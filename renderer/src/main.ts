@@ -12,6 +12,17 @@ import { aliases, mdi } from "vuetify/iconsets/mdi"
 
 import "@mdi/font/css/materialdesignicons.css"
 
+import VueMarkdownEditor from "@kangc/v-md-editor"
+import "@kangc/v-md-editor/lib/style/base-editor.css"
+import vuepressTheme from "@kangc/v-md-editor/lib/theme/vuepress.js"
+import "@kangc/v-md-editor/lib/theme/style/vuepress.css"
+
+import Prism from "prismjs"
+
+VueMarkdownEditor.use(vuepressTheme, {
+  Prism
+})
+
 const vuetify = createVuetify({
   components,
   directives,
@@ -47,5 +58,6 @@ const app = createApp(wrapper)
 app.use(createPinia())
 app.use(vuetify)
 app.use(router)
+app.use(VueMarkdownEditor)
 
 app.mount("#app")
