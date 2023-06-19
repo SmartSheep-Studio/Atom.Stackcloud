@@ -12,5 +12,8 @@ type MatrixApp struct {
 	Details     string                      `json:"details"`
 	Tags        datatypes.JSONSlice[string] `json:"tags"`
 	IsPublished bool                        `json:"is_published"`
-	UserID      uint                        `json:"app_id"`
+	Posts       []MatrixPost                `json:"posts" gorm:"foreignKey:AppID"`
+	Releases    []MatrixRelease             `json:"releases" gorm:"foreignKey:AppID"`
+	Duplicates  []MatrixLibraryItem         `json:"duplicates" gorm:"foreignKey:AppID"`
+	ProfileID   uint                        `json:"profile_id"`
 }

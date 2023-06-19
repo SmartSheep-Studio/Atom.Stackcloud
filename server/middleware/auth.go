@@ -1,12 +1,15 @@
 package middleware
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/fx"
-	"repo.smartsheep.studio/atom/nucleus/datasource/models"
+	"gorm.io/gorm"
+	"repo.smartsheep.studio/atom/matrix/datasource/models"
+	tmodels "repo.smartsheep.studio/atom/nucleus/datasource/models"
 	"repo.smartsheep.studio/atom/nucleus/toolbox"
 )
 
@@ -19,7 +22,7 @@ type AuthConfig struct {
 	LookupToken string
 }
 
-func NewAuth(cycle fx.Lifecycle, c *toolbox.ExternalServiceConnection) AuthHandler {
+func NewAuth(cycle fx.Lifecycle, db *gorm.DB, c *toolbox.ExternalServiceConnection) AuthHandler {
 	conn = c
 
 	cfg := AuthConfig{
@@ -41,6 +44,24 @@ func NewAuth(cycle fx.Lifecycle, c *toolbox.ExternalServiceConnection) AuthHandl
 					if err := conn.HasUserPermissions(u, perms...); err != nil {
 						return fiber.NewError(fiber.StatusForbidden, err.Error())
 					}
+
+					var prof *models.MatrixProfile
+					if err := db.Where("user_id = ?", u.ID).First(&prof).Error; err != nil {
+						if errors.Is(gorm.ErrRecordNotFound, err) {
+							prof = &models.MatrixProfile{
+								Nickname: u.Nickname,
+								UserID:   u.ID,
+							}
+
+							if err := db.Save(&prof).Error; err != nil {
+								return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+							}
+						} else {
+							return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+						}
+					}
+
+					c.Locals("matrix-prof", prof)
 				}
 
 				c.Locals("principal-ok", err == nil)
@@ -53,7 +74,7 @@ func NewAuth(cycle fx.Lifecycle, c *toolbox.ExternalServiceConnection) AuthHandl
 	}
 }
 
-func LookupAuthToken(c *fiber.Ctx, args []string) (models.User, error) {
+func LookupAuthToken(c *fiber.Ctx, args []string) (tmodels.User, error) {
 	var str string
 	for _, arg := range args {
 		parts := strings.Split(strings.TrimSpace(arg), ":")
@@ -77,7 +98,7 @@ func LookupAuthToken(c *fiber.Ctx, args []string) (models.User, error) {
 	}
 
 	if len(str) == 0 {
-		return models.User{}, fmt.Errorf("could not found any token string from context")
+		return tmodels.User{}, fmt.Errorf("could not found any token string from context")
 	}
 
 	return conn.GetPrincipal(str, true)

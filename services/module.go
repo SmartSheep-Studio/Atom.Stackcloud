@@ -5,5 +5,7 @@ import (
 )
 
 func Module() fx.Option {
-	return fx.Module("services")
+	return fx.Module("services",
+		fx.Provide(NewExploreService),
+	)
 }

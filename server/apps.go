@@ -6,7 +6,6 @@ import (
 	"gorm.io/gorm"
 	"repo.smartsheep.studio/atom/matrix/datasource/models"
 	"repo.smartsheep.studio/atom/matrix/server/middleware"
-	tmodels "repo.smartsheep.studio/atom/nucleus/datasource/models"
 	"repo.smartsheep.studio/atom/nucleus/utils"
 )
 
@@ -28,10 +27,10 @@ func (ctrl *AppController) Map(router *fiber.App) {
 }
 
 func (ctrl *AppController) list(c *fiber.Ctx) error {
-	u := c.Locals("principal").(tmodels.User)
+	u := c.Locals("matrix-prof").(*models.MatrixProfile)
 
 	var shops []models.MatrixApp
-	if err := ctrl.db.Where("user_id = ?", u.ID).Find(&shops).Error; err != nil {
+	if err := ctrl.db.Where("profile_id = ?", u.ID).Find(&shops).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	} else {
 		return c.JSON(shops)
@@ -39,10 +38,10 @@ func (ctrl *AppController) list(c *fiber.Ctx) error {
 }
 
 func (ctrl *AppController) get(c *fiber.Ctx) error {
-	u := c.Locals("principal").(tmodels.User)
+	u := c.Locals("matrix-prof").(*models.MatrixProfile)
 
 	var shop models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND user_id = ?", c.Params("app"), u.ID).First(&shop).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&shop).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	} else {
 		return c.JSON(shop)
@@ -50,7 +49,7 @@ func (ctrl *AppController) get(c *fiber.Ctx) error {
 }
 
 func (ctrl *AppController) create(c *fiber.Ctx) error {
-	u := c.Locals("principal").(tmodels.User)
+	u := c.Locals("matrix-prof").(*models.MatrixProfile)
 
 	var req struct {
 		Slug        string   `json:"slug" validate:"required"`
@@ -74,7 +73,7 @@ func (ctrl *AppController) create(c *fiber.Ctx) error {
 		Description: req.Description,
 		Details:     req.Details,
 		IsPublished: req.IsPublished,
-		UserID:      u.ID,
+		ProfileID:   u.ID,
 	}
 
 	if err := ctrl.db.Save(&app).Error; err != nil {
@@ -85,7 +84,7 @@ func (ctrl *AppController) create(c *fiber.Ctx) error {
 }
 
 func (ctrl *AppController) update(c *fiber.Ctx) error {
-	u := c.Locals("principal").(tmodels.User)
+	u := c.Locals("matrix-prof").(*models.MatrixProfile)
 
 	var req struct {
 		Slug        string   `json:"slug" validate:"required"`
@@ -102,7 +101,7 @@ func (ctrl *AppController) update(c *fiber.Ctx) error {
 	}
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND user_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 
@@ -122,10 +121,10 @@ func (ctrl *AppController) update(c *fiber.Ctx) error {
 }
 
 func (ctrl *AppController) delete(c *fiber.Ctx) error {
-	u := c.Locals("principal").(tmodels.User)
+	u := c.Locals("matrix-prof").(*models.MatrixProfile)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND user_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 
