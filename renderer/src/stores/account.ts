@@ -70,8 +70,8 @@ export interface UserAsset {
 
 export const useAccount = defineStore("account", () => {
   const isLoggedIn = ref(false)
-  const cookies = useCookies(["lineup_authorization"])
-  const token = computed(() => cookies.get("lineup_authorization"))
+  const cookies = useCookies(["matrix_authorization"])
+  const token = computed(() => cookies.get("matrix_authorization"))
 
   const profile = useLocalStorage<User | null>("atom-profile", null, {
     deep: true,
@@ -95,7 +95,7 @@ export const useAccount = defineStore("account", () => {
   })
 
   async function fetch() {
-    if (cookies.get("lineup_authorization") != null) {
+    if (cookies.get("matrix_authorization") != null) {
       try {
         profile.value = (await http.get("/api/auth")).data
         isLoggedIn.value = true
@@ -107,7 +107,7 @@ export const useAccount = defineStore("account", () => {
   }
 
   function logout() {
-    cookies.remove("lineup_authorization")
+    cookies.remove("matrix_authorization")
     profile.value = null
     window.location.reload()
   }

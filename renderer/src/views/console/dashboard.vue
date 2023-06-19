@@ -16,7 +16,7 @@
               </template>
 
               <v-card>
-                <v-toolbar dark color="primary">
+                <v-toolbar dark color="primary" absolute>
                   <v-btn icon dark @click="popups.create = false">
                     <v-icon>mdi-close</v-icon>
                   </v-btn>
@@ -25,62 +25,8 @@
                   </v-toolbar-title>
                 </v-toolbar>
 
-                <v-card-item class="pt-0">
-                  <v-form class="pt-4" @submit.prevent="create">
-                    <v-row justify="center">
-                      <v-col :md="4" :sm="6">
-                        <v-text-field
-                          variant="outlined"
-                          density="comfortable"
-                          label="Slug"
-                          name="slug"
-                          :hide-details="true"
-                        />
-                      </v-col>
-                      <v-col :md="4" :sm="6">
-                        <v-text-field
-                          variant="outlined"
-                          density="comfortable"
-                          label="Name"
-                          name="name"
-                          :hide-details="true"
-                        />
-                      </v-col>
-                      <v-col :md="8" :sm="12">
-                        <v-text-field
-                          variant="outlined"
-                          density="comfortable"
-                          label="Tags"
-                          name="tags"
-                          :hide-details="true"
-                        />
-                      </v-col>
-                      <v-col :md="8" :sm="12">
-                        <v-text-field
-                          variant="outlined"
-                          density="comfortable"
-                          label="URL"
-                          name="url"
-                          :hide-details="true"
-                        />
-                      </v-col>
-                      <v-col :md="8" :sm="12">
-                        <v-textarea
-                          variant="outlined"
-                          density="comfortable"
-                          label="Description"
-                          name="description"
-                          :hide-details="true"
-                        />
-                      </v-col>
-                      <v-col :md="8" :sm="12">
-                        <v-md-editor v-model="createDetail" height="400px" />
-                      </v-col>
-                      <v-col :md="8" :sm="12">
-                        <v-btn color="primary" type="submit" variant="text" :loading="submitting">Submit</v-btn>
-                      </v-col>
-                    </v-row>
-                  </v-form>
+                <v-card-item style="padding-top: 64px; max-height: 100vh; overflow: auto">
+                  <create-app @done="refresh" />
                 </v-card-item>
               </v-card>
             </v-dialog>
@@ -119,7 +65,7 @@
                     </template>
 
                     <v-card>
-                      <v-toolbar dark color="primary">
+                      <v-toolbar dark color="primary" absolute>
                         <v-btn icon dark @click="popups.update[i] = false">
                           <v-icon>mdi-close</v-icon>
                         </v-btn>
@@ -128,62 +74,8 @@
                         </v-toolbar-title>
                       </v-toolbar>
 
-                      <v-card-item class="pt-0">
-                        <v-form class="pt-4" @submit.prevent="update">
-                          <v-row justify="center">
-                            <v-col :md="4" :sm="6">
-                              <v-text-field
-                                variant="outlined"
-                                density="comfortable"
-                                label="Slug"
-                                v-model="payload.slug"
-                                :hide-details="true"
-                              />
-                            </v-col>
-                            <v-col :md="4" :sm="6">
-                              <v-text-field
-                                variant="outlined"
-                                density="comfortable"
-                                label="Name"
-                                v-model="payload.name"
-                                :hide-details="true"
-                              />
-                            </v-col>
-                            <v-col :md="8" :sm="12">
-                              <v-text-field
-                                variant="outlined"
-                                density="comfortable"
-                                label="Tags"
-                                v-model="payload.tags"
-                                :hide-details="true"
-                              />
-                            </v-col>
-                            <v-col :md="8" :sm="12">
-                              <v-text-field
-                                variant="outlined"
-                                density="comfortable"
-                                label="URL"
-                                v-model="payload.url"
-                                :hide-details="true"
-                              />
-                            </v-col>
-                            <v-col :md="8" :sm="12">
-                              <v-textarea
-                                variant="outlined"
-                                density="comfortable"
-                                label="Description"
-                                v-model="payload.description"
-                                :hide-details="true"
-                              />
-                            </v-col>
-                            <v-col :md="8" :sm="12">
-                              <v-md-editor v-model="payload.details" height="400px" />
-                            </v-col>
-                            <v-col :md="8" :sm="12">
-                              <v-btn color="primary" type="submit" variant="text" :loading="submitting">Submit</v-btn>
-                            </v-col>
-                          </v-row>
-                        </v-form>
+                      <v-card-item style="padding-top: 64px; max-height: 100vh; overflow: auto">
+                        <update-app @done="refresh" :data="item" />
                       </v-card-item>
                     </v-card>
                   </v-dialog>
@@ -228,16 +120,16 @@ import { useAccount } from "@/stores/account"
 import { useSnackbar } from "@/stores/snackbar"
 import { http } from "@/utils/http"
 import { reactive } from "vue"
-import { watch } from "vue"
 import { onMounted } from "vue"
 import { ref } from "vue"
+import CreateApp from "@/views/console/apps/create.vue"
+import UpdateApp from "@/views/console/apps/update.vue"
 
 const $account = useAccount()
 const $snackbar = useSnackbar()
 
 const apps = ref<any[]>([])
 
-const createDetail = ref("")
 const payload = ref({
   id: 0,
   slug: "",
@@ -259,25 +151,10 @@ async function fetch() {
   }
 }
 
-async function create(e: SubmitEvent) {
-  const data: any = Object.fromEntries(new FormData(e.target as HTMLFormElement).entries())
-  data.details = createDetail.value
-  data.tags = data.tags.split(",")
-
-  try {
-    submitting.value = true
-
-    const res = await http.post("/api/apps", data)
-    await fetch()
-
-    popups.create = false
-    createDetail.value = ""
-    $snackbar.show({ text: `Successfully created app ${res.data.name}.`, color: "success" })
-  } catch (e: any) {
-    $snackbar.show({ text: `Something wrong... ${e}`, color: "error" })
-  } finally {
-    submitting.value = false
-  }
+async function refresh() {
+  popups.create = false
+  popups.update = popups.update.map(() => false)
+  await fetch()
 }
 
 async function update() {

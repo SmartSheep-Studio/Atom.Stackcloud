@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/rs/zerolog/log"
-	"repo.smartsheep.studio/atom/lineupmarketplace/renderer"
+	"repo.smartsheep.studio/atom/matrix/renderer"
 	"repo.smartsheep.studio/atom/nucleus/toolbox"
 
 	"github.com/gofiber/fiber/v2"

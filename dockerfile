@@ -1,5 +1,5 @@
 # Run image with this command
-# docker run --rm --name lineup --net host -v $(pwd)/settings.toml:/server/settings.toml -v $(pwd)/plugins:/server/plugins -v $(pwd)/resources:/resources lineup
+# docker run --rm --name matrix --net host -v $(pwd)/settings.toml:/server/settings.toml -v $(pwd)/plugins:/server/plugins -v $(pwd)/resources:/resources matrix
 
 # Building
 FROM golang:alpine as build

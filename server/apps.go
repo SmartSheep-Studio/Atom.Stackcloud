@@ -4,8 +4,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
-	"repo.smartsheep.studio/atom/lineupmarketplace/datasource/models"
-	"repo.smartsheep.studio/atom/lineupmarketplace/server/middleware"
+	"repo.smartsheep.studio/atom/matrix/datasource/models"
+	"repo.smartsheep.studio/atom/matrix/server/middleware"
 	tmodels "repo.smartsheep.studio/atom/nucleus/datasource/models"
 	"repo.smartsheep.studio/atom/nucleus/utils"
 )
@@ -30,7 +30,7 @@ func (ctrl *AppController) Map(router *fiber.App) {
 func (ctrl *AppController) list(c *fiber.Ctx) error {
 	u := c.Locals("principal").(tmodels.User)
 
-	var shops []models.LineupApp
+	var shops []models.MatrixApp
 	if err := ctrl.db.Where("user_id = ?", u.ID).Find(&shops).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	} else {
@@ -41,7 +41,7 @@ func (ctrl *AppController) list(c *fiber.Ctx) error {
 func (ctrl *AppController) get(c *fiber.Ctx) error {
 	u := c.Locals("principal").(tmodels.User)
 
-	var shop models.LineupApp
+	var shop models.MatrixApp
 	if err := ctrl.db.Where("slug = ? AND user_id = ?", c.Params("app"), u.ID).First(&shop).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	} else {
@@ -59,19 +59,21 @@ func (ctrl *AppController) create(c *fiber.Ctx) error {
 		Details     string   `json:"details"`
 		Url         string   `json:"url"`
 		Tags        []string `json:"tags"`
+		IsPublished bool     `json:"is_published"`
 	}
 
 	if err := utils.ParseRequestBody(c, &req); err != nil {
 		return err
 	}
 
-	app := models.LineupApp{
+	app := models.MatrixApp{
 		Slug:        req.Slug,
 		Url:         req.Url,
 		Tags:        datatypes.NewJSONSlice(req.Tags),
 		Name:        req.Name,
 		Description: req.Description,
 		Details:     req.Details,
+		IsPublished: req.IsPublished,
 		UserID:      u.ID,
 	}
 
@@ -92,13 +94,14 @@ func (ctrl *AppController) update(c *fiber.Ctx) error {
 		Details     string   `json:"details"`
 		Url         string   `json:"url"`
 		Tags        []string `json:"tags"`
+		IsPublished bool     `json:"is_published"`
 	}
 
 	if err := utils.ParseRequestBody(c, &req); err != nil {
 		return err
 	}
 
-	var app models.LineupApp
+	var app models.MatrixApp
 	if err := ctrl.db.Where("slug = ? AND user_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
@@ -109,6 +112,7 @@ func (ctrl *AppController) update(c *fiber.Ctx) error {
 	app.Name = req.Name
 	app.Description = req.Description
 	app.Details = req.Details
+	app.IsPublished = req.IsPublished
 
 	if err := ctrl.db.Save(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
@@ -120,7 +124,7 @@ func (ctrl *AppController) update(c *fiber.Ctx) error {
 func (ctrl *AppController) delete(c *fiber.Ctx) error {
 	u := c.Locals("principal").(tmodels.User)
 
-	var app models.LineupApp
+	var app models.MatrixApp
 	if err := ctrl.db.Where("slug = ? AND user_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}

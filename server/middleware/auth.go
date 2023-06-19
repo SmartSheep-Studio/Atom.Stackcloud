@@ -24,7 +24,7 @@ func NewAuth(cycle fx.Lifecycle, c *toolbox.ExternalServiceConnection) AuthHandl
 
 	cfg := AuthConfig{
 		Next:        nil,
-		LookupToken: "header: Authorization, query: token, cookie: lineup_authorization",
+		LookupToken: "header: Authorization, query: token, cookie: matrix_authorization",
 	}
 
 	return func(force bool, perms ...string) fiber.Handler {

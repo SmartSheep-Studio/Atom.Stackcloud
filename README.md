@@ -1,4 +1,4 @@
-# LineupMarketplace
+# Matrix
 
 ![A part of Project Atom](https://img.shields.io/badge/A%20part%20of-Project%20Atom-green?style=for-the-badge)
 

@@ -3,7 +3,7 @@ package server
 import (
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/fx"
-	"repo.smartsheep.studio/atom/lineupmarketplace/server/middleware"
+	"repo.smartsheep.studio/atom/matrix/server/middleware"
 )
 
 type HttpController interface {

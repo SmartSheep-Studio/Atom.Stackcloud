@@ -1,4 +1,4 @@
-module repo.smartsheep.studio/atom/lineupmarketplace
+module repo.smartsheep.studio/atom/matrix
 
 go 1.20
 

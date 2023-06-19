@@ -18,9 +18,9 @@ func NewEndpointConnection(cycle fx.Lifecycle) *toolbox.ExternalServiceConnectio
 	cycle.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			conn, err := toolbox.PublishService(viper.GetString("general.endpoints"), viper.GetString("general.mount_key"), toolbox.ExternalServiceRequest{
-				Name:        "LineupMarketplace",
+				Name:        "Matrix",
 				InstanceID:  viper.GetString("general.instance_id"),
-				PackageID:   "repo.smartsheep.studio/atom/lineupmarketplace",
+				PackageID:   "repo.smartsheep.studio/atom/matrix",
 				Description: "A developer-friendly, geek-friendly store for apps and games.",
 				Address:     viper.GetString("general.base_url"),
 				Options: tmodels.ExternalServiceOptions{

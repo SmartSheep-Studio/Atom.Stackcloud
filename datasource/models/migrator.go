@@ -7,7 +7,7 @@ import (
 
 func Migrate(db *gorm.DB) {
 	if err := db.AutoMigrate(
-		&LineupApp{},
+		&MatrixApp{},
 	); err != nil {
 		log.Fatal().Err(err).Msg("Error when migrating database")
 	}

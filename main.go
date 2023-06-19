@@ -5,12 +5,12 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 	"go.uber.org/fx"
-	"repo.smartsheep.studio/atom/lineupmarketplace/config"
-	"repo.smartsheep.studio/atom/lineupmarketplace/datasource"
-	"repo.smartsheep.studio/atom/lineupmarketplace/datasource/models"
-	"repo.smartsheep.studio/atom/lineupmarketplace/logger"
-	"repo.smartsheep.studio/atom/lineupmarketplace/server"
-	"repo.smartsheep.studio/atom/lineupmarketplace/services"
+	"repo.smartsheep.studio/atom/matrix/config"
+	"repo.smartsheep.studio/atom/matrix/datasource"
+	"repo.smartsheep.studio/atom/matrix/datasource/models"
+	"repo.smartsheep.studio/atom/matrix/logger"
+	"repo.smartsheep.studio/atom/matrix/server"
+	"repo.smartsheep.studio/atom/matrix/services"
 	"repo.smartsheep.studio/atom/nucleus/toolbox"
 )
 

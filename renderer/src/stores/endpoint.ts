@@ -23,7 +23,7 @@ export const useEndpoint = defineStore("endpoint", () => {
       throw e
     }
 
-    document.title = `${configuration.value.general.name ?? "Project Atom"} Lineup`
+    document.title = `${configuration.value.general.name ?? "Project Atom"} Matrix`
   }
 
   return { isPrepared, configuration, additional, service, fetch }

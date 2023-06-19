@@ -3,7 +3,7 @@
     <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
     <v-toolbar-title>
-      <span @click="$router.push({ name: 'introduce' })" style="cursor: pointer">Lineup Marketplace</span>
+      <span @click="$router.push({ name: 'introduce' })" style="cursor: pointer">Matrix Marketplace</span>
     </v-toolbar-title>
 
     <v-spacer></v-spacer>
@@ -51,7 +51,7 @@
         prepend-icon="mdi-console"
         title="Console"
         value="console"
-        v-if="hasUserPermissions('lineup.console.view')"
+        v-if="hasUserPermissions('matrix.console.view')"
       >
         <template v-slot:activator="{ props }">
           <v-list-item v-bind="props" />
