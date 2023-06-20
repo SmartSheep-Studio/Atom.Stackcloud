@@ -21,7 +21,7 @@ func NewPostController(db *gorm.DB, auth middleware.AuthHandler) *PostController
 func (ctrl *PostController) Map(router *fiber.App) {
 	router.Get("/api/apps/:app/posts", ctrl.auth(true), ctrl.list)
 	router.Get("/api/apps/:app/posts/:post", ctrl.auth(true), ctrl.get)
-	router.Post("/api/apps/posts", ctrl.auth(true), ctrl.create)
+	router.Post("/api/apps/:app/posts", ctrl.auth(true), ctrl.create)
 	router.Put("/api/apps/:app/posts/:post", ctrl.auth(true), ctrl.update)
 	router.Delete("/api/apps/:app/posts/:post", ctrl.auth(true), ctrl.delete)
 }
@@ -30,7 +30,7 @@ func (ctrl *PostController) list(c *fiber.Ctx) error {
 	u := c.Locals("matrix-prof").(*models.MatrixProfile)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 
@@ -46,7 +46,7 @@ func (ctrl *PostController) get(c *fiber.Ctx) error {
 	u := c.Locals("matrix-prof").(*models.MatrixProfile)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 
@@ -62,14 +62,14 @@ func (ctrl *PostController) create(c *fiber.Ctx) error {
 	u := c.Locals("matrix-prof").(*models.MatrixProfile)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 
 	var req struct {
-		Title       string   `json:"name" validate:"required"`
+		Title       string   `json:"title" validate:"required"`
 		Type        string   `json:"type" validate:"required"`
-		Content     string   `json:"details"`
+		Content     string   `json:"content"`
 		Tags        []string `json:"tags"`
 		IsPublished bool     `json:"is_published"`
 	}
@@ -98,14 +98,14 @@ func (ctrl *PostController) update(c *fiber.Ctx) error {
 	u := c.Locals("matrix-prof").(*models.MatrixProfile)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 
 	var req struct {
-		Title       string   `json:"name" validate:"required"`
+		Title       string   `json:"title" validate:"required"`
 		Type        string   `json:"type" validate:"required"`
-		Content     string   `json:"details"`
+		Content     string   `json:"content"`
 		Tags        []string `json:"tags"`
 		IsPublished bool     `json:"is_published"`
 	}
@@ -136,7 +136,7 @@ func (ctrl *PostController) delete(c *fiber.Ctx) error {
 	u := c.Locals("matrix-prof").(*models.MatrixProfile)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 

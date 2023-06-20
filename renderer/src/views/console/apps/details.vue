@@ -9,6 +9,10 @@
       <releases />
     </div>
 
+    <div class="mt-4">
+      <posts />
+    </div>
+
     <v-footer class="border-t" app>
       <v-breadcrumbs density="compact">
         <v-breadcrumbs-item exact :to="{ name: 'console.dashboard' }">Dashboard</v-breadcrumbs-item>
@@ -24,8 +28,9 @@ import { ref } from "vue"
 import { http } from "@/utils/http";
 import { useRoute } from "vue-router";
 import { useSnackbar } from "@/stores/snackbar";
-import Releases from "@/views/console/apps/releases.vue"
 import { onMounted } from "vue";
+import Releases from "@/views/console/apps/releases.vue"
+import Posts from "@/views/console/apps/posts.vue"
 
 const $route = useRoute()
 const $snackbar = useSnackbar()

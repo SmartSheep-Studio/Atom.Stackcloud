@@ -2,7 +2,7 @@
   <div>
     <v-card>
       <v-toolbar dark density="compact" color="blue-darken-3" class="px-2 mb-2 row">
-        <v-toolbar-title style="font-size: 16px">Releases</v-toolbar-title>
+        <v-toolbar-title style="font-size: 16px">Posts</v-toolbar-title>
         <v-col :offset="4" :cols="4" class="d-flex justify-end">
           <v-dialog fullscreen transition="dialog-bottom-transition" v-model="popups.create">
             <template #activator="{ props }">
@@ -20,7 +20,7 @@
                 </v-toolbar>
 
                 <v-card-item style="padding-top: 64px; max-height: 100vh; overflow: auto">
-                  <create-release @done="refresh" />
+                  <create-post @done="refresh" />
                 </v-card-item>
               </v-card>
           </v-dialog>
@@ -29,16 +29,16 @@
 
       <v-table density="comfortable" hover height="30vh">
         <tbody>
-          <tr v-for="(item, i) in releases" :key="item.name">
+          <tr v-for="(item, i) in posts" :key="item.name">
             <td style="width: 64px">
               <v-avatar>
-                <v-icon icon="mdi-tag" />
+                <v-icon icon="mdi-note" />
               </v-avatar>
             </td>
             <td>
               <div class="py-2">
-                <div>{{ item.name }}</div>
-                <div class="text-caption">{{ item.description }}</div>
+                <div>{{ item.title }}</div>
+                <div class="text-caption">{{ item.content.substring(0, 80).replaceAll("\n", " ") }}</div>
               </div>
             </td>
             <td style="text-align: right">
@@ -66,7 +66,7 @@
                     </v-toolbar>
 
                     <v-card-item style="padding-top: 64px; max-height: 100vh; overflow: auto">
-                      <update-release @done="refresh" :data="item" />
+                      <update-post @done="refresh" :data="item" />
                     </v-card-item>
                   </v-card>
                 </v-dialog>
@@ -82,7 +82,7 @@
                     />
                   </template>
                   <v-card title="Confirm">
-                    <v-card-text>Do you sure you want to delete this release?</v-card-text>
+                    <v-card-text>Do you sure you want to delete this post?</v-card-text>
                     <v-card-actions class="px-5 justify-end">
                       <v-btn @click="popups.delete[i] = false">Cancel</v-btn>
                       <v-btn :loading="submitting" color="red" @click="dispose">Confirm</v-btn>
@@ -104,31 +104,29 @@ import { http } from "@/utils/http"
 import { onMounted, reactive } from "vue"
 import { ref } from "vue"
 import { useRoute } from "vue-router"
-import CreateRelease from "@/views/console/apps/releases/create.vue"
-import UpdateRelease from "@/views/console/apps/releases/update.vue"
+import CreatePost from "@/views/console/apps/posts/create.vue"
+import UpdatePost from "@/views/console/apps/posts/update.vue"
 
 const $route = useRoute()
 const $snackbar = useSnackbar()
 
-const releases = ref<any[]>([])
+const posts = ref<any[]>([])
 
 const submitting = ref(false)
 const popups = reactive({ create: false, update: [false], delete: [false] })
 
 const payload = ref({
   id: 0,
-  slug: "",
-  name: "",
+  title: "",
   tags: "",
   type: "minor-update",
-  description: "",
-  details: "",
+  content: "",
   is_published: false
 })
 
 async function fetch() {
   try {
-    releases.value = (await http.get(`/api/apps/${$route.params.app}/releases`)).data
+    posts.value = (await http.get(`/api/apps/${$route.params.app}/posts`)).data
   } catch (e: any) {
     $snackbar.show({ text: `Something wrong... ${e}`, color: "error" })
   }
@@ -144,11 +142,11 @@ async function dispose() {
   try {
     submitting.value = true
 
-    await http.delete(`/api/apps/${$route.params.app}/releases/${payload.value.id}`)
+    await http.delete(`/api/apps/${$route.params.app}/posts/${payload.value.id}`)
     await fetch()
 
     popups.delete = popups.delete.map(() => false)
-    $snackbar.show({ text: `Successfully deleted release ${payload.value.name}.`, color: "success" })
+    $snackbar.show({ text: `Successfully deleted post ${payload.value.title}.`, color: "success" })
   } catch (e: any) {
     $snackbar.show({ text: `Something wrong... ${e}`, color: "error" })
   } finally {

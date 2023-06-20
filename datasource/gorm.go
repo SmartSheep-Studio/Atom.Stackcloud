@@ -13,6 +13,7 @@ func NewGormDB() *gorm.DB {
 	conn, err := gorm.Open(dialector, &gorm.Config{Logger: logger.New(&log.Logger, logger.Config{
 		Colorful:                  true,
 		IgnoreRecordNotFoundError: true,
+		LogLevel:                  logger.Info,
 	})})
 
 	if err != nil {
