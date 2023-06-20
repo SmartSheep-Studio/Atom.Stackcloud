@@ -4,7 +4,7 @@ type MatrixRelease struct {
 	Model
 
 	Name         string     `json:"name"`
-	Code         string     `json:"code"`
+	Slug         string     `json:"slug"`
 	Description  string     `json:"description"`
 	IsPrerelease bool       `json:"is_prerelease"`
 	IsPublished  bool       `json:"is_published"`

@@ -1,7 +1,7 @@
 <template>
   <v-form class="py-4" @submit.prevent="create">
     <v-row justify="center">
-      <v-col :md="4" :sm="6">
+      <v-col :md="4" :sm="6" :cols="12">
         <v-text-field
           variant="outlined"
           density="comfortable"
@@ -10,7 +10,7 @@
           :hide-details="true"
         />
       </v-col>
-      <v-col :md="4" :sm="6">
+      <v-col :md="4" :sm="6" :cols="12">
         <v-text-field
           variant="outlined"
           density="comfortable"
@@ -19,7 +19,7 @@
           :hide-details="true"
         />
       </v-col>
-      <v-col :md="8" :sm="12">
+      <v-col :md="8" :sm="12" :cols="12">
         <v-text-field
           variant="outlined"
           density="comfortable"
@@ -28,10 +28,10 @@
           :hide-details="true"
         />
       </v-col>
-      <v-col :md="8" :sm="12">
+      <v-col :md="8" :sm="12" :cols="12">
         <v-text-field variant="outlined" density="comfortable" label="URL" v-model="payload.url" :hide-details="true" />
       </v-col>
-      <v-col :md="8" :sm="12">
+      <v-col :md="8" :sm="12" :cols="12">
         <v-textarea
           variant="outlined"
           density="comfortable"
@@ -40,13 +40,13 @@
           :hide-details="true"
         />
       </v-col>
-      <v-col :md="8" :sm="12">
+      <v-col :md="8" :sm="12" :cols="12">
         <v-md-editor v-model="payload.details" height="400px" />
       </v-col>
-      <v-col :md="8" :sm="12">
+      <v-col :md="8" :sm="12" :cols="12">
         <v-checkbox-btn label="Published" v-model="payload.is_published" color="primary" />
       </v-col>
-      <v-col :md="8" :sm="12">
+      <v-col :md="8" :sm="12" :cols="12">
         <v-btn color="primary" type="submit" variant="text" :loading="submitting">Submit</v-btn>
       </v-col>
     </v-row>

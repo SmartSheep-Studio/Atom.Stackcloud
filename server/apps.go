@@ -29,22 +29,22 @@ func (ctrl *AppController) Map(router *fiber.App) {
 func (ctrl *AppController) list(c *fiber.Ctx) error {
 	u := c.Locals("matrix-prof").(*models.MatrixProfile)
 
-	var shops []models.MatrixApp
-	if err := ctrl.db.Where("profile_id = ?", u.ID).Find(&shops).Error; err != nil {
+	var apps []models.MatrixApp
+	if err := ctrl.db.Where("profile_id = ?", u.ID).Find(&apps).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	} else {
-		return c.JSON(shops)
+		return c.JSON(apps)
 	}
 }
 
 func (ctrl *AppController) get(c *fiber.Ctx) error {
 	u := c.Locals("matrix-prof").(*models.MatrixProfile)
 
-	var shop models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&shop).Error; err != nil {
+	var app models.MatrixApp
+	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	} else {
-		return c.JSON(shop)
+		return c.JSON(app)
 	}
 }
 

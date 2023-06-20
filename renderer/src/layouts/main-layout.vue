@@ -3,7 +3,7 @@
     <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
     <v-toolbar-title>
-      <span @click="$router.push({ name: 'introduce' })" style="cursor: pointer">Matrix Marketplace</span>
+      <span @click="$router.push({ name: 'explore' })" style="cursor: pointer">Matrix Marketplace</span>
     </v-toolbar-title>
 
     <v-spacer></v-spacer>

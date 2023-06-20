@@ -13,11 +13,12 @@ const (
 type MatrixPost struct {
 	Model
 
-	Type      string                      `json:"type"`
-	Title     string                      `json:"title"`
-	Cover     string                      `json:"cover"`
-	Content   string                      `json:"content"`
-	Tags      datatypes.JSONSlice[string] `json:"tags"`
-	ReleaseID *uint                       `json:"release_id"`
-	AppID     uint                        `json:"app_id"`
+	Type        string                      `json:"type"`
+	Title       string                      `json:"title"`
+	Cover       string                      `json:"cover"`
+	Content     string                      `json:"content"`
+	Tags        datatypes.JSONSlice[string] `json:"tags"`
+	ReleaseID   *uint                       `json:"release_id"`
+	IsPublished bool                        `json:"is_published"`
+	AppID       uint                        `json:"app_id"`
 }
