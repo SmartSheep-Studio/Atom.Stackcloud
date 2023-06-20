@@ -35,7 +35,7 @@ func (ctrl *ReleaseController) list(c *fiber.Ctx) error {
 	}
 
 	var releases []models.MatrixRelease
-	if err := ctrl.db.Where("app_id = ?", app.ID).Preload("Post").Find(&releases).Error; err != nil {
+	if err := ctrl.db.Where("app_id = ?", app.ID).Order("created_at desc").Preload("Post").Find(&releases).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	} else {
 		return c.JSON(releases)

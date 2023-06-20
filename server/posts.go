@@ -35,7 +35,7 @@ func (ctrl *PostController) list(c *fiber.Ctx) error {
 	}
 
 	var posts []models.MatrixPost
-	if err := ctrl.db.Where("app_id = ?", app.ID).Find(&posts).Error; err != nil {
+	if err := ctrl.db.Where("app_id = ?", app.ID).Order("created_at desc").Find(&posts).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	} else {
 		return c.JSON(posts)

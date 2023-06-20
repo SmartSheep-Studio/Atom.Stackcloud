@@ -17,7 +17,7 @@ func (v *ExploreService) ExploreApps() ([]models.MatrixApp, error) {
 	tx := v.db.Where("is_published = true")
 
 	var apps []models.MatrixApp
-	if err := tx.Limit(100).Find(&apps).Error; err != nil {
+	if err := tx.Limit(100).Order("created_at desc").Find(&apps).Error; err != nil {
 		return nil, err
 	} else {
 		return apps, nil
@@ -28,7 +28,7 @@ func (v *ExploreService) ExplorePosts(app uint) ([]models.MatrixPost, error) {
 	tx := v.db.Where("is_published = true AND app_id = ?", app)
 
 	var posts []models.MatrixPost
-	if err := tx.Limit(100).Find(&posts).Error; err != nil {
+	if err := tx.Limit(100).Order("created_at desc").Find(&posts).Error; err != nil {
 		return nil, err
 	} else {
 		return posts, nil
@@ -39,7 +39,7 @@ func (v *ExploreService) ExploreReleases(app uint) ([]models.MatrixRelease, erro
 	tx := v.db.Where("is_published = true AND app_id = ?", app)
 
 	var releases []models.MatrixRelease
-	if err := tx.Limit(100).Find(&releases).Error; err != nil {
+	if err := tx.Limit(100).Order("created_at desc").Find(&releases).Error; err != nil {
 		return nil, err
 	} else {
 		return releases, nil
