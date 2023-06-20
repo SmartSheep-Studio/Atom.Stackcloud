@@ -161,7 +161,11 @@ func (ctrl *ReleaseController) delete(c *fiber.Ctx) error {
 	}
 
 	var release models.MatrixRelease
-	if err := ctrl.db.Where("id = ? AND app_id = ?", c.Params("release"), app.ID).First(&release).Error; err != nil {
+	if err := ctrl.db.Where("id = ? AND app_id = ?", c.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
+		return utils.ParseDataSourceError(err)
+	}
+
+	if err := ctrl.db.Delete(&release.Post).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 

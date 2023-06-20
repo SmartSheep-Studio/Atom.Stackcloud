@@ -144,7 +144,7 @@ async function dispose() {
   try {
     submitting.value = true
 
-    await http.delete(`/api/apps/${$route.params.app}/${payload.value.id}`)
+    await http.delete(`/api/apps/${$route.params.app}/releases/${payload.value.id}`)
     await fetch()
 
     popups.delete = popups.delete.map(() => false)
