@@ -16,7 +16,7 @@
                   <v-card class="explore-item pa-4">
                     <v-card-item>
                       <div class="text-h6">{{ item.raw.name }}</div>
-                      <div style="margin-left: -4px">
+                      <div class="explore-tags" style="margin-left: -4px">
                         <v-badge v-for="tag in item.raw.tags" inline color="primary" :content="tag" />
                       </div>
                     </v-card-item>
@@ -74,5 +74,17 @@ onMounted(() => {
   box-shadow: 0px 2px 4px -1px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
     0px 4px 5px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
     0px 1px 10px 0px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.12)) !important;
+}
+
+.explore-tags {
+  display: flex;
+  overflow-x: scroll;
+  flex-wrap: nowrap;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.explore-tags::-webkit-scrollbar {
+  display: none;
 }
 </style>

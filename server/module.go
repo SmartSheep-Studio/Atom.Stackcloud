@@ -25,6 +25,7 @@ func Module() fx.Option {
 			AsController(NewExploreController),
 			AsController(NewAppController),
 			AsController(NewReleaseController),
+			AsController(NewPostController),
 
 			fx.Annotate(NewHttpMap, fx.ParamTags(`group:"controllers"`)),
 		),

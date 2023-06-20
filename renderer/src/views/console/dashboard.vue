@@ -98,7 +98,13 @@
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
-                  <v-btn icon="mdi-login-variant" size="small" color="primary" variant="text" />
+                  <v-btn
+                    icon="mdi-login-variant"
+                    size="small"
+                    color="primary"
+                    variant="text"
+                    :to="{ name: 'console.apps', params: { app: item.slug } }"
+                  />
                 </div>
               </td>
             </tr>
@@ -155,26 +161,6 @@ async function refresh() {
   popups.create = false
   popups.update = popups.update.map(() => false)
   await fetch()
-}
-
-async function update() {
-  const data: any = payload.value
-  data.tags = data.tags.split(",")
-
-  try {
-    submitting.value = true
-
-    const res = await http.put(`/api/apps/${payload.value.slug}`, data)
-    await fetch()
-
-    popups.update = popups.update.map(() => false)
-    payload.value.details = ""
-    $snackbar.show({ text: `Successfully updated app ${res.data.name}.`, color: "success" })
-  } catch (e: any) {
-    $snackbar.show({ text: `Something wrong... ${e}`, color: "error" })
-  } finally {
-    submitting.value = false
-  }
 }
 
 async function dispose() {

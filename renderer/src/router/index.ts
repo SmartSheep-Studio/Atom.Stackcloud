@@ -19,6 +19,11 @@ const router = createRouter({
           name: "console.dashboard",
           component: () => import("@/views/console/dashboard.vue")
         },
+        {
+          path: "/console/:app",
+          name: "console.apps",
+          component: () => import("@/views/console/apps/details.vue")
+        },
       ]
     }
   ]

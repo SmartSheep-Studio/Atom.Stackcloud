@@ -75,12 +75,13 @@ const payload = ref<any>({
 })
 
 async function create() {
-  payload.value.tags = payload.value.tags.split(",")
+  const data: any = JSON.parse(JSON.stringify(payload.value))
+  data.tags = payload.value.tags.split(",")
 
   try {
     submitting.value = true
 
-    const res = await http.post("/api/apps", payload.value)
+    const res = await http.post("/api/apps", data)
     emits("done")
 
     $snackbar.show({ text: `Successfully created app ${res.data.name}.`, color: "success" })

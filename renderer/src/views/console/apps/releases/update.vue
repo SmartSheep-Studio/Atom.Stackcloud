@@ -20,6 +20,18 @@
         />
       </v-col>
       <v-col :md="8" :sm="12" :cols="12">
+        <v-select
+          variant="outlined"
+          density="comfortable"
+          label="Type"
+          item-title="name"
+          item-value="value"
+          v-model="payload.type"
+          :items="types"
+          :hide-details="true"
+        />
+      </v-col>
+      <v-col :md="8" :sm="12" :cols="12">
         <v-text-field
           variant="outlined"
           density="comfortable"
@@ -27,9 +39,6 @@
           v-model="payload.tags"
           :hide-details="true"
         />
-      </v-col>
-      <v-col :md="8" :sm="12" :cols="12">
-        <v-text-field variant="outlined" density="comfortable" label="URL" v-model="payload.url" :hide-details="true" />
       </v-col>
       <v-col :md="8" :sm="12" :cols="12">
         <v-textarea
@@ -58,6 +67,7 @@ import { ref } from "vue"
 import { http } from "@/utils/http"
 import { useSnackbar } from "@/stores/snackbar"
 import { onMounted } from "vue"
+import { useRoute } from "vue-router"
 
 const emits = defineEmits(["done"])
 const props = defineProps<{
@@ -65,15 +75,21 @@ const props = defineProps<{
     id: number
     slug: string
     name: string
-    description: string
     tags: string
-    url: string
+    description: string
     details: string
     is_published: boolean
   }
 }>()
 
+const $route = useRoute()
 const $snackbar = useSnackbar()
+
+const types = [
+  { name: "Minor Update", value: "minor-update" },
+  { name: "Major Update", value: "major-update" },
+  { name: "Hotfix Update", value: "hotfix-update" }
+]
 
 const submitting = ref(false)
 const payload = ref<any>({})
@@ -85,10 +101,10 @@ async function update() {
   try {
     submitting.value = true
 
-    const res = await http.put(`/api/apps/${payload.value.slug}`, data)
+    const res = await http.put(`/api/apps/${$route.params.app}/releases/${payload.value.id}`, data)
     emits("done")
 
-    $snackbar.show({ text: `Successfully updated app ${res.data.name}.`, color: "success" })
+    $snackbar.show({ text: `Successfully updated release ${res.data.name}.`, color: "success" })
   } catch (e: any) {
     $snackbar.show({ text: `Something wrong... ${e}`, color: "error" })
   } finally {
@@ -98,6 +114,8 @@ async function update() {
 
 onMounted(() => {
   payload.value = JSON.parse(JSON.stringify(props.data))
-  payload.value.tags = payload.value.tags.join(",")
+  payload.value.details = payload.value.post.content
+  payload.value.type = payload.value.post.type
+  payload.value.tags = payload.value.post.tags.join(",")
 })
 </script>

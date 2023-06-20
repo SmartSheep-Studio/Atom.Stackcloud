@@ -1,5 +1,5 @@
 <template>
-  <v-form class="py-4" @submit.prevent="update">
+  <v-form class="py-4" @submit.prevent="create">
     <v-row justify="center">
       <v-col :md="4" :sm="6" :cols="12">
         <v-text-field
@@ -20,6 +20,18 @@
         />
       </v-col>
       <v-col :md="8" :sm="12" :cols="12">
+        <v-select
+          variant="outlined"
+          density="comfortable"
+          label="Type"
+          item-title="name"
+          item-value="value"
+          v-model="payload.type"
+          :items="types"
+          :hide-details="true"
+        />
+      </v-col>
+      <v-col :md="8" :sm="12" :cols="12">
         <v-text-field
           variant="outlined"
           density="comfortable"
@@ -27,9 +39,6 @@
           v-model="payload.tags"
           :hide-details="true"
         />
-      </v-col>
-      <v-col :md="8" :sm="12" :cols="12">
-        <v-text-field variant="outlined" density="comfortable" label="URL" v-model="payload.url" :hide-details="true" />
       </v-col>
       <v-col :md="8" :sm="12" :cols="12">
         <v-textarea
@@ -57,38 +66,43 @@
 import { ref } from "vue"
 import { http } from "@/utils/http"
 import { useSnackbar } from "@/stores/snackbar"
-import { onMounted } from "vue"
+import { useRoute } from "vue-router"
 
 const emits = defineEmits(["done"])
-const props = defineProps<{
-  data: {
-    id: number
-    slug: string
-    name: string
-    description: string
-    tags: string
-    url: string
-    details: string
-    is_published: boolean
-  }
-}>()
 
+const $route = useRoute()
 const $snackbar = useSnackbar()
 
-const submitting = ref(false)
-const payload = ref<any>({})
+const types = [
+  { name: "Minor Update", value: "minor-update" },
+  { name: "Major Update", value: "major-update" },
+  { name: "Hotfix Update", value: "hotfix-update" }
+]
 
-async function update() {
+const submitting = ref(false)
+const payload = ref<any>({
+  id: 0,
+  slug: "",
+  name: "",
+  tags: "",
+  type: "minor-update",
+  description: "",
+  details: "",
+  is_published: false
+})
+
+async function create() {
   const data: any = JSON.parse(JSON.stringify(payload.value))
   data.tags = payload.value.tags.split(",")
 
   try {
     submitting.value = true
 
-    const res = await http.put(`/api/apps/${payload.value.slug}`, data)
+    const res = await http.post(`/api/apps/${$route.params.app}/releases`, data)
     emits("done")
 
-    $snackbar.show({ text: `Successfully updated app ${res.data.name}.`, color: "success" })
+    $snackbar.show({ text: `Successfully created release ${res.data.name}.`, color: "success" })
+    reset()
   } catch (e: any) {
     $snackbar.show({ text: `Something wrong... ${e}`, color: "error" })
   } finally {
@@ -96,8 +110,16 @@ async function update() {
   }
 }
 
-onMounted(() => {
-  payload.value = JSON.parse(JSON.stringify(props.data))
-  payload.value.tags = payload.value.tags.join(",")
-})
+function reset() {
+  payload.value = {
+    id: 0,
+    slug: "",
+    name: "",
+    description: "",
+    tags: "",
+    url: "",
+    details: "",
+    is_published: false
+  }
+}
 </script>
