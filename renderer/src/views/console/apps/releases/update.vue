@@ -53,6 +53,105 @@
         <v-md-editor v-model="payload.details" height="400px" />
       </v-col>
       <v-col :md="8" :sm="12" :cols="12">
+        <v-card prepend-icon="mdi-play" title="Run & Play Options">
+          <v-card-item class="pt-0 px-6">
+            <div class="mt-2">
+              <v-card v-for="(item, i) in payload.options.assets" :key="i" variant="outlined" class="mb-2">
+                <v-card-item>
+                  <div class="text-subtitle-2 px-2 pb-3">Assets #{{ i + 1 }}</div>
+                  <v-text-field density="compact" label="URL" variant="outlined" v-model="item.url" />
+                  <v-text-field density="compact" label="Decompressor" variant="outlined" v-model="item.decompressor" />
+                  <v-select
+                    density="compact"
+                    label="Platform"
+                    variant="outlined"
+                    :items="platforms"
+                    v-model="item.platform"
+                  />
+                  <v-btn
+                    variant="text"
+                    prepend-icon="mdi-close"
+                    color="error"
+                    @click="payload.options.assets.splice(i, 1)"
+                  >
+                    Remove
+                  </v-btn>
+                </v-card-item>
+              </v-card>
+              <v-card v-for="(item, i) in payload.options.preprocessing" :key="i" variant="outlined" class="mb-2">
+                <v-card-item>
+                  <div class="text-subtitle-2 px-2 pb-3">Preprocessing #{{ i + 1 }}</div>
+                  <v-text-field density="compact" label="Script" variant="outlined" v-model="item.script" />
+                  <v-select
+                    density="compact"
+                    label="Platform"
+                    variant="outlined"
+                    :items="platforms"
+                    v-model="item.platform"
+                  />
+                  <v-btn
+                    variant="text"
+                    prepend-icon="mdi-close"
+                    color="error"
+                    @click="payload.options.preprocessing.splice(i, 1)"
+                  >
+                    Remove
+                  </v-btn>
+                </v-card-item>
+              </v-card>
+              <v-card v-for="(item, i) in payload.options.run_options" :key="i" variant="outlined" class="mb-2">
+                <v-card-item>
+                  <div class="text-subtitle-2 px-2 pb-3">Run Options #{{ i + 1 }}</div>
+                  <v-text-field density="compact" label="Name" variant="outlined" v-model="item.name" />
+                  <v-text-field density="compact" label="Script" variant="outlined" v-model="item.script" />
+                  <v-select
+                    density="compact"
+                    label="Platform"
+                    variant="outlined"
+                    :items="platforms"
+                    v-model="item.platform"
+                  />
+                  <v-btn
+                    variant="text"
+                    prepend-icon="mdi-close"
+                    color="error"
+                    @click="payload.options.run_options.splice(i, 1)"
+                  >
+                    Remove
+                  </v-btn>
+                </v-card-item>
+              </v-card>
+            </div>
+          </v-card-item>
+          <v-card-item class="px-6 pt-0">
+            <v-btn
+              variant="text"
+              prepend-icon="mdi-script-text"
+              color="primary"
+              @click="payload.options.assets.push({ url: '', decompressor: '', platform: 'win32' })"
+            >
+              Add Assets
+            </v-btn>
+            <v-btn
+              variant="text"
+              prepend-icon="mdi-download-box"
+              color="teal"
+              @click="payload.options.preprocessing.push({ script: '', platform: 'win32' })"
+            >
+              Add Preprocessing
+            </v-btn>
+            <v-btn
+              variant="text"
+              prepend-icon="mdi-play"
+              color="green"
+              @click="payload.options.run_options.push({ name: '', script: '', platform: 'win32' })"
+            >
+              Add Run Option
+            </v-btn>
+          </v-card-item>
+        </v-card>
+      </v-col>
+      <v-col :md="8" :sm="12" :cols="12">
         <v-checkbox-btn label="Published" v-model="payload.is_published" color="primary" />
       </v-col>
       <v-col :md="8" :sm="12" :cols="12">
@@ -78,6 +177,11 @@ const props = defineProps<{
     tags: string
     description: string
     details: string
+    options: {
+      assets: any[]
+      preprocessing: any[]
+      run_options: any[]
+    }
     is_published: boolean
   }
 }>()
@@ -85,6 +189,7 @@ const props = defineProps<{
 const $route = useRoute()
 const $snackbar = useSnackbar()
 
+const platforms = ["win64", "win32", "drawin", "linux", "freebsd"]
 const types = [
   { name: "Minor Update", value: "minor-update" },
   { name: "Major Update", value: "major-update" },
@@ -92,7 +197,7 @@ const types = [
 ]
 
 const submitting = ref(false)
-const payload = ref<any>({})
+const payload = ref<any>({ options: { assets: [], preprocessing: [], run_options: [] } })
 
 async function update() {
   const data: any = JSON.parse(JSON.stringify(payload.value))

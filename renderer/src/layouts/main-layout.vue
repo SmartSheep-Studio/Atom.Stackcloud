@@ -47,6 +47,8 @@
     <v-divider></v-divider>
 
     <v-list density="compact" color="primary" nav>
+      <v-list-item prepend-icon="mdi-compass" title="Explore" value="explore" exact :to="{ name: 'explore' }" />
+
       <v-list-group
         prepend-icon="mdi-console"
         title="Console"

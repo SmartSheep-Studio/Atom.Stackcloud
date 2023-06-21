@@ -67,13 +67,14 @@ func (ctrl *ReleaseController) create(c *fiber.Ctx) error {
 	}
 
 	var req struct {
-		Slug        string   `json:"slug" validate:"required"`
-		Name        string   `json:"name" validate:"required"`
-		Type        string   `json:"type" validate:"required"`
-		Description string   `json:"description"`
-		Details     string   `json:"details"`
-		Tags        []string `json:"tags"`
-		IsPublished bool     `json:"is_published"`
+		Slug        string                      `json:"slug" validate:"required"`
+		Name        string                      `json:"name" validate:"required"`
+		Type        string                      `json:"type" validate:"required"`
+		Description string                      `json:"description"`
+		Details     string                      `json:"details"`
+		Tags        []string                    `json:"tags"`
+		Options     models.MatrixReleaseOptions `json:"options" validate:"required"`
+		IsPublished bool                        `json:"is_published"`
 	}
 
 	if err := utils.ParseRequestBody(c, &req); err != nil {
@@ -92,6 +93,7 @@ func (ctrl *ReleaseController) create(c *fiber.Ctx) error {
 			IsPublished: req.IsPublished,
 			AppID:       app.ID,
 		},
+		Options:     datatypes.NewJSONType(req.Options),
 		IsPublished: req.IsPublished,
 		AppID:       app.ID,
 	}
@@ -112,13 +114,14 @@ func (ctrl *ReleaseController) update(c *fiber.Ctx) error {
 	}
 
 	var req struct {
-		Slug        string   `json:"slug" validate:"required"`
-		Name        string   `json:"name" validate:"required"`
-		Type        string   `json:"type" validate:"required"`
-		Description string   `json:"description"`
-		Details     string   `json:"details"`
-		Tags        []string `json:"tags"`
-		IsPublished bool     `json:"is_published"`
+		Slug        string                      `json:"slug" validate:"required"`
+		Name        string                      `json:"name" validate:"required"`
+		Type        string                      `json:"type" validate:"required"`
+		Description string                      `json:"description"`
+		Details     string                      `json:"details"`
+		Tags        []string                    `json:"tags"`
+		Options     models.MatrixReleaseOptions `json:"options" validate:"required"`
+		IsPublished bool                        `json:"is_published"`
 	}
 
 	if err := utils.ParseRequestBody(c, &req); err != nil {
@@ -136,6 +139,7 @@ func (ctrl *ReleaseController) update(c *fiber.Ctx) error {
 	release.Name = req.Name
 	release.Description = req.Description
 	release.IsPublished = req.IsPublished
+	release.Options = datatypes.NewJSONType(req.Options)
 	release.Post = models.MatrixPost{
 		Type:        req.Type,
 		Title:       req.Name,

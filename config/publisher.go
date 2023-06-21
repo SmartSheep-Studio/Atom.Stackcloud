@@ -24,7 +24,21 @@ func NewEndpointConnection(cycle fx.Lifecycle) *toolbox.ExternalServiceConnectio
 				Description: "A developer-friendly, geek-friendly store for apps and games.",
 				Address:     viper.GetString("general.base_url"),
 				Options: tmodels.ExternalServiceOptions{
-					Pages:        []tmodels.ExternalPage{},
+					Pages: []tmodels.ExternalPage{
+						{
+							To:      viper.GetString("general.base_url"),
+							Title:   "Matrix",
+							Name:    "matrix",
+							Icon:    "mdi-store",
+							Builtin: false,
+							Visible: true,
+							Meta: map[string]any{
+								"gatekeeper": map[string]any{
+									"must": true,
+								},
+							},
+						},
+					},
 					Requirements: []string{"oauth"},
 					Properties: fiber.Map{
 						"oauth.urls":      []string{viper.GetString("general.base_url")},

@@ -15,7 +15,7 @@
                     <v-icon>mdi-close</v-icon>
                   </v-btn>
                   <v-toolbar-title style="text-align: center; flex-grow: 1; padding-right: 74px">
-                    Create Release
+                    Create Post
                   </v-toolbar-title>
                 </v-toolbar>
 
@@ -61,7 +61,7 @@
                         <v-icon>mdi-close</v-icon>
                       </v-btn>
                       <v-toolbar-title style="text-align: center; flex-grow: 1; padding-right: 74px">
-                        Edit Release
+                        Edit Post
                       </v-toolbar-title>
                     </v-toolbar>
 

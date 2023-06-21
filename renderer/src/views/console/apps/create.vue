@@ -44,6 +44,30 @@
         <v-md-editor v-model="payload.details" height="400px" />
       </v-col>
       <v-col :md="8" :sm="12" :cols="12">
+        <v-card prepend-icon="mdi-store" title="Price Options">
+          <v-card-item class="pt-0 px-6 pb-6">
+            <v-text-field
+              class="mt-2"
+              type="password"
+              density="comfortable"
+              variant="outlined"
+              label="API Token"
+              hint="You can create a api token at user profile center."
+              v-model="payload.price_options.api_token"
+            />
+            <v-text-field
+              class="mt-2"
+              density="comfortable"
+              variant="outlined"
+              label="Product ID"
+              hint="You can create a shop & product on Quarkpay Console."
+              v-model.number="payload.price_options.product_id"
+              type="number"
+            />
+          </v-card-item>
+        </v-card>
+      </v-col>
+      <v-col :md="8" :sm="12" :cols="12">
         <v-checkbox-btn label="Published" v-model="payload.is_published" color="primary" />
       </v-col>
       <v-col :md="8" :sm="12" :cols="12">
@@ -71,6 +95,10 @@ const payload = ref<any>({
   tags: "",
   url: "",
   details: "",
+  price_options: {
+    product_id: 0,
+    api_token: ""
+  },
   is_published: false
 })
 
