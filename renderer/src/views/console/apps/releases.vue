@@ -10,7 +10,7 @@
             </template>
 
             <v-card>
-                <v-toolbar dark color="primary" absolute>
+                <v-toolbar dark color="primary">
                   <v-btn icon dark @click="popups.create = false">
                     <v-icon>mdi-close</v-icon>
                   </v-btn>
@@ -19,7 +19,7 @@
                   </v-toolbar-title>
                 </v-toolbar>
 
-                <v-card-item style="padding-top: 64px; max-height: 100vh; overflow: auto">
+                <v-card-item style="max-height: calc(100vh - 64px); overflow: auto">
                   <create-release @done="refresh" />
                 </v-card-item>
               </v-card>
@@ -56,7 +56,7 @@
                   </template>
 
                   <v-card>
-                    <v-toolbar dark color="primary" absolute>
+                    <v-toolbar dark color="primary">
                       <v-btn icon dark @click="popups.update[i] = false">
                         <v-icon>mdi-close</v-icon>
                       </v-btn>
@@ -65,7 +65,7 @@
                       </v-toolbar-title>
                     </v-toolbar>
 
-                    <v-card-item style="padding-top: 64px; max-height: 100vh; overflow: auto">
+                    <v-card-item style="max-height: calc(100vh - 64px); overflow: auto">
                       <update-release @done="refresh" :data="item" />
                     </v-card-item>
                   </v-card>
