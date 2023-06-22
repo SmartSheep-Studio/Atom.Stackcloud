@@ -15,11 +15,13 @@ type MatrixApp struct {
 	Posts        []MatrixPost                              `json:"posts" gorm:"foreignKey:AppID"`
 	Releases     []MatrixRelease                           `json:"releases" gorm:"foreignKey:AppID"`
 	Duplicates   []MatrixLibraryItem                       `json:"duplicates" gorm:"foreignKey:AppID"`
+	Transactions []MatrixTransaction                       `json:"transactions" gorm:"foreignKey:AppID"`
 	PriceOptions datatypes.JSONType[MatrixAppPriceOptions] `json:"price_options"`
 	ProfileID    uint                                      `json:"profile_id"`
 }
 
 type MatrixAppPriceOptions struct {
+	Shop      string `json:"shop" validate:"required"`
 	ProductID uint   `json:"product_id" validate:"required"`
 	ApiToken  string `json:"api_token" validate:"required"`
 }

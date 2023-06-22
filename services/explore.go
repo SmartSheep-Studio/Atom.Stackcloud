@@ -1,6 +1,7 @@
 package services
 
 import (
+	"gorm.io/datatypes"
 	"gorm.io/gorm"
 	"repo.smartsheep.studio/atom/matrix/datasource/models"
 )
@@ -20,7 +21,30 @@ func (v *ExploreService) ExploreApps() ([]models.MatrixApp, error) {
 	if err := tx.Limit(100).Order("created_at desc").Find(&apps).Error; err != nil {
 		return nil, err
 	} else {
-		return apps, nil
+		result := []models.MatrixApp{}
+		for _, item := range apps {
+			options := item.PriceOptions.Data()
+			options.ApiToken = ""
+			item.PriceOptions = datatypes.NewJSONType(options)
+			result = append(result, item)
+		}
+
+		return result, nil
+	}
+}
+
+func (v *ExploreService) ExploreApp(app uint) (models.MatrixApp, error) {
+	tx := v.db.Where("is_published = true AND id = ?", app)
+
+	var details models.MatrixApp
+	if err := tx.Preload("Posts").Preload("Releases").First(&details).Error; err != nil {
+		return details, err
+	} else {
+		options := details.PriceOptions.Data()
+		options.ApiToken = ""
+		details.PriceOptions = datatypes.NewJSONType(options)
+
+		return details, nil
 	}
 }
 

@@ -59,6 +59,14 @@
               class="mt-2"
               density="comfortable"
               variant="outlined"
+              label="Shop"
+              hint="You can create a shop & product on Quarkpay Console."
+              v-model="payload.price_options.shop"
+            />
+            <v-text-field
+              class="mt-2"
+              density="comfortable"
+              variant="outlined"
               label="Product ID"
               hint="You can create a shop & product on Quarkpay Console."
               v-model.number="payload.price_options.product_id"
@@ -96,6 +104,7 @@ const payload = ref<any>({
   url: "",
   details: "",
   price_options: {
+    shop: "",
     product_id: 0,
     api_token: ""
   },

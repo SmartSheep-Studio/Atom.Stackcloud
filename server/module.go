@@ -23,6 +23,7 @@ func Module() fx.Option {
 			AsController(NewStatusController),
 			AsController(NewAuthController),
 			AsController(NewExploreController),
+			AsController(NewLibraryController),
 			AsController(NewAppController),
 			AsController(NewReleaseController),
 			AsController(NewPostController),

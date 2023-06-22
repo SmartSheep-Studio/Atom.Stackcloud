@@ -3,10 +3,11 @@ package models
 type MatrixProfile struct {
 	Model
 
-	Nickname   string              `json:"nickname"`
-	Experience int64               `json:"experience"`
-	Library    []MatrixLibraryItem `json:"library" gorm:"foreignKey:ProfileID"`
-	UserID     uint                `json:"user_id"`
+	Nickname     string              `json:"nickname"`
+	Experience   int64               `json:"experience"`
+	Library      []MatrixLibraryItem `json:"library" gorm:"foreignKey:ProfileID"`
+	Transactions []MatrixTransaction `json:"transactions" gorm:"foreignKey:ProfileID"`
+	UserID       uint                `json:"user_id"`
 }
 
 type MatrixLibraryItem struct {

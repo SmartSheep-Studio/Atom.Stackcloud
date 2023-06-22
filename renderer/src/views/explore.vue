@@ -13,7 +13,7 @@
             <v-row class="explore-queue">
               <template v-for="(item, i) in items" :key="i">
                 <v-col :cols="12" :sm="6" :md="4">
-                  <v-card class="explore-item pa-4">
+                  <v-card class="explore-item pa-4" :to="{ name: 'store.details', params: { app: item.raw.slug } }">
                     <v-card-item>
                       <div class="text-h6">{{ item.raw.name }}</div>
                       <div class="explore-tags" style="margin-left: -4px">
