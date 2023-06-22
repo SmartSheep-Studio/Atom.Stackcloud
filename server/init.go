@@ -6,6 +6,7 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"repo.smartsheep.studio/atom/matrix/renderer"
+	"repo.smartsheep.studio/atom/matrix/server/middleware"
 	"repo.smartsheep.studio/atom/nucleus/toolbox"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,7 +19,7 @@ import (
 var conn *toolbox.ExternalServiceConnection
 var server *fiber.App
 
-func NewHttpServer(cycle fx.Lifecycle, c *toolbox.ExternalServiceConnection) *fiber.App {
+func NewHttpServer(cycle fx.Lifecycle, cors middleware.CorsHandler, c *toolbox.ExternalServiceConnection) *fiber.App {
 	conn = c
 
 	// Create app
@@ -37,6 +38,7 @@ func NewHttpServer(cycle fx.Lifecycle, c *toolbox.ExternalServiceConnection) *fi
 		Format: "${status} - ${latency} ${method} ${path}\n",
 		Output: log.Logger,
 	}))
+	server.Use(cors())
 
 	cycle.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
