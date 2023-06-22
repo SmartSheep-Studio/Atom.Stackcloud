@@ -41,7 +41,8 @@ func (ctrl *ExploreController) apps(c *fiber.Ctx) error {
 
 func (ctrl *ExploreController) app(c *fiber.Ctx) error {
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ?", c.Params("app")).First(&app).Error; err != nil {
+	id, _ := c.ParamsInt("app", 0)
+	if err := ctrl.db.Where("slug = ? OR id = ?", c.Params("app"), id).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 
@@ -55,7 +56,8 @@ func (ctrl *ExploreController) app(c *fiber.Ctx) error {
 
 func (ctrl *ExploreController) product(c *fiber.Ctx) error {
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ?", c.Params("app")).First(&app).Error; err != nil {
+	id, _ := c.ParamsInt("app", 0)
+	if err := ctrl.db.Where("slug = ? OR id = ?", c.Params("app"), id).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 
@@ -80,7 +82,8 @@ func (ctrl *ExploreController) product(c *fiber.Ctx) error {
 
 func (ctrl *ExploreController) posts(c *fiber.Ctx) error {
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ?", c.Params("app")).First(&app).Error; err != nil {
+	id, _ := c.ParamsInt("app", 0)
+	if err := ctrl.db.Where("slug = ? OR id = ?", c.Params("app"), id).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 
@@ -94,7 +97,8 @@ func (ctrl *ExploreController) posts(c *fiber.Ctx) error {
 
 func (ctrl *ExploreController) releases(c *fiber.Ctx) error {
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ?", c.Params("app")).First(&app).Error; err != nil {
+	id, _ := c.ParamsInt("app", 0)
+	if err := ctrl.db.Where("slug = ? OR id = ?", c.Params("app"), id).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 

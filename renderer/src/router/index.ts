@@ -14,6 +14,11 @@ const router = createRouter({
           component: () => import("@/views/explore.vue")
         },
         {
+          path: "/library",
+          name: "store.library",
+          component: () => import("@/views/store/library.vue")
+        },
+        {
           path: "/store/:app",
           name: "store.details",
           component: () => import("@/views/store/details.vue")

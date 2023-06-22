@@ -48,6 +48,7 @@
 
     <v-list density="compact" color="primary" nav>
       <v-list-item prepend-icon="mdi-compass" title="Explore" value="explore" exact :to="{ name: 'explore' }" />
+      <v-list-item prepend-icon="mdi-apps" title="Library" value="library" exact :to="{ name: 'store.library' }" />
 
       <v-list-group
         prepend-icon="mdi-console"
