@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar v-if="isBuiltin">
+  <v-app-bar :density="isBuiltin ? 'default' : 'comfortable'">
     <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
     <v-toolbar-title>
@@ -9,7 +9,7 @@
     <v-spacer></v-spacer>
   </v-app-bar>
 
-  <v-navigation-drawer v-if="isBuiltin" v-model="drawer" width="300">
+  <v-navigation-drawer v-model="drawer" width="300">
     <template #prepend>
       <v-list-item
         exact
@@ -75,8 +75,7 @@ import { useAccount } from "@/stores/account"
 import { usePlaceholder } from "@/utils/placeholders"
 import { getEndpointPath } from "@/utils/endpoint"
 import { hasUserPermissions } from "@/utils/gatekeeper"
-import { computed } from "vue"
-import { ref } from "vue"
+import { computed, ref } from "vue"
 
 const drawer = ref(true)
 const fallback = `${window.location.origin}/api/auth/request`
