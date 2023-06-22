@@ -189,7 +189,7 @@ const props = defineProps<{
 const $route = useRoute()
 const $snackbar = useSnackbar()
 
-const platforms = ["win64", "win32", "drawin", "linux", "freebsd"]
+const platforms = ["win32", "drawin", "linux", "freebsd"]
 const types = [
   { name: "Minor Update", value: "minor-update" },
   { name: "Major Update", value: "major-update" },
