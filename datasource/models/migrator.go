@@ -8,8 +8,8 @@ import (
 func Migrate(db *gorm.DB) {
 	if err := db.AutoMigrate(
 		&MatrixProfile{},
-		&MatrixTransaction{},
 		&MatrixApp{},
+		&MatrixTransaction{},
 		&MatrixLibraryItem{},
 		&MatrixPost{},
 		&MatrixRelease{},
