@@ -58,10 +58,12 @@ func (ctrl *AuthController) callback(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
 		c.Cookie(&fiber.Cookie{
-			Path:   "/",
-			Name:   "matrix_authorization",
-			Value:  token,
-			MaxAge: int(viper.GetDuration("security.sessions_alive_duration").Seconds()),
+			Path:     "/",
+			Name:     "matrix_authorization",
+			Value:    token,
+			MaxAge:   int(viper.GetDuration("security.sessions_alive_duration").Seconds()),
+			SameSite: "None",
+			Secure:   true,
 		})
 
 		return c.Redirect(viper.GetString("general.base_url"), fiber.StatusFound)
