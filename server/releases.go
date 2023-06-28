@@ -128,8 +128,11 @@ func (ctrl *ReleaseController) update(c *fiber.Ctx) error {
 		return err
 	}
 
+	tx := ctrl.db.Begin()
+
 	var release models.MatrixRelease
-	if err := ctrl.db.Where("id = ? AND app_id = ?", c.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
+	if err := tx.Where("id = ? AND app_id = ?", c.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
+		tx.Rollback()
 		return utils.ParseDataSourceError(err)
 	} else {
 		ctrl.db.Unscoped().Delete(&release.Post)
@@ -149,7 +152,12 @@ func (ctrl *ReleaseController) update(c *fiber.Ctx) error {
 		AppID:       app.ID,
 	}
 
-	if err := ctrl.db.Save(&release).Error; err != nil {
+	if err := tx.Save(&release).Error; err != nil {
+		tx.Rollback()
+		return utils.ParseDataSourceError(err)
+	}
+
+	if err := tx.Commit().Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	} else {
 		return c.JSON(release)
