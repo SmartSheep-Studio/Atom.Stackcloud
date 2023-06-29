@@ -59,7 +59,7 @@ func (ctrl *AuthController) callback(c *fiber.Ctx) error {
 	} else {
 		c.Cookie(&fiber.Cookie{
 			Path:     "/",
-			Name:     "matrix_authorization",
+			Name:     "authorization",
 			Value:    token,
 			MaxAge:   int(viper.GetDuration("security.sessions_alive_duration").Seconds()),
 			SameSite: "None",

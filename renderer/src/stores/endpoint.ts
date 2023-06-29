@@ -1,19 +1,19 @@
 import { defineStore } from "pinia"
 import { http } from "@/utils/http"
-import { ref } from "vue"
+import { reactive, ref } from "vue"
 
 export const useEndpoint = defineStore("endpoint", () => {
   const isPrepared = ref(true)
-  const configuration = ref<any>({})
-  const additional = ref<any>({})
   const service = ref<any>({})
+  const additional = ref<any>({})
+  const configuration = ref<any>({})
 
   async function fetch() {
     try {
       const res = await http.get("/api/info")
-      configuration.value = res.data.configuration
-      additional.value = res.data.additional
       service.value = res.data.service
+      additional.value = res.data.additional
+      configuration.value = res.data.configuration
     } catch (e: any) {
       if (e.response.status === 503) {
         isPrepared.value = false
@@ -23,8 +23,8 @@ export const useEndpoint = defineStore("endpoint", () => {
       throw e
     }
 
-    document.title = `${configuration.value.general.name ?? "Project Atom"} Matrix`
+    document.title = configuration.value.general.name ?? "Project Atom"
   }
 
-  return { isPrepared, configuration, additional, service, fetch }
+  return { isPrepared, fetch }
 })

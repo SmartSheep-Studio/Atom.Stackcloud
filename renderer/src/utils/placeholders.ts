@@ -1,8 +1,8 @@
 export const placeholders: { [id: string]: string } = {
   description: "No description yet",
   banner: "https://static.smartsheep.studio/d/Atom/Placeholders/default-banner.jpg",
-  avatar: "mdi-account",
-  project: "mdi-sitemap"
+  avatar: "https://static.smartsheep.studio/d/Atom/Icon.png",
+  project: "mdi-sitemap",
 }
 
 export function usePlaceholder(id: string, val?: string): string {

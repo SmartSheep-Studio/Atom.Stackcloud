@@ -68,49 +68,53 @@ export interface UserAsset {
   user_id: number
 }
 
-export const useAccount = defineStore("account", () => {
+export const usePrincipal = defineStore("principal", () => {
   const isLoggedIn = ref(false)
-  const cookies = useCookies(["matrix_authorization"])
-  const token = computed(() => cookies.get("matrix_authorization"))
+  const cookies = useCookies(["authorization"])
+  const token = computed(() => cookies.get("authorization"))
 
-  const profile = useLocalStorage<User | null>("atom-profile", null, {
+  const session = ref<any>({})
+  const account = useLocalStorage<User | null>("atom-profile", null, {
     deep: true,
     listenToStorageChanges: true,
     serializer: {
-      read(v) {
+      read(v: any) {
         try {
           return JSON.parse(v)
         } catch {
           return null
         }
       },
-      write(v) {
+      write(v: any) {
         if (v != null) {
           return JSON.stringify(v)
         } else {
           return "null"
         }
-      }
-    }
+      },
+    },
   })
 
   async function fetch() {
-    if (cookies.get("matrix_authorization") != null) {
+    if (cookies.get("authorization") != null) {
       try {
-        profile.value = (await http.get("/api/auth")).data
+        const res = await http.get("/api/auth")
+        account.value = res.data.user
+        session.value = res.data.session
+
         isLoggedIn.value = true
       } catch {
-        profile.value = null
+        account.value = null
         isLoggedIn.value = false
       }
     }
   }
 
   function logout() {
-    cookies.remove("matrix_authorization")
-    profile.value = null
+    cookies.remove("authorization")
+    account.value = null
     window.location.reload()
   }
 
-  return { profile, isLoggedIn, token, fetch, logout }
+  return { account, session, isLoggedIn, token, fetch, logout }
 })

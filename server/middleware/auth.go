@@ -27,7 +27,7 @@ func NewAuth(cycle fx.Lifecycle, db *gorm.DB, c *toolbox.ExternalServiceConnecti
 
 	cfg := AuthConfig{
 		Next:        nil,
-		LookupToken: "header: Authorization, query: token, cookie: matrix_authorization",
+		LookupToken: "header: Authorization, query: token, cookie: authorization",
 	}
 
 	return func(force bool, perms ...string) fiber.Handler {
