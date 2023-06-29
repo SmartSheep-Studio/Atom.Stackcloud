@@ -1,7 +1,7 @@
 <template>
   <n-dialog-provider>
     <n-message-provider>
-      <div class="w-full h-screen relative">
+      <div class="w-full relative" :class="isUnderShadow ? 'h-max' : 'h-screen'">
         <n-layout has-sider position="absolute">
           <n-layout-sider bordered collapse-mode="width" collapsed :collapsed-width="64" class="pt-2">
             <n-menu
@@ -62,6 +62,11 @@ const menuOptions: Ref<MenuOption[]> = computed(() =>
       ]
     : []
 )
+
+// Use for dynamic calculate height
+const isUnderShadow = computed(() => {
+  return (window as any).__POWERED_BY_WUJIE__ != null
+})
 </script>
 
 <style>
@@ -74,7 +79,7 @@ const menuOptions: Ref<MenuOption[]> = computed(() =>
 }
 
 .h-max {
-  height: 100vh;
+  height: calc(100vh - 72px);
 }
 
 .w-dialog {
