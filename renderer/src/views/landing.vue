@@ -1,15 +1,61 @@
 <template>
   <div class="container">
-    <div class="text-center pt-36">
-      <img :src="Logo" width="128" height="128" />
-      <div class="mt-4">
+    <div class="pt-12 px-10 flex items-center">
+      <div>
+        <img :src="Logo" width="80" height="80" />
+      </div>
+      <div class="mt-1 pl-4">
         <div class="text-4xl font-bold">Matrix</div>
         <div class="text-lg">Committed to improving the application download and run experience.</div>
       </div>
+    </div>
+
+    <div class="pt-10 px-8">
+      <div class="text-lg">Explore Queue</div>
+      <n-grid
+        :cols="4"
+        x-gap="8"
+        y-gap="8"
+        item-responsive
+        responsive="screen"
+        class="py-3 cursor-pointer"
+        style="margin: 0 -8px"
+      >
+        <n-gi span="4 m:2 l:1" v-for="item in exploreQueue">
+          <n-card hoverable>
+            <div class="text-lg">{{ item.name }}</div>
+            <div>{{ item.description }}</div>
+          </n-card>
+        </n-gi>
+      </n-grid>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import Logo from "@/assets/icon.png";
+import Logo from "@/assets/icon.png"
+import { http } from "@/utils/http"
+import { useMessage } from "naive-ui"
+import { onMounted, ref } from "vue"
+
+const $message = useMessage()
+
+const reverting = ref(true)
+
+const exploreQueue = ref<any[]>([])
+
+async function fetch() {
+  try {
+    reverting.value = true
+    exploreQueue.value = (await http.get("/api/explore/apps")).data
+  } catch (e: any) {
+    $message.error(`Something went wrong... ${e}`)
+  } finally {
+    reverting.value = false
+  }
+}
+
+onMounted(() => {
+  fetch()
+})
 </script>

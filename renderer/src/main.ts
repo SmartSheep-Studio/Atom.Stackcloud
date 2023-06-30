@@ -9,8 +9,20 @@ import router from "./router"
 import "vfonts/Lato.css"
 import "vfonts/FiraCode.css"
 
+import VueMarkdownEditor from "@kangc/v-md-editor"
+import "@kangc/v-md-editor/lib/style/base-editor.css"
+import githubTheme from "@kangc/v-md-editor/lib/theme/github.js"
+import "@kangc/v-md-editor/lib/theme/style/github.css"
+
+import Prism from "prismjs"
+
+VueMarkdownEditor.use(githubTheme, {
+  Prism,
+})
+
 const app = createApp(wrapper)
 
+app.use(VueMarkdownEditor)
 app.use(createPinia())
 app.use(router)
 

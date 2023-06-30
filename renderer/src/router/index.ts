@@ -13,7 +13,17 @@ const router = createRouter({
       path: "/console",
       name: "console",
       component: () => import("@/views/console/landing.vue"),
-    }
+    },
+    {
+      path: "/console/:app",
+      name: "console.app",
+      component: () => import("@/views/console/app-details.vue"),
+    },
+    {
+      path: "/console/app/create",
+      name: "console.app.create",
+      component: () => import("@/views/console/actions/create-app.vue"),
+    },
   ],
 })
 
