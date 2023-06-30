@@ -1,7 +1,7 @@
 <template>
   <n-spin :show="reverting">
     <div class="container h-full">
-      <div class="pt-12 pb-4 px-10">
+      <div class="pt-8 pb-4 px-10">
         <n-page-header :title="app.name" :subtitle="app.description" @back="$router.push({ name: 'console' })">
           <template #header>
             <n-breadcrumb>
@@ -20,7 +20,8 @@
         </n-gi>
         <n-gi span="24 m:6 l:8">
           <n-card title="Dangerous Zone">
-            <destroy-app :data="app" @done="$router.push({ name: 'console' })" />
+            <publish-app :data="app" @refresh="fetch()" />
+            <destroy-app class="mt-2" :data="app" @done="$router.push({ name: 'console' })" />
           </n-card>
         </n-gi>
       </n-grid>
@@ -31,6 +32,7 @@
 <script lang="ts" setup>
 import UpdateApp from "@/views/console/actions/update-app.vue"
 import DestroyApp from "@/views/console/actions/destroy-app.vue"
+import PublishApp from "@/views/console/actions/publish-app.vue"
 import { useMessage } from "naive-ui"
 import { useRoute } from "vue-router"
 import { onMounted, ref } from "vue"
