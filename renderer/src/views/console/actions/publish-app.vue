@@ -35,7 +35,7 @@ const emits = defineEmits(["refresh"])
 
 const submitting = ref(false)
 
-const keyword = computed(() => (props.data.is_published ? "Depublish" : "Publish"))
+const keyword = computed(() => (props.data.is_published ? "Unpublish" : "Publish"))
 const keyicon = computed(() => (props.data.is_published ? CloudDownloadRound : CloudUploadRound))
 
 function publish() {

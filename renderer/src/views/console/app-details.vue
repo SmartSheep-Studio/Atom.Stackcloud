@@ -1,7 +1,7 @@
 <template>
   <n-spin :show="reverting">
     <div class="container h-full">
-      <div class="pt-8 pb-4 px-10">
+      <div class="pt-8 pb-4 lg:px-10">
         <n-page-header :title="app.name" :subtitle="app.description" @back="$router.push({ name: 'console' })">
           <template #header>
             <n-breadcrumb>
@@ -12,7 +12,7 @@
         </n-page-header>
       </div>
 
-      <n-grid v-if="!reverting" item-responsive responsive="screen" x-gap="8" y-gap="8" class="px-10 pt-4">
+      <n-grid v-if="!reverting" item-responsive responsive="screen" x-gap="8" y-gap="8" class="lg:px-10 pt-4">
         <n-gi span="24 m:14">
           <n-card title="Update App">
             <update-app :data="app" @refresh="fetch()" />
