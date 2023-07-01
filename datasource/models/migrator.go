@@ -9,7 +9,6 @@ func Migrate(db *gorm.DB) {
 	if err := db.AutoMigrate(
 		&MatrixProfile{},
 		&MatrixApp{},
-		&MatrixTransaction{},
 		&MatrixLibraryItem{},
 		&MatrixPost{},
 		&MatrixRelease{},

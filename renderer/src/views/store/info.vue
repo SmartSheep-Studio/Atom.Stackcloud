@@ -42,7 +42,17 @@
           </n-card>
         </n-gi>
         <n-gi span="24 m:6 l:8">
-          <n-card title="Information">
+          <n-card title="Purchase">
+            <div>Price</div>
+            <div class="text-lg font-bold">Free for All</div>
+            <n-button class="w-full mt-2" type="primary" :disabled="buyable" :loading="submitting" @click="purchase()">
+              <template #icon>
+                <n-icon :component="PlaylistAddRound" />
+              </template>
+              Add to Library
+            </n-button>
+          </n-card>
+          <n-card class="mt-2" title="Information">
             <div>
               <div class="font-bold">Published At</div>
               <div>{{ new Date(app.created_at).toLocaleString() }}</div>
@@ -60,27 +70,45 @@
 
 <script lang="ts" setup>
 import { useMessage } from "naive-ui"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import { onMounted, ref } from "vue"
+import { PlaylistAddRound } from "@vicons/material"
 import { http } from "@/utils/http"
 
 const $route = useRoute()
+const $router = useRouter()
 const $message = useMessage()
 
 const app = ref<any>({})
+const buyable = ref(false)
 const newsPopup = ref<boolean[]>([])
 
 const reverting = ref(true)
+const submitting = ref(false)
 
 async function fetch() {
   try {
     reverting.value = true
-    app.value = (await http.get(`/api/apps/${$route.params.app}`)).data
-    app.value.posts = (await http.get(`/api/apps/${$route.params.app}/posts`)).data
+    app.value = (await http.get(`/api/explore/apps/${$route.params.app}`)).data
+    app.value.posts = (await http.get(`/api/explore/apps/${$route.params.app}/posts`)).data
+    buyable.value = (await http.get("/api/library/own", { params: { app: app.value.slug } })).status === 204
   } catch (e: any) {
     $message.error(`Something went wrong... ${e}`)
   } finally {
     reverting.value = false
+  }
+}
+
+async function purchase() {
+  try {
+    submitting.value = true
+    await http.post("/api/library/add", { app: app.value.slug })
+    $message.success("Successfully add into your library.")
+    $router.push({ name: "library" })
+  } catch (e: any) {
+    $message.error(`Something went wrong... ${e}`)
+  } finally {
+    submitting.value = false
   }
 }
 
