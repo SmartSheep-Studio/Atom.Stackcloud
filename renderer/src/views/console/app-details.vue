@@ -17,6 +17,9 @@
           <n-card title="Posts">
             <posts :data="app" />
           </n-card>
+          <n-card class="mt-2" title="Releases">
+            <releases :data="app" />
+          </n-card>
           <n-card class="mt-2" title="Update App">
             <update-app :data="app" @refresh="fetch()" />
           </n-card>
@@ -34,6 +37,7 @@
 
 <script lang="ts" setup>
 import Posts from "@/views/console/parts/posts.vue"
+import Releases from "@/views/console/parts/releases.vue"
 import UpdateApp from "@/views/console/actions/update-app.vue"
 import DestroyApp from "@/views/console/actions/destroy-app.vue"
 import PublishApp from "@/views/console/actions/publish-app.vue"

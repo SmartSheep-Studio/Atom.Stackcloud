@@ -50,11 +50,11 @@ func (ctrl *ReleaseController) get(c *fiber.Ctx) error {
 		return utils.ParseDataSourceError(err)
 	}
 
-	var shop models.MatrixApp
-	if err := ctrl.db.Where("id = ? AND app_id = ?", c.Params("release"), app.ID).Preload("Post").First(&shop).Error; err != nil {
+	var release models.MatrixRelease
+	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	} else {
-		return c.JSON(shop)
+		return c.JSON(release)
 	}
 }
 
@@ -86,6 +86,7 @@ func (ctrl *ReleaseController) create(c *fiber.Ctx) error {
 		Name:        req.Name,
 		Description: req.Description,
 		Post: models.MatrixPost{
+			Slug:        req.Slug,
 			Type:        req.Type,
 			Title:       req.Name,
 			Content:     req.Details,
@@ -131,7 +132,7 @@ func (ctrl *ReleaseController) update(c *fiber.Ctx) error {
 	tx := ctrl.db.Begin()
 
 	var release models.MatrixRelease
-	if err := tx.Where("id = ? AND app_id = ?", c.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
+	if err := tx.Where("slug = ? AND app_id = ?", c.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
 		tx.Rollback()
 		return utils.ParseDataSourceError(err)
 	} else {
@@ -144,6 +145,7 @@ func (ctrl *ReleaseController) update(c *fiber.Ctx) error {
 	release.IsPublished = req.IsPublished
 	release.Options = datatypes.NewJSONType(req.Options)
 	release.Post = models.MatrixPost{
+		Slug:        req.Slug,
 		Type:        req.Type,
 		Title:       req.Name,
 		Content:     req.Details,
@@ -173,7 +175,7 @@ func (ctrl *ReleaseController) delete(c *fiber.Ctx) error {
 	}
 
 	var release models.MatrixRelease
-	if err := ctrl.db.Where("id = ? AND app_id = ?", c.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 

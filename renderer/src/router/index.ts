@@ -30,6 +30,16 @@ const router = createRouter({
       component: () => import("@/views/console/actions/update-post.vue"),
     },
     {
+      path: "/console/:app/releases/create",
+      name: "console.apps.releases.create",
+      component: () => import("@/views/console/actions/create-release.vue"),
+    },
+    {
+      path: "/console/:app/releases/:release/update",
+      name: "console.apps.releases.update",
+      component: () => import("@/views/console/actions/update-release.vue"),
+    },
+    {
       path: "/console/apps/create",
       name: "console.apps.create",
       component: () => import("@/views/console/actions/create-app.vue"),
