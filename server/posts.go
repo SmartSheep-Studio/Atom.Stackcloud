@@ -50,11 +50,11 @@ func (ctrl *PostController) get(c *fiber.Ctx) error {
 		return utils.ParseDataSourceError(err)
 	}
 
-	var shop models.MatrixApp
-	if err := ctrl.db.Where("id = ? AND app_id = ?", c.Params("post"), app.ID).First(&shop).Error; err != nil {
+	var post models.MatrixPost
+	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("post"), app.ID).First(&post).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	} else {
-		return c.JSON(shop)
+		return c.JSON(post)
 	}
 }
 
@@ -67,6 +67,7 @@ func (ctrl *PostController) create(c *fiber.Ctx) error {
 	}
 
 	var req struct {
+		Slug        string   `json:"slug" validate:"required"`
 		Title       string   `json:"title" validate:"required"`
 		Type        string   `json:"type" validate:"required"`
 		Content     string   `json:"content"`
@@ -79,6 +80,7 @@ func (ctrl *PostController) create(c *fiber.Ctx) error {
 	}
 
 	post := models.MatrixPost{
+		Slug:        req.Slug,
 		Type:        req.Type,
 		Title:       req.Title,
 		Content:     req.Content,
@@ -115,7 +117,7 @@ func (ctrl *PostController) update(c *fiber.Ctx) error {
 	}
 
 	var post models.MatrixPost
-	if err := ctrl.db.Where("id = ? AND app_id = ?", c.Params("post"), app.ID).First(&post).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("post"), app.ID).First(&post).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 
@@ -141,7 +143,7 @@ func (ctrl *PostController) delete(c *fiber.Ctx) error {
 	}
 
 	var post models.MatrixPost
-	if err := ctrl.db.Where("id = ? AND app_id = ?", c.Params("post"), app.ID).First(&post).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("post"), app.ID).First(&post).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 

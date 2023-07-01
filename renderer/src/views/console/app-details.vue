@@ -14,7 +14,10 @@
 
       <n-grid v-if="!reverting" item-responsive responsive="screen" x-gap="8" y-gap="8" class="lg:px-10 pt-4">
         <n-gi span="24 m:14">
-          <n-card title="Update App">
+          <n-card title="Posts">
+            <posts :data="app" />
+          </n-card>
+          <n-card class="mt-2" title="Update App">
             <update-app :data="app" @refresh="fetch()" />
           </n-card>
         </n-gi>
@@ -30,6 +33,7 @@
 </template>
 
 <script lang="ts" setup>
+import Posts from "@/views/console/parts/posts.vue"
 import UpdateApp from "@/views/console/actions/update-app.vue"
 import DestroyApp from "@/views/console/actions/destroy-app.vue"
 import PublishApp from "@/views/console/actions/publish-app.vue"

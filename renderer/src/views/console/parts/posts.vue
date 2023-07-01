@@ -1,15 +1,11 @@
 <template>
   <div>
     <n-spin :show="requesting">
-      <n-list bordered hoverable>
+      <n-list bordered>
         <n-empty v-if="data.length <= 0" class="py-8" description="There's no data. Why not you create one?" />
 
         <n-list-item v-for="item in data">
-          <n-thing
-            class="cursor-pointer"
-            :title="item.name"
-            @click="$router.push({ name: 'console.apps', params: { app: item.slug } })"
-          >
+          <n-thing :title="item.title">
             <template #header-extra>
               <div class="flex items-center">
                 <div class="me-2">{{ item.is_published ? "Published" : "Draft" }}</div>
@@ -22,18 +18,42 @@
                 <n-tag v-for="tag in item.tags" :bordered="false" type="primary" size="small">{{ tag }}</n-tag>
               </n-space>
             </template>
-            <div>{{ item.description }}</div>
+
+            <div>
+              Total <b>{{ item.content.length }}</b> characters. Expected to read
+              <b>{{ Math.ceil(item.content.length / 300) }}</b> minute.
+            </div>
+            <n-space class="mt-2" size="small">
+              <n-button
+                type="warning"
+                size="small"
+                @click="
+                  $router.push({ name: 'console.apps.posts.update', params: { app: props.data.slug, post: item.slug } })
+                "
+              >
+                <template #icon>
+                  <n-icon :component="EditRound" />
+                </template>
+                Edit
+              </n-button>
+              <n-button type="error" size="small" @click="destroy(item)">
+                <template #icon>
+                  <n-icon :component="DeleteRound" />
+                </template>
+                Destroy
+              </n-button>
+            </n-space>
           </n-thing>
         </n-list-item>
       </n-list>
     </n-spin>
 
     <div class="flex justify-between mt-4">
-      <n-button type="primary" size="small" @click="$router.push({ name: 'console.apps.create' })">
+      <n-button type="primary" size="small" @click="$router.push({ name: 'console.apps.posts.create' })">
         <template #icon>
           <n-icon :component="PlusRound" />
         </template>
-        New App
+        New Post
       </n-button>
 
       <n-pagination
@@ -48,12 +68,15 @@
 <script lang="ts" setup>
 import { usePrincipal } from "@/stores/principal"
 import { computed, onMounted, reactive, ref } from "vue"
-import { LogOutRound, PlusRound } from "@vicons/material"
+import { PlusRound, EditRound, DeleteRound } from "@vicons/material"
 import { http } from "@/utils/http"
-import { useMessage } from "naive-ui"
+import { useDialog, useMessage } from "naive-ui"
 
+const $dialog = useDialog()
 const $message = useMessage()
 const $principal = usePrincipal()
+
+const props = defineProps<{ data: any }>()
 
 const rawData = ref<any[]>([])
 const data = computed(() => {
@@ -72,12 +95,35 @@ const pagination = reactive({
 async function fetch() {
   try {
     requesting.value = true
-    rawData.value = (await http.get("/api/apps")).data
+    rawData.value = (await http.get(`/api/apps/${props.data.slug}/posts`)).data
   } catch (e: any) {
     $message.error(`Something went wrong... ${e}`)
   } finally {
     requesting.value = false
   }
+}
+
+function destroy(item: any) {
+  $dialog.warning({
+    title: "Warning",
+    content: "This operation cannot be undo. Are you confirm?",
+    positiveText: "Yes",
+    negativeText: "Not really",
+    onPositiveClick: async () => {
+      try {
+        requesting.value = true
+
+        await http.delete(`/api/apps/${props.data.slug}/posts/${item.slug}`)
+        await fetch()
+
+        $message.success("Successfully deleted the post.")
+      } catch (e: any) {
+        $message.error(`Something went wrong... ${e}`)
+      } finally {
+        requesting.value = false
+      }
+    },
+  })
 }
 
 onMounted(() => {

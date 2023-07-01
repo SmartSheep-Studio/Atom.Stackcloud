@@ -62,6 +62,7 @@ const data = computed(() => {
 })
 
 const requesting = ref(true)
+const popups = reactive({ creating: false })
 
 const pagination = reactive({
   page: 1,
@@ -73,6 +74,21 @@ async function fetch() {
   try {
     requesting.value = true
     rawData.value = (await http.get("/api/apps")).data
+  } catch (e: any) {
+    $message.error(`Something went wrong... ${e}`)
+  } finally {
+    requesting.value = false
+  }
+}
+
+async function terminate(item: any) {
+  try {
+    requesting.value = true
+    await http.delete("/api/auth/sessions", { params: { id: item.id } })
+
+    await Promise.all([fetch(), $principal.fetch()])
+
+    $message.success("Successfully terminate session you selected.")
   } catch (e: any) {
     $message.error(`Something went wrong... ${e}`)
   } finally {

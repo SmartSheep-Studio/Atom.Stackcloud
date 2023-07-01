@@ -82,7 +82,7 @@ const form = ref<FormInst | null>(null)
 const rules: FormRules = {
   slug: {
     required: true,
-    validator: (_, v) => new RegExp(/^\w+$/).test(v),
+    validator: (_, v) => new RegExp(/^[A-Za-z0-9-_]+$/).test(v),
     message: "Only accepts letters, underscore and numbers without space",
     trigger: ["blur", "input"],
   },

@@ -1,5 +1,5 @@
 <template>
-  <n-form ref="form" :rules="rules" :model="payload" @submit.prevent="create">
+  <n-form ref="form" :rules="rules" :model="payload" @submit.prevent="update">
     <n-form-item label="Slug" path="slug">
       <n-input
         placeholder="Use for the link to your application. Only accepts url safe characters."
@@ -75,7 +75,7 @@ const form = ref<FormInst | null>(null)
 const rules: FormRules = {
   slug: {
     required: true,
-    validator: (_, v) => new RegExp(/^\w+$/).test(v),
+    validator: (_, v) => new RegExp(/^[A-Za-z0-9-_]+$/).test(v),
     message: "Only accepts letters, underscore and numbers without space",
     trigger: ["blur", "input"],
   },
@@ -126,7 +126,7 @@ const payload = ref({
   is_published: false,
 })
 
-function create() {
+function update() {
   form.value?.validate(async (errors) => {
     if (errors) {
       return

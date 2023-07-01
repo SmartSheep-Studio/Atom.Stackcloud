@@ -13,6 +13,7 @@ const (
 type MatrixPost struct {
 	Model
 
+	Slug        string                      `json:"slug" gorm:"uniqueIndex"`
 	Type        string                      `json:"type"`
 	Title       string                      `json:"title"`
 	Cover       string                      `json:"cover"`
