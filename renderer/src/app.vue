@@ -36,7 +36,7 @@ import { usePrincipal } from "@/stores/principal"
 import { h, type Component, computed, type Ref, ref, watch } from "vue"
 import { RouterLink, useRoute, useRouter } from "vue-router"
 import { NIcon, type MenuOption } from "naive-ui"
-import { TerminalRound, ExploreRound } from "@vicons/material"
+import { TerminalRound, ExploreRound, LibraryBooksRound } from "@vicons/material"
 import { hasUserPermissions } from "@/utils/gatekeeper"
 
 const $route = useRoute()
@@ -87,6 +87,11 @@ const menuOptions: Ref<MenuOption[]> = computed(() =>
           icon: renderIcon(TerminalRound),
           show: hasUserPermissions("matrix.console.view"),
           key: "console",
+        },
+        {
+          label: () => h(RouterLink, { to: { name: "library" } }, { default: () => "Library" }),
+          icon: renderIcon(LibraryBooksRound),
+          key: "library",
         },
       ]
     : []
