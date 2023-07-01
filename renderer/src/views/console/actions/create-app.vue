@@ -35,25 +35,6 @@
         <n-form-item label="Details" path="details">
           <v-md-editor v-model="payload.details" height="400px" />
         </n-form-item>
-        <n-form-item label="Quarkpay Shop" path="price_options.shop">
-          <n-input
-            placeholder="Use for purchase process. Can create on Quarkpay console."
-            v-model:value="payload.price_options.shop"
-          />
-        </n-form-item>
-        <n-form-item label="Quarkpay Product ID" path="price_options.product_id">
-          <n-input-number
-            placeholder="Use for purchase process. Can create on Quarkpay console. Need to belong to the store filled in above."
-            v-model:value="payload.price_options.product_id"
-          />
-        </n-form-item>
-        <n-form-item label="API Token" path="price_options.api_token">
-          <n-input
-            type="password"
-            placeholder="Use for third-party service calling. Can create on user center."
-            v-model:value="payload.price_options.api_token"
-          />
-        </n-form-item>
 
         <n-space size="small">
           <n-button type="primary" attr-type="submit" :loading="submitting">Submit</n-button>
@@ -104,18 +85,6 @@ const rules: FormRules = {
     message: "Need least six characters",
     trigger: ["blur", "input"],
   },
-  price_options: {
-    shop: {
-      required: true,
-      message: "Cannot be blank",
-      trigger: ["blur", "input"],
-    },
-    api_token: {
-      required: true,
-      message: "Cannot be blank",
-      trigger: ["blur", "input"],
-    },
-  },
 }
 
 const payload = reactive({
@@ -125,11 +94,6 @@ const payload = reactive({
   details: "",
   url: "",
   tags: [],
-  price_options: {
-    shop: "",
-    product_id: 0,
-    api_token: "",
-  },
   is_published: false,
 })
 

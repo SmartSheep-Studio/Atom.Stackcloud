@@ -32,8 +32,51 @@
         <n-form-item label="Details" path="details">
           <v-md-editor v-model="payload.details" height="400px" />
         </n-form-item>
+        <n-form-item v-for="(item, index) in payload.options.assets" :label="`Assets #${index + 1}`">
+          <n-input placeholder="Name" v-model:value="item.name" />
+          <n-input class="ml-2" placeholder="Download URL" v-model:value="item.url" />
+          <n-input class="ml-2" placeholder="Decompressor" v-model:value="item.decompressor" />
+          <n-select class="ml-2" :options="platforms" v-model:value="item.platform" />
+          <n-button class="ml-2" @click="payload.options.assets.splice(index, 1)">
+            <template #icon>
+              <n-icon :component="DeleteRound" />
+            </template>
+          </n-button>
+        </n-form-item>
+        <n-form-item v-for="(item, index) in payload.options.preprocessing" :label="`Preprocessing #${index + 1}`">
+          <n-input placeholder="Name" v-model:value="item.name" />
+          <n-input class="ml-2" placeholder="Script" v-model:value="item.script" />
+          <n-select class="ml-2" :options="platforms" v-model:value="item.platform" />
+          <n-button class="ml-2" @click="payload.options.preprocessing.splice(index, 1)">
+            <template #icon>
+              <n-icon :component="DeleteRound" />
+            </template>
+          </n-button>
+        </n-form-item>
+        <n-form-item v-for="(item, index) in payload.options.run_options" :label="`Run Option #${index + 1}`">
+          <n-input placeholder="Name" v-model:value="item.name" />
+          <n-input class="ml-2" placeholder="Script" v-model:value="item.script" />
+          <n-select class="ml-2" :options="platforms" v-model:value="item.platform" />
+          <n-button class="ml-2" @click="payload.options.run_options.splice(index, 1)">
+            <template #icon>
+              <n-icon :component="DeleteRound" />
+            </template>
+          </n-button>
+        </n-form-item>
 
         <n-space size="small">
+          <n-button @click="payload.options.assets.push({ url: '', name: '', decompressor: '', platform: 'win32' })">
+            Add Assets
+          </n-button>
+          <n-button @click="payload.options.preprocessing.push({ name: '', script: '', platform: 'win32' })">
+            Add Preprocessing
+          </n-button>
+          <n-button @click="payload.options.run_options.push({ name: '', script: '', platform: 'win32' })">
+            Add Run Option
+          </n-button>
+        </n-space>
+
+        <n-space class="mt-6" size="small">
           <n-button type="primary" attr-type="submit" :loading="submitting">Submit</n-button>
           <n-button @click="$router.back()">Cancel</n-button>
         </n-space>
@@ -46,6 +89,7 @@
 import { parseRedirect } from "@/utils/callback"
 import { http } from "@/utils/http"
 import { useMessage, type FormRules, type FormInst, useDialog } from "naive-ui"
+import { DeleteRound } from "@vicons/material"
 import { reactive, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 
@@ -90,13 +134,24 @@ const types = [
   { label: "Hotfix Update", value: "hotfix-update" },
 ]
 
-const payload = reactive({
+const platforms = [
+  { label: "Windows", value: "win32" },
+  { label: "MacOS", value: "drawin" },
+  { label: "Linux", value: "linux" },
+]
+
+const payload = reactive<any>({
   slug: "",
   type: "minor-update",
   name: "",
   description: "",
   details: "",
   tags: [],
+  options: {
+    assets: [],
+    preprocessing: [],
+    run_options: [],
+  },
   is_published: false,
 })
 

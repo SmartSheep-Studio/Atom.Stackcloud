@@ -17,11 +17,13 @@ type MatrixRelease struct {
 
 type MatrixReleaseOptions struct {
 	Assets []struct {
+		Name         string `json:"name" validate:"required"`
 		URL          string `json:"url" validate:"required"`
 		Decompressor string `json:"decompressor"`
 		Platform     string `json:"platform" validate:"required"`
 	} `json:"assets"`
 	Preprocessing []struct {
+		Name     string `json:"name" validate:"required"`
 		Script   string `json:"script" validate:"required"`
 		Platform string `json:"platform" validate:"required"`
 	} `json:"preprocessing"`

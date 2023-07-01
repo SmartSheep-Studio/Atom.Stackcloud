@@ -52,14 +52,13 @@ func (ctrl *AppController) create(c *fiber.Ctx) error {
 	u := c.Locals("matrix-prof").(*models.MatrixProfile)
 
 	var req struct {
-		Slug         string                       `json:"slug" validate:"required"`
-		Name         string                       `json:"name" validate:"required"`
-		Description  string                       `json:"description"`
-		Details      string                       `json:"details"`
-		Url          string                       `json:"url"`
-		Tags         []string                     `json:"tags"`
-		PriceOptions models.MatrixAppPriceOptions `json:"price_options" validate:"required"`
-		IsPublished  bool                         `json:"is_published"`
+		Slug        string   `json:"slug" validate:"required"`
+		Name        string   `json:"name" validate:"required"`
+		Description string   `json:"description"`
+		Details     string   `json:"details"`
+		Url         string   `json:"url"`
+		Tags        []string `json:"tags"`
+		IsPublished bool     `json:"is_published"`
 	}
 
 	if err := utils.ParseRequestBody(c, &req); err != nil {
@@ -67,15 +66,14 @@ func (ctrl *AppController) create(c *fiber.Ctx) error {
 	}
 
 	app := models.MatrixApp{
-		Slug:         req.Slug,
-		Url:          req.Url,
-		Tags:         datatypes.NewJSONSlice(req.Tags),
-		Name:         req.Name,
-		Description:  req.Description,
-		Details:      req.Details,
-		PriceOptions: datatypes.NewJSONType(req.PriceOptions),
-		IsPublished:  req.IsPublished,
-		ProfileID:    u.ID,
+		Slug:        req.Slug,
+		Url:         req.Url,
+		Tags:        datatypes.NewJSONSlice(req.Tags),
+		Name:        req.Name,
+		Description: req.Description,
+		Details:     req.Details,
+		IsPublished: req.IsPublished,
+		ProfileID:   u.ID,
 	}
 
 	if err := ctrl.db.Save(&app).Error; err != nil {
@@ -89,14 +87,13 @@ func (ctrl *AppController) update(c *fiber.Ctx) error {
 	u := c.Locals("matrix-prof").(*models.MatrixProfile)
 
 	var req struct {
-		Slug         string                       `json:"slug" validate:"required"`
-		Name         string                       `json:"name" validate:"required"`
-		Description  string                       `json:"description"`
-		Details      string                       `json:"details"`
-		Url          string                       `json:"url"`
-		Tags         []string                     `json:"tags"`
-		PriceOptions models.MatrixAppPriceOptions `json:"price_options" validate:"required"`
-		IsPublished  bool                         `json:"is_published"`
+		Slug        string   `json:"slug" validate:"required"`
+		Name        string   `json:"name" validate:"required"`
+		Description string   `json:"description"`
+		Details     string   `json:"details"`
+		Url         string   `json:"url"`
+		Tags        []string `json:"tags"`
+		IsPublished bool     `json:"is_published"`
 	}
 
 	if err := utils.ParseRequestBody(c, &req); err != nil {
@@ -114,7 +111,6 @@ func (ctrl *AppController) update(c *fiber.Ctx) error {
 	app.Name = req.Name
 	app.Description = req.Description
 	app.Details = req.Details
-	app.PriceOptions = datatypes.NewJSONType(req.PriceOptions)
 	app.IsPublished = req.IsPublished
 
 	if err := ctrl.db.Save(&app).Error; err != nil {
