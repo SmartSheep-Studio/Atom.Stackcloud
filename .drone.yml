@@ -13,4 +13,4 @@ steps:
       auto_tag: true
     when:
       event: push
-      branch: master
+      branch: main
