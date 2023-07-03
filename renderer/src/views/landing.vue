@@ -37,6 +37,9 @@ import Logo from "@/assets/icon.png"
 import { http } from "@/utils/http"
 import { useMessage } from "naive-ui"
 import { onMounted, ref } from "vue"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n()
 
 const $message = useMessage()
 
@@ -49,7 +52,7 @@ async function fetch() {
     reverting.value = true
     exploreQueue.value = (await http.get("/api/explore/apps")).data
   } catch (e: any) {
-    $message.error(`Something went wrong... ${e}`)
+    $message.error(t('common.feedback.unknown-error', [e]))
   } finally {
     reverting.value = false
   }

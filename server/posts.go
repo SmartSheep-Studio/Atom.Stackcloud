@@ -27,7 +27,7 @@ func (ctrl *PostController) Map(router *fiber.App) {
 }
 
 func (ctrl *PostController) list(c *fiber.Ctx) error {
-	u := c.Locals("matrix-prof").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixProfile)
 
 	var app models.MatrixApp
 	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
@@ -43,7 +43,7 @@ func (ctrl *PostController) list(c *fiber.Ctx) error {
 }
 
 func (ctrl *PostController) get(c *fiber.Ctx) error {
-	u := c.Locals("matrix-prof").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixProfile)
 
 	var app models.MatrixApp
 	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
@@ -59,7 +59,7 @@ func (ctrl *PostController) get(c *fiber.Ctx) error {
 }
 
 func (ctrl *PostController) create(c *fiber.Ctx) error {
-	u := c.Locals("matrix-prof").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixProfile)
 
 	var app models.MatrixApp
 	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
@@ -97,7 +97,7 @@ func (ctrl *PostController) create(c *fiber.Ctx) error {
 }
 
 func (ctrl *PostController) update(c *fiber.Ctx) error {
-	u := c.Locals("matrix-prof").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixProfile)
 
 	var app models.MatrixApp
 	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
@@ -135,7 +135,7 @@ func (ctrl *PostController) update(c *fiber.Ctx) error {
 }
 
 func (ctrl *PostController) delete(c *fiber.Ctx) error {
-	u := c.Locals("matrix-prof").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixProfile)
 
 	var app models.MatrixApp
 	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {

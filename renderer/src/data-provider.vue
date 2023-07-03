@@ -2,7 +2,7 @@
   <n-layout-content class="content-placeholder w-full h-max" v-if="reverting">
     <div class="w-full h-max flex justify-center items-center">
       <n-spin show>
-        <template #description>Connecting...</template>
+        <template #description>{{ $t('common.feedback.connecting') }}</template>
       </n-spin>
     </div>
   </n-layout-content>
@@ -13,40 +13,42 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
-import { usePrincipal } from "@/stores/principal";
-import { useEndpoint } from "@/stores/endpoint";
-import { useDialog } from "naive-ui";
+import { onMounted, ref } from "vue"
+import { usePrincipal } from "@/stores/principal"
+import { useEndpoint } from "@/stores/endpoint"
+import { useDialog } from "naive-ui"
+import { useI18n } from "vue-i18n"
 
-const $dialog = useDialog();
+const { t } = useI18n()
 
-const $endpoint = useEndpoint();
-const $principal = usePrincipal();
+const $dialog = useDialog()
+const $endpoint = useEndpoint()
+const $principal = usePrincipal()
 
-const reverting = ref(true);
+const reverting = ref(true)
 
 async function fetch() {
-  reverting.value = true;
+  reverting.value = true
 
   try {
-    await Promise.all([$endpoint.fetch(), $principal.fetch()]);
+    await Promise.all([$endpoint.fetch(), $principal.fetch()])
   } catch (e: any) {
     $dialog.error({
       closable: false,
       closeOnEsc: false,
-      title: "An error occurred during the connection.",
+      title: t("common.feedback.network-error"),
       content: e.toString(),
-      positiveText: "Retry",
+      positiveText: t("actions.retry"),
       onPositiveClick: () => {
-        fetch();
+        fetch()
       },
-    });
+    })
   } finally {
-    reverting.value = false;
+    reverting.value = false
   }
 }
 
 onMounted(() => {
-  fetch();
-});
+  fetch()
+})
 </script>

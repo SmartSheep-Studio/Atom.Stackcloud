@@ -38,6 +38,9 @@ import { RouterLink, useRoute, useRouter } from "vue-router"
 import { NIcon, type MenuOption } from "naive-ui"
 import { TerminalRound, ExploreRound, LibraryBooksRound } from "@vicons/material"
 import { hasUserPermissions } from "@/utils/gatekeeper"
+import { useI18n } from "vue-i18n"
+
+const { t } = useI18n()
 
 const $route = useRoute()
 const $router = useRouter()
@@ -78,18 +81,18 @@ const menuOptions: Ref<MenuOption[]> = computed(() =>
   $principal.isLoggedIn
     ? [
         {
-          label: () => h(RouterLink, { to: { name: "landing" } }, { default: () => "Explore" }),
+          label: () => h(RouterLink, { to: { name: "landing" } }, { default: () => t('nav.explore') }),
           icon: renderIcon(ExploreRound),
           key: "landing",
         },
         {
-          label: () => h(RouterLink, { to: { name: "console" } }, { default: () => "Console" }),
+          label: () => h(RouterLink, { to: { name: "console" } }, { default: () => t('nav.console') }),
           icon: renderIcon(TerminalRound),
           show: hasUserPermissions("matrix.console.view"),
           key: "console",
         },
         {
-          label: () => h(RouterLink, { to: { name: "library" } }, { default: () => "Library" }),
+          label: () => h(RouterLink, { to: { name: "library" } }, { default: () => t('nav.library') }),
           icon: renderIcon(LibraryBooksRound),
           key: "library",
         },

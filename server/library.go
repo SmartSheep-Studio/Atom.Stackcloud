@@ -28,7 +28,7 @@ func (ctrl *LibraryController) Map(router *fiber.App) {
 }
 
 func (ctrl *LibraryController) list(c *fiber.Ctx) error {
-	u := c.Locals("matrix-prof").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixProfile)
 
 	var items []models.MatrixLibraryItem
 	if err := ctrl.db.Where("profile_id = ?", u.ID).Find(&items).Error; err != nil {
@@ -39,7 +39,7 @@ func (ctrl *LibraryController) list(c *fiber.Ctx) error {
 }
 
 func (ctrl *LibraryController) doesOwn(c *fiber.Ctx) error {
-	u := c.Locals("matrix-prof").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixProfile)
 	target := c.Query("app")
 
 	var app models.MatrixApp
@@ -61,7 +61,7 @@ func (ctrl *LibraryController) doesOwn(c *fiber.Ctx) error {
 }
 
 func (ctrl *LibraryController) add(c *fiber.Ctx) error {
-	u := c.Locals("matrix-prof").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixProfile)
 
 	var req struct {
 		App string `json:"app" validate:"required"`

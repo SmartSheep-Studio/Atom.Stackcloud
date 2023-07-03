@@ -61,7 +61,7 @@ func NewAuth(cycle fx.Lifecycle, db *gorm.DB, c *toolbox.ExternalServiceConnecti
 						}
 					}
 
-					c.Locals("matrix-prof", prof)
+					c.Locals("matrix-id", prof)
 				}
 
 				c.Locals("principal-ok", err == nil)
