@@ -27,7 +27,7 @@ func (ctrl *ReleaseController) Map(router *fiber.App) {
 }
 
 func (ctrl *ReleaseController) list(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
 	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
@@ -43,7 +43,7 @@ func (ctrl *ReleaseController) list(c *fiber.Ctx) error {
 }
 
 func (ctrl *ReleaseController) get(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
 	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
@@ -59,7 +59,7 @@ func (ctrl *ReleaseController) get(c *fiber.Ctx) error {
 }
 
 func (ctrl *ReleaseController) create(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
 	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
@@ -107,7 +107,7 @@ func (ctrl *ReleaseController) create(c *fiber.Ctx) error {
 }
 
 func (ctrl *ReleaseController) update(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
 	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
@@ -167,7 +167,7 @@ func (ctrl *ReleaseController) update(c *fiber.Ctx) error {
 }
 
 func (ctrl *ReleaseController) delete(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
 	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {

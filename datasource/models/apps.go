@@ -15,5 +15,5 @@ type MatrixApp struct {
 	Posts       []MatrixPost                `json:"posts" gorm:"foreignKey:AppID"`
 	Releases    []MatrixRelease             `json:"releases" gorm:"foreignKey:AppID"`
 	Duplicates  []MatrixLibraryItem         `json:"duplicates" gorm:"foreignKey:AppID"`
-	ProfileID   uint                        `json:"profile_id"`
+	AccountID   uint                        `json:"profile_id"`
 }

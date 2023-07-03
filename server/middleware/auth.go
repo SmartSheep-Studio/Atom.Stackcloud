@@ -45,10 +45,10 @@ func NewAuth(cycle fx.Lifecycle, db *gorm.DB, c *toolbox.ExternalServiceConnecti
 						return fiber.NewError(fiber.StatusForbidden, err.Error())
 					}
 
-					var prof *models.MatrixProfile
+					var prof *models.MatrixAccount
 					if err := db.Where("user_id = ?", u.ID).First(&prof).Error; err != nil {
 						if errors.Is(gorm.ErrRecordNotFound, err) {
-							prof = &models.MatrixProfile{
+							prof = &models.MatrixAccount{
 								Nickname: u.Nickname,
 								UserID:   u.ID,
 							}

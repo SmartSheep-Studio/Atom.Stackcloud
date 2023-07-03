@@ -7,11 +7,12 @@ import (
 
 func Migrate(db *gorm.DB) {
 	if err := db.AutoMigrate(
-		&MatrixProfile{},
+		&MatrixAccount{},
 		&MatrixApp{},
 		&MatrixLibraryItem{},
 		&MatrixPost{},
 		&MatrixRelease{},
+		&MatrixCloudSave{},
 	); err != nil {
 		log.Fatal().Err(err).Msg("Error when migrating database")
 	}

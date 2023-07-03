@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/datatypes"
 	"gorm.io/gorm"
 	"repo.smartsheep.studio/atom/matrix/datasource/models"
 	"repo.smartsheep.studio/atom/matrix/server/middleware"
@@ -28,7 +29,7 @@ func (ctrl *LibraryController) Map(router *fiber.App) {
 }
 
 func (ctrl *LibraryController) list(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var items []models.MatrixLibraryItem
 	if err := ctrl.db.Where("profile_id = ?", u.ID).Find(&items).Error; err != nil {
@@ -39,7 +40,7 @@ func (ctrl *LibraryController) list(c *fiber.Ctx) error {
 }
 
 func (ctrl *LibraryController) doesOwn(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixAccount)
 	target := c.Query("app")
 
 	var app models.MatrixApp
@@ -61,7 +62,7 @@ func (ctrl *LibraryController) doesOwn(c *fiber.Ctx) error {
 }
 
 func (ctrl *LibraryController) add(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixProfile)
+	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var req struct {
 		App string `json:"app" validate:"required"`
@@ -86,8 +87,12 @@ func (ctrl *LibraryController) add(c *fiber.Ctx) error {
 	}
 
 	item := models.MatrixLibraryItem{
-		ProfileID: u.ID,
+		AccountID: u.ID,
 		AppID:     app.ID,
+		CloudSave: models.MatrixCloudSave{
+			Name:    u.Nickname,
+			Payload: datatypes.JSON([]byte("{}")),
+		},
 	}
 
 	if err := ctrl.db.Save(&item).Error; err != nil {
