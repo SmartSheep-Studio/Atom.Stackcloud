@@ -4,10 +4,11 @@ name: default
 steps:
   - name: Build Image
     image: plugins/docker
+    environment:
+      DOCKER_BUILDKIT: 1
     settings:
       registry: https://repo.smartsheep.studio
       repo: repo.smartsheep.studio/atom/matrix
-      use_cache: true
       username: Drone
       password: Drone@2007
       auto_tag: true

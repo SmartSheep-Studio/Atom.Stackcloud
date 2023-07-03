@@ -7,8 +7,11 @@ WORKDIR /workspace
 COPY . .
 WORKDIR /workspace/renderer
 RUN rm -rf dist node_modules
-RUN yarn install
-RUN yarn run build-only
+RUN --mount=type=cache,target=/workspace/renderer/node_modules,id=renderer_modules_cache,sharing=locked \
+    --mount=type=cache,target=/root/.npm,id=renderer_node_cache \
+    yarn install
+RUN --mount=type=cache,target=/workspace/renderer/node_modules,id=renderer_modules_cache,sharing=locked \
+    yarn run build-only
 
 # Building Backend
 FROM golang:alpine as backend
