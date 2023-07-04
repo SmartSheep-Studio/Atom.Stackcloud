@@ -30,7 +30,7 @@ func (ctrl *ReleaseController) list(c *fiber.Ctx) error {
 	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 
@@ -46,7 +46,7 @@ func (ctrl *ReleaseController) get(c *fiber.Ctx) error {
 	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 
@@ -62,7 +62,7 @@ func (ctrl *ReleaseController) create(c *fiber.Ctx) error {
 	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 
@@ -110,7 +110,7 @@ func (ctrl *ReleaseController) update(c *fiber.Ctx) error {
 	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 
@@ -170,7 +170,7 @@ func (ctrl *ReleaseController) delete(c *fiber.Ctx) error {
 	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 

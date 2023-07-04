@@ -30,7 +30,7 @@ func (ctrl *AppController) list(c *fiber.Ctx) error {
 	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var apps []models.MatrixApp
-	if err := ctrl.db.Where("profile_id = ?", u.ID).Find(&apps).Error; err != nil {
+	if err := ctrl.db.Where("account_id = ?", u.ID).Find(&apps).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	} else {
 		return c.JSON(apps)
@@ -41,7 +41,7 @@ func (ctrl *AppController) get(c *fiber.Ctx) error {
 	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	} else {
 		return c.JSON(app)
@@ -101,7 +101,7 @@ func (ctrl *AppController) update(c *fiber.Ctx) error {
 	}
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 
@@ -124,7 +124,7 @@ func (ctrl *AppController) delete(c *fiber.Ctx) error {
 	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND profile_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	}
 

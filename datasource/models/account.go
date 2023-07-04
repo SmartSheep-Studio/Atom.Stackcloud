@@ -14,6 +14,6 @@ type MatrixLibraryItem struct {
 
 	PlayTime  int64           `json:"play_time"`
 	CloudSave MatrixCloudSave `json:"cloud_save" gorm:"foreignKey:LibraryID"`
-	AccountID uint            `json:"profile_id"`
+	AccountID uint            `json:"account_id"`
 	AppID     uint            `json:"app_id"`
 }

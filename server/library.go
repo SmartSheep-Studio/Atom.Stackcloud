@@ -32,7 +32,7 @@ func (ctrl *LibraryController) list(c *fiber.Ctx) error {
 	u := c.Locals("matrix-id").(*models.MatrixAccount)
 
 	var items []models.MatrixLibraryItem
-	if err := ctrl.db.Where("profile_id = ?", u.ID).Find(&items).Error; err != nil {
+	if err := ctrl.db.Where("account_id = ?", u.ID).Find(&items).Error; err != nil {
 		return utils.ParseDataSourceError(err)
 	} else {
 		return c.JSON(items)
@@ -49,7 +49,7 @@ func (ctrl *LibraryController) doesOwn(c *fiber.Ctx) error {
 	}
 
 	var libraryCount int64
-	if err := ctrl.db.Model(&models.MatrixLibraryItem{}).Where("profile_id = ? AND app_id = ?", u.ID, app.ID).Count(&libraryCount).Error; err != nil {
+	if err := ctrl.db.Model(&models.MatrixLibraryItem{}).Where("account_id = ? AND app_id = ?", u.ID, app.ID).Count(&libraryCount).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return c.SendStatus(fiber.StatusNoContent)
 		}
@@ -78,7 +78,7 @@ func (ctrl *LibraryController) add(c *fiber.Ctx) error {
 	}
 
 	var libraryCount int64
-	if err := ctrl.db.Model(&models.MatrixLibraryItem{}).Where("profile_id = ? AND app_id = ?", u.ID, app.ID).Count(&libraryCount).Error; err != nil {
+	if err := ctrl.db.Model(&models.MatrixLibraryItem{}).Where("account_id = ? AND app_id = ?", u.ID, app.ID).Count(&libraryCount).Error; err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return utils.ParseDataSourceError(err)
 		}
