@@ -45,15 +45,15 @@ func NewAuth(cycle fx.Lifecycle, db *gorm.DB, c *toolbox.ExternalServiceConnecti
 						return fiber.NewError(fiber.StatusForbidden, err.Error())
 					}
 
-					var prof *models.MatrixAccount
-					if err := db.Where("user_id = ?", u.ID).First(&prof).Error; err != nil {
+					var account *models.MatrixAccount
+					if err := db.Where("user_id = ?", u.ID).First(&account).Error; err != nil {
 						if errors.Is(gorm.ErrRecordNotFound, err) {
-							prof = &models.MatrixAccount{
+							account = &models.MatrixAccount{
 								Nickname: u.Nickname,
 								UserID:   u.ID,
 							}
 
-							if err := db.Save(&prof).Error; err != nil {
+							if err := db.Save(&account).Error; err != nil {
 								return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 							}
 						} else {
@@ -61,7 +61,7 @@ func NewAuth(cycle fx.Lifecycle, db *gorm.DB, c *toolbox.ExternalServiceConnecti
 						}
 					}
 
-					c.Locals("matrix-id", prof)
+					c.Locals("matrix-id", account)
 				}
 
 				c.Locals("principal-ok", err == nil)
@@ -101,5 +101,10 @@ func LookupAuthToken(c *fiber.Ctx, args []string) (tmodels.User, error) {
 		return tmodels.User{}, fmt.Errorf("could not found any token string from context")
 	}
 
-	return conn.GetPrincipal(str, true)
+	resp, err := conn.GetPrincipal(str)
+	if err != nil {
+		return tmodels.User{}, err
+	} else {
+		return resp.User, nil
+	}
 }
