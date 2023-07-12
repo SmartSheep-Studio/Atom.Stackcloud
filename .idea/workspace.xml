@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="171c3bbe-7984-49bc-902e-7e9a4b1e3d89" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/renderer/src/assets/placeholders/default-avatar.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/renderer/src/assets/placeholders/default-banner.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.drone.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.drone.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/publisher.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/publisher.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/renderer/src/utils/placeholders.ts" beforeDir="false" afterPath="$PROJECT_DIR$/renderer/src/utils/placeholders.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/apps.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/apps.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/cloud_save.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/cloud_save.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/explore.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/explore.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/library.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/library.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/middleware/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/middleware/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/module.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/module.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/posts.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/posts.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/releases.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/releases.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/status.go" beforeDir="false" afterPath="$PROJECT_DIR$/server/status.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/explore.go" beforeDir="false" afterPath="$PROJECT_DIR$/services/explore.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2STlKGNousxr0HttTeVwec5YJjd" />
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/LittleSheep/Projects/Code/Atom/Matrix",
+    "nodejs_package_manager_path": "pnpm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+</project>

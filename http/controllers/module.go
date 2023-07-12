@@ -1,24 +1,20 @@
-package server
+package controllers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	ctx "code.smartsheep.studio/atom/neutron/http/context"
 	"go.uber.org/fx"
-	"repo.smartsheep.studio/atom/matrix/server/middleware"
 )
 
 type HttpController interface {
-	Map(router *fiber.App)
+	Map(router *ctx.App)
 }
 
 func AsController(f any) any {
-	return fx.Annotate(f, fx.As(new(HttpController)), fx.ResultTags(`group:"controllers"`))
+	return fx.Annotate(f, fx.As(new(HttpController)), fx.ResultTags(`group:"http"`))
 }
 
 func Module() fx.Option {
-	return fx.Module("server",
-		middleware.Module(),
-
-		fx.Provide(NewHttpServer),
+	return fx.Module("http.controllers",
 		fx.Provide(
 			AsController(NewStatusController),
 			AsController(NewAuthController),
@@ -28,8 +24,6 @@ func Module() fx.Option {
 			AsController(NewReleaseController),
 			AsController(NewPostController),
 			AsController(NewCloudSaveController),
-
-			fx.Annotate(NewHttpMap, fx.ParamTags(`group:"controllers"`)),
 		),
 	)
 }

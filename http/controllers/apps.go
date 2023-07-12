@@ -1,12 +1,12 @@
-package server
+package controllers
 
 import (
+	"code.smartsheep.studio/atom/matrix/datasource/models"
+	"code.smartsheep.studio/atom/matrix/http/middleware"
+	ctx "code.smartsheep.studio/atom/neutron/http/context"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
-	"repo.smartsheep.studio/atom/matrix/datasource/models"
-	"repo.smartsheep.studio/atom/matrix/server/middleware"
-	"repo.smartsheep.studio/atom/nucleus/utils"
 )
 
 type AppController struct {
@@ -18,7 +18,7 @@ func NewAppController(db *gorm.DB, auth middleware.AuthHandler) *AppController {
 	return &AppController{db, auth}
 }
 
-func (ctrl *AppController) Map(router *fiber.App) {
+func (ctrl *AppController) Map(router *ctx.App) {
 	router.Get("/api/apps", ctrl.auth(true), ctrl.list)
 	router.Get("/api/apps/:app", ctrl.auth(true), ctrl.get)
 	router.Post("/api/apps", ctrl.auth(true), ctrl.create)
@@ -26,30 +26,30 @@ func (ctrl *AppController) Map(router *fiber.App) {
 	router.Delete("/api/apps/:app", ctrl.auth(true), ctrl.delete)
 }
 
-func (ctrl *AppController) list(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *AppController) list(c *ctx.Ctx) error {
+	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
 
 	var apps []models.MatrixApp
 	if err := ctrl.db.Where("account_id = ?", u.ID).Find(&apps).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+		return c.DbError(err)
 	} else {
-		return c.JSON(apps)
+		return c.P.JSON(apps)
 	}
 }
 
-func (ctrl *AppController) get(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *AppController) get(c *ctx.Ctx) error {
+	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+		return c.DbError(err)
 	} else {
-		return c.JSON(app)
+		return c.P.JSON(app)
 	}
 }
 
-func (ctrl *AppController) create(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *AppController) create(c *ctx.Ctx) error {
+	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
 
 	var req struct {
 		Slug        string   `json:"slug" validate:"required"`
@@ -61,7 +61,7 @@ func (ctrl *AppController) create(c *fiber.Ctx) error {
 		IsPublished bool     `json:"is_published"`
 	}
 
-	if err := utils.ParseRequestBody(c, &req); err != nil {
+	if err := c.BindBody(&req); err != nil {
 		return err
 	}
 
@@ -77,14 +77,14 @@ func (ctrl *AppController) create(c *fiber.Ctx) error {
 	}
 
 	if err := ctrl.db.Save(&app).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+		return c.DbError(err)
 	} else {
-		return c.JSON(app)
+		return c.P.JSON(app)
 	}
 }
 
-func (ctrl *AppController) update(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *AppController) update(c *ctx.Ctx) error {
+	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
 
 	var req struct {
 		Slug        string   `json:"slug" validate:"required"`
@@ -96,13 +96,13 @@ func (ctrl *AppController) update(c *fiber.Ctx) error {
 		IsPublished bool     `json:"is_published"`
 	}
 
-	if err := utils.ParseRequestBody(c, &req); err != nil {
+	if err := c.BindBody(&req); err != nil {
 		return err
 	}
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+		return c.DbError(err)
 	}
 
 	app.Url = req.Url
@@ -114,23 +114,23 @@ func (ctrl *AppController) update(c *fiber.Ctx) error {
 	app.IsPublished = req.IsPublished
 
 	if err := ctrl.db.Save(&app).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+		return c.DbError(err)
 	} else {
-		return c.JSON(app)
+		return c.P.JSON(app)
 	}
 }
 
-func (ctrl *AppController) delete(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *AppController) delete(c *ctx.Ctx) error {
+	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+		return c.DbError(err)
 	}
 
 	if err := ctrl.db.Delete(&app).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+		return c.DbError(err)
 	} else {
-		return c.SendStatus(fiber.StatusNoContent)
+		return c.P.SendStatus(fiber.StatusNoContent)
 	}
 }

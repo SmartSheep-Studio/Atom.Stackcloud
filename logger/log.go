@@ -7,9 +7,13 @@ import (
 	"os"
 )
 
-func NewEventLogger() fxevent.Logger {
+func NewLogger() zerolog.Logger {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stdout})
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 
-	return &fxevent.ConsoleLogger{W: log.Logger}
+	return log.Logger
+}
+
+func NewEventLogger(log zerolog.Logger) fxevent.Logger {
+	return &fxevent.ConsoleLogger{W: log}
 }

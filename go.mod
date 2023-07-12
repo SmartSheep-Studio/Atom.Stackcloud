@@ -1,11 +1,11 @@
-module repo.smartsheep.studio/atom/matrix
+module code.smartsheep.studio/atom/matrix
 
 go 1.20
 
 require (
+	code.smartsheep.studio/atom/neutron v0.0.0-20230712144730-742118626e75
 	github.com/rs/zerolog v1.29.1
 	gorm.io/datatypes v1.2.0
-	repo.smartsheep.studio/atom/nucleus v0.0.0-20230706080912-af776bc6d8a7
 )
 
 require (
@@ -13,17 +13,15 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.14.1 // indirect
+	github.com/go-playground/validator/v10 v10.14.0 // indirect
 	github.com/golang-jwt/jwt/v5 v5.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
-	github.com/jackc/pgx/v5 v5.4.1 // indirect
+	github.com/jackc/pgx/v5 v5.4.2 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
-	github.com/oschwald/geoip2-golang v1.9.0 // indirect
-	github.com/oschwald/maxminddb-golang v1.11.0 // indirect
-	github.com/robfig/cron/v3 v3.0.1 // indirect
+	github.com/stretchr/testify v1.8.4 // indirect
 	golang.org/x/crypto v0.11.0 // indirect
-	golang.org/x/exp v0.0.0-20230626212559-97b1e661b5df // indirect
+	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1 // indirect
 )
 
 require (
@@ -70,5 +68,4 @@ require (
 	gorm.io/driver/mysql v1.5.1 // indirect
 	gorm.io/driver/postgres v1.5.2
 	gorm.io/gorm v1.25.2
-	repo.smartsheep.studio/smartsheep/atom v0.0.0-20230522221508-6aa6d7282edc // indirect
 )

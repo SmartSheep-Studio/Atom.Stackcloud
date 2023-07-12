@@ -1,5 +1,5 @@
 # Run image with this command
-# docker run --rm --name matrix --net host -v $(pwd)/settings.toml:/server/settings.toml -v $(pwd)/plugins:/server/plugins -v $(pwd)/resources:/resources matrix
+# docker run --rm --name matrix --net host -v $(pwd)/config.toml:/http/config.toml -v $(pwd)/plugins:/http/plugins -v $(pwd)/resources:/resources matrix
 
 # Building Frontend
 FROM node:18-alpine as renderer

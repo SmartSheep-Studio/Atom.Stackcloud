@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func Migrate(db *gorm.DB) {
+func RunMigration(db *gorm.DB) {
 	if err := db.AutoMigrate(
 		&MatrixAccount{},
 		&MatrixApp{},

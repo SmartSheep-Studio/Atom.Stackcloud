@@ -1,12 +1,12 @@
-package server
+package controllers
 
 import (
+	"code.smartsheep.studio/atom/matrix/datasource/models"
+	"code.smartsheep.studio/atom/matrix/http/middleware"
+	ctx "code.smartsheep.studio/atom/neutron/http/context"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
-	"repo.smartsheep.studio/atom/matrix/datasource/models"
-	"repo.smartsheep.studio/atom/matrix/server/middleware"
-	"repo.smartsheep.studio/atom/nucleus/utils"
 )
 
 type ReleaseController struct {
@@ -18,7 +18,7 @@ func NewReleaseController(db *gorm.DB, auth middleware.AuthHandler) *ReleaseCont
 	return &ReleaseController{db, auth}
 }
 
-func (ctrl *ReleaseController) Map(router *fiber.App) {
+func (ctrl *ReleaseController) Map(router *ctx.App) {
 	router.Get("/api/apps/:app/releases", ctrl.auth(true), ctrl.list)
 	router.Get("/api/apps/:app/releases/:release", ctrl.auth(true), ctrl.get)
 	router.Post("/api/apps/:app/releases", ctrl.auth(true), ctrl.create)
@@ -26,44 +26,44 @@ func (ctrl *ReleaseController) Map(router *fiber.App) {
 	router.Delete("/api/apps/:app/releases/:release", ctrl.auth(true), ctrl.delete)
 }
 
-func (ctrl *ReleaseController) list(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *ReleaseController) list(c *ctx.Ctx) error {
+	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+		return c.DbError(err)
 	}
 
 	var releases []models.MatrixRelease
 	if err := ctrl.db.Where("app_id = ?", app.ID).Order("created_at desc").Preload("Post").Find(&releases).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+		return c.DbError(err)
 	} else {
-		return c.JSON(releases)
+		return c.P.JSON(releases)
 	}
 }
 
-func (ctrl *ReleaseController) get(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *ReleaseController) get(c *ctx.Ctx) error {
+	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+		return c.DbError(err)
 	}
 
 	var release models.MatrixRelease
-	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.P.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
+		return c.DbError(err)
 	} else {
-		return c.JSON(release)
+		return c.P.JSON(release)
 	}
 }
 
-func (ctrl *ReleaseController) create(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *ReleaseController) create(c *ctx.Ctx) error {
+	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+		return c.DbError(err)
 	}
 
 	var req struct {
@@ -77,7 +77,7 @@ func (ctrl *ReleaseController) create(c *fiber.Ctx) error {
 		IsPublished bool                        `json:"is_published"`
 	}
 
-	if err := utils.ParseRequestBody(c, &req); err != nil {
+	if err := c.BindBody(&req); err != nil {
 		return err
 	}
 
@@ -100,18 +100,18 @@ func (ctrl *ReleaseController) create(c *fiber.Ctx) error {
 	}
 
 	if err := ctrl.db.Save(&release).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+		return c.DbError(err)
 	} else {
-		return c.JSON(release)
+		return c.P.JSON(release)
 	}
 }
 
-func (ctrl *ReleaseController) update(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *ReleaseController) update(c *ctx.Ctx) error {
+	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+		return c.DbError(err)
 	}
 
 	var req struct {
@@ -125,16 +125,16 @@ func (ctrl *ReleaseController) update(c *fiber.Ctx) error {
 		IsPublished bool                        `json:"is_published"`
 	}
 
-	if err := utils.ParseRequestBody(c, &req); err != nil {
+	if err := c.BindBody(&req); err != nil {
 		return err
 	}
 
 	tx := ctrl.db.Begin()
 
 	var release models.MatrixRelease
-	if err := tx.Where("slug = ? AND app_id = ?", c.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
+	if err := tx.Where("slug = ? AND app_id = ?", c.P.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
 		tx.Rollback()
-		return utils.ParseDataSourceError(err)
+		return c.DbError(err)
 	} else {
 		ctrl.db.Unscoped().Delete(&release.Post)
 	}
@@ -156,36 +156,36 @@ func (ctrl *ReleaseController) update(c *fiber.Ctx) error {
 
 	if err := tx.Save(&release).Error; err != nil {
 		tx.Rollback()
-		return utils.ParseDataSourceError(err)
+		return c.DbError(err)
 	}
 
 	if err := tx.Commit().Error; err != nil {
-		return utils.ParseDataSourceError(err)
+		return c.DbError(err)
 	} else {
-		return c.JSON(release)
+		return c.P.JSON(release)
 	}
 }
 
-func (ctrl *ReleaseController) delete(c *fiber.Ctx) error {
-	u := c.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *ReleaseController) delete(c *ctx.Ctx) error {
+	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
 
 	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+		return c.DbError(err)
 	}
 
 	var release models.MatrixRelease
-	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.P.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
+		return c.DbError(err)
 	}
 
 	if err := ctrl.db.Delete(&release.Post).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+		return c.DbError(err)
 	}
 
 	if err := ctrl.db.Delete(&release).Error; err != nil {
-		return utils.ParseDataSourceError(err)
+		return c.DbError(err)
 	} else {
-		return c.SendStatus(fiber.StatusNoContent)
+		return c.P.SendStatus(fiber.StatusNoContent)
 	}
 }

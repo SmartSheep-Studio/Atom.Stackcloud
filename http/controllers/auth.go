@@ -1,14 +1,15 @@
-package server
+package controllers
 
 import (
+	ctx "code.smartsheep.studio/atom/neutron/http/context"
 	"encoding/json"
 	"fmt"
+	"github.com/gofiber/fiber/v2"
 	"strconv"
 
-	"github.com/gofiber/fiber/v2"
+	"code.smartsheep.studio/atom/neutron/datasource/models"
+	"code.smartsheep.studio/atom/neutron/toolbox"
 	"github.com/spf13/viper"
-	"repo.smartsheep.studio/atom/nucleus/datasource/models"
-	"repo.smartsheep.studio/atom/nucleus/toolbox"
 )
 
 type AuthController struct {
@@ -19,7 +20,7 @@ func NewAuthController(conn *toolbox.ExternalServiceConnection) *AuthController 
 	return &AuthController{conn}
 }
 
-func (ctrl *AuthController) Map(router *fiber.App) {
+func (ctrl *AuthController) Map(router *ctx.App) {
 	router.Get("/api/auth/request", ctrl.request)
 	router.Get("/api/auth/callback", ctrl.callback)
 }
@@ -33,31 +34,31 @@ func (ctrl *AuthController) getOauth() models.OauthClient {
 	return client
 }
 
-func (ctrl *AuthController) request(c *fiber.Ctx) error {
+func (ctrl *AuthController) request(c *ctx.Ctx) error {
 	oauth := ctrl.getOauth()
 
-	return c.Redirect(ctrl.conn.GetConnectURL(
+	return c.P.Redirect(ctrl.conn.GetConnectURL(
 		strconv.Itoa(int(oauth.ID)),
-		fmt.Sprintf("%s/api/auth/callback", viper.GetString("general.base_url")),
+		fmt.Sprintf("%s/api/auth/callback", viper.GetString("base_url")),
 	), fiber.StatusFound)
 }
 
-func (ctrl *AuthController) callback(c *fiber.Ctx) error {
+func (ctrl *AuthController) callback(c *ctx.Ctx) error {
 	oauth := ctrl.getOauth()
 
-	code := c.Query("code")
+	code := c.P.Query("code")
 
 	token, _, err := ctrl.conn.ExchangeAccessToken(
 		code,
 		strconv.Itoa(int(oauth.ID)),
 		oauth.Secret,
-		fmt.Sprintf("%s/api/auth/callback", viper.GetString("general.base_url")),
+		fmt.Sprintf("%s/api/auth/callback", viper.GetString("base_url")),
 	)
 
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
-		c.Cookie(&fiber.Cookie{
+		c.P.Cookie(&fiber.Cookie{
 			Path:     "/",
 			Name:     "authorization",
 			Value:    token,
@@ -66,6 +67,6 @@ func (ctrl *AuthController) callback(c *fiber.Ctx) error {
 			Secure:   true,
 		})
 
-		return c.Redirect(viper.GetString("general.base_url"), fiber.StatusFound)
+		return c.P.Redirect(viper.GetString("base_url"), fiber.StatusFound)
 	}
 }

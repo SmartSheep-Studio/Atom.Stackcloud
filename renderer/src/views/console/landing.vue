@@ -30,6 +30,6 @@ const greetings = computed(() =>
     ? { period: "Morning", text: "Grab a cup of hot coffee and start your day full of energy!" }
     : new Date().getHours() <= 18 && new Date().getHours() >= 12
     ? { period: "Afternoon", text: "It's past three o'clock, what are you doing, the boss won't appreciate you~" }
-    : { period: "Night", text: "It's time to sleep~ Otherwise the server will explode~" }
+    : { period: "Night", text: "It's time to sleep~ Otherwise the http will explode~" }
 )
 </script>

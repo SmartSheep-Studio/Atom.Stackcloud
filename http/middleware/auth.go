@@ -1,24 +1,25 @@
 package middleware
 
 import (
+	ctx "code.smartsheep.studio/atom/neutron/http/context"
 	"errors"
 	"fmt"
+	"github.com/gofiber/fiber/v2"
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
+	"code.smartsheep.studio/atom/matrix/datasource/models"
+	tmodels "code.smartsheep.studio/atom/neutron/datasource/models"
+	"code.smartsheep.studio/atom/neutron/toolbox"
 	"go.uber.org/fx"
 	"gorm.io/gorm"
-	"repo.smartsheep.studio/atom/matrix/datasource/models"
-	tmodels "repo.smartsheep.studio/atom/nucleus/datasource/models"
-	"repo.smartsheep.studio/atom/nucleus/toolbox"
 )
 
 var conn *toolbox.ExternalServiceConnection
 
-type AuthHandler func(force bool, perms ...string) fiber.Handler
+type AuthHandler func(force bool, perms ...string) ctx.Handler
 
 type AuthConfig struct {
-	Next        func(c *fiber.Ctx) bool
+	Next        func(c *ctx.Ctx) bool
 	LookupToken string
 }
 
@@ -30,10 +31,10 @@ func NewAuth(cycle fx.Lifecycle, db *gorm.DB, c *toolbox.ExternalServiceConnecti
 		LookupToken: "header: Authorization, query: token, cookie: authorization",
 	}
 
-	return func(force bool, perms ...string) fiber.Handler {
-		return func(c *fiber.Ctx) error {
+	return func(force bool, perms ...string) ctx.Handler {
+		return func(c *ctx.Ctx) error {
 			if cfg.Next != nil && cfg.Next(c) {
-				return c.Next()
+				return c.P.Next()
 			}
 
 			u, err := LookupAuthToken(c, strings.Split(cfg.LookupToken, ","))
@@ -61,20 +62,20 @@ func NewAuth(cycle fx.Lifecycle, db *gorm.DB, c *toolbox.ExternalServiceConnecti
 						}
 					}
 
-					c.Locals("matrix-id", account)
+					c.P.Locals("matrix-id", account)
 				}
 
-				c.Locals("principal-ok", err == nil)
+				c.P.Locals("principal-ok", err == nil)
 
-				c.Locals("principal", u)
+				c.P.Locals("principal", u)
 			}
 
-			return c.Next()
+			return c.P.Next()
 		}
 	}
 }
 
-func LookupAuthToken(c *fiber.Ctx, args []string) (tmodels.User, error) {
+func LookupAuthToken(c *ctx.Ctx, args []string) (tmodels.User, error) {
 	var str string
 	for _, arg := range args {
 		parts := strings.Split(strings.TrimSpace(arg), ":")
@@ -83,16 +84,16 @@ func LookupAuthToken(c *fiber.Ctx, args []string) (tmodels.User, error) {
 
 		switch k {
 		case "header":
-			if len(c.GetReqHeaders()[v]) > 0 {
-				str = strings.TrimSpace(strings.ReplaceAll(c.GetReqHeaders()[v], "Bearer", ""))
+			if len(c.P.GetReqHeaders()[v]) > 0 {
+				str = strings.TrimSpace(strings.ReplaceAll(c.P.GetReqHeaders()[v], "Bearer", ""))
 			}
 		case "query":
-			if len(c.Query(v)) > 0 {
-				str = c.Query(v)
+			if len(c.P.Query(v)) > 0 {
+				str = c.P.Query(v)
 			}
 		case "cookie":
-			if len(c.Cookies(v)) > 0 {
-				str = c.Cookies(v)
+			if len(c.P.Cookies(v)) > 0 {
+				str = c.P.Cookies(v)
 			}
 		}
 	}

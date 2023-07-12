@@ -1,11 +1,13 @@
-export const placeholders: { [id: string]: string } = {
+import defaultBanner from "@/assets/placeholders/default-banner.jpg"
+import defaultAvatar from "@/assets/placeholders/default-banner.jpg"
+
+export const placeholders: { [id: string]: any } = {
   description: "No description yet",
-  banner: "https://static.smartsheep.studio/d/Atom/Placeholders/default-banner.jpg",
-  avatar: "https://static.smartsheep.studio/d/Atom/Icon.png",
-  project: "mdi-sitemap",
+  banner: defaultBanner,
+  avatar: defaultAvatar,
 }
 
-export function usePlaceholder(id: string, val?: string): string {
+export function usePlaceholder(id: string, val?: string): any {
   if (val == null || val.length <= 0) {
     return placeholders[id]
   } else {

@@ -3,13 +3,13 @@ package config
 import (
 	"context"
 	"fmt"
-
 	"github.com/gofiber/fiber/v2"
+
+	tmodels "code.smartsheep.studio/atom/neutron/datasource/models"
+	"code.smartsheep.studio/atom/neutron/toolbox"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 	"go.uber.org/fx"
-	tmodels "repo.smartsheep.studio/atom/nucleus/datasource/models"
-	"repo.smartsheep.studio/atom/nucleus/toolbox"
 )
 
 func NewEndpointConnection(cycle fx.Lifecycle) *toolbox.ExternalServiceConnection {
@@ -17,16 +17,16 @@ func NewEndpointConnection(cycle fx.Lifecycle) *toolbox.ExternalServiceConnectio
 
 	cycle.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
-			conn, err := toolbox.PublishService(viper.GetString("general.endpoints"), viper.GetString("general.mount_key"), toolbox.ExternalServiceRequest{
+			conn, err := toolbox.PublishService(viper.GetString("endpoints"), viper.GetString("mount_key"), toolbox.ExternalServiceRequest{
 				Name:        "Matrix",
-				InstanceID:  viper.GetString("general.instance_id"),
-				PackageID:   "repo.smartsheep.studio/atom/matrix",
+				InstanceID:  viper.GetString("instance_id"),
+				PackageID:   "code.smartsheep.studio/atom/matrix",
 				Description: "A developer-friendly, geek-friendly store for apps and games.",
-				Address:     viper.GetString("general.base_url"),
+				Address:     viper.GetString("base_url"),
 				Options: tmodels.ExternalServiceOptions{
 					Pages: []tmodels.ExternalPage{
 						{
-							To:      viper.GetString("general.base_url"),
+							To:      viper.GetString("base_url"),
 							Title:   "Matrix",
 							Name:    "matrix",
 							Icon:    "mdi-store",
@@ -41,8 +41,8 @@ func NewEndpointConnection(cycle fx.Lifecycle) *toolbox.ExternalServiceConnectio
 					},
 					Requirements: []string{"oauth"},
 					Properties: fiber.Map{
-						"oauth.urls":      []string{viper.GetString("general.base_url")},
-						"oauth.callbacks": []string{fmt.Sprintf("%s/api/auth/callback", viper.GetString("general.base_url"))},
+						"oauth.urls":      []string{viper.GetString("base_url")},
+						"oauth.callbacks": []string{fmt.Sprintf("%s/api/auth/callback", viper.GetString("base_url"))},
 					},
 				},
 			})

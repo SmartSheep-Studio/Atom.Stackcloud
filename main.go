@@ -1,32 +1,29 @@
 package main
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"code.smartsheep.studio/atom/matrix/config"
+	"code.smartsheep.studio/atom/matrix/datasource"
+	"code.smartsheep.studio/atom/matrix/http"
+	"code.smartsheep.studio/atom/matrix/logger"
+	"code.smartsheep.studio/atom/matrix/services"
+	"code.smartsheep.studio/atom/neutron/toolbox"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 	"go.uber.org/fx"
-	"repo.smartsheep.studio/atom/matrix/config"
-	"repo.smartsheep.studio/atom/matrix/datasource"
-	"repo.smartsheep.studio/atom/matrix/datasource/models"
-	"repo.smartsheep.studio/atom/matrix/logger"
-	"repo.smartsheep.studio/atom/matrix/server"
-	"repo.smartsheep.studio/atom/matrix/services"
-	"repo.smartsheep.studio/atom/nucleus/toolbox"
 )
 
 func main() {
 	fx.New(
+		logger.Module(),
 		fx.WithLogger(logger.NewEventLogger),
-		fx.Invoke(models.Migrate),
 
+		config.Module(),
 		datasource.Module(),
 		services.Module(),
-		server.Module(),
+		http.Module(),
 
-		fx.Provide(config.NewEndpointConnection),
-
-		fx.Invoke(func(server *fiber.App, routes *server.HttpMap, endpoint *toolbox.ExternalServiceConnection) {
-			log.Info().Msgf("You can open %s in your browser now", viper.GetString("general.base_url"))
+		fx.Invoke(func(conf *viper.Viper, endpoint *toolbox.ExternalServiceConnection) {
+			log.Info().Msgf("Your matrix instance is ready on: %s", conf.GetString("base_url"))
 		}),
 	).Run()
 }
