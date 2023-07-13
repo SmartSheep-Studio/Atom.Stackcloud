@@ -3,7 +3,7 @@ package controllers
 import (
 	"code.smartsheep.studio/atom/matrix/datasource/models"
 	"code.smartsheep.studio/atom/matrix/http/middleware"
-	ctx "code.smartsheep.studio/atom/neutron/http/context"
+	"code.smartsheep.studio/atom/neutron/http/context"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
@@ -18,7 +18,7 @@ func NewReleaseController(db *gorm.DB, auth middleware.AuthHandler) *ReleaseCont
 	return &ReleaseController{db, auth}
 }
 
-func (ctrl *ReleaseController) Map(router *ctx.App) {
+func (ctrl *ReleaseController) Map(router *context.App) {
 	router.Get("/api/apps/:app/releases", ctrl.auth(true), ctrl.list)
 	router.Get("/api/apps/:app/releases/:release", ctrl.auth(true), ctrl.get)
 	router.Post("/api/apps/:app/releases", ctrl.auth(true), ctrl.create)
@@ -26,66 +26,69 @@ func (ctrl *ReleaseController) Map(router *ctx.App) {
 	router.Delete("/api/apps/:app/releases/:release", ctrl.auth(true), ctrl.delete)
 }
 
-func (ctrl *ReleaseController) list(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *ReleaseController) list(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
-	var releases []models.MatrixRelease
+	var releases []models.Release
 	if err := ctrl.db.Where("app_id = ?", app.ID).Order("created_at desc").Preload("Post").Find(&releases).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(releases)
+		return c.JSON(releases)
 	}
 }
 
-func (ctrl *ReleaseController) get(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *ReleaseController) get(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
-	var release models.MatrixRelease
-	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.P.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
+	var release models.Release
+	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(release)
+		return c.JSON(release)
 	}
 }
 
-func (ctrl *ReleaseController) create(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *ReleaseController) create(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
 	var req struct {
-		Slug        string                      `json:"slug" validate:"required"`
-		Name        string                      `json:"name" validate:"required"`
-		Type        string                      `json:"type" validate:"required"`
-		Description string                      `json:"description"`
-		Details     string                      `json:"details"`
-		Tags        []string                    `json:"tags"`
-		Options     models.MatrixReleaseOptions `json:"options" validate:"required"`
-		IsPublished bool                        `json:"is_published"`
+		Slug        string                `json:"slug" validate:"required"`
+		Name        string                `json:"name" validate:"required"`
+		Type        string                `json:"type" validate:"required"`
+		Description string                `json:"description"`
+		Details     string                `json:"details"`
+		Tags        []string              `json:"tags"`
+		Options     models.ReleaseOptions `json:"options" validate:"required"`
+		IsPublished bool                  `json:"is_published"`
 	}
 
 	if err := c.BindBody(&req); err != nil {
 		return err
 	}
 
-	release := models.MatrixRelease{
+	release := models.Release{
 		Slug:        req.Slug,
 		Name:        req.Name,
 		Description: req.Description,
-		Post: models.MatrixPost{
+		Post: models.Post{
 			Slug:        req.Slug,
 			Type:        req.Type,
 			Title:       req.Name,
@@ -102,27 +105,28 @@ func (ctrl *ReleaseController) create(c *ctx.Ctx) error {
 	if err := ctrl.db.Save(&release).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(release)
+		return c.JSON(release)
 	}
 }
 
-func (ctrl *ReleaseController) update(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *ReleaseController) update(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
 	var req struct {
-		Slug        string                      `json:"slug" validate:"required"`
-		Name        string                      `json:"name" validate:"required"`
-		Type        string                      `json:"type" validate:"required"`
-		Description string                      `json:"description"`
-		Details     string                      `json:"details"`
-		Tags        []string                    `json:"tags"`
-		Options     models.MatrixReleaseOptions `json:"options" validate:"required"`
-		IsPublished bool                        `json:"is_published"`
+		Slug        string                `json:"slug" validate:"required"`
+		Name        string                `json:"name" validate:"required"`
+		Type        string                `json:"type" validate:"required"`
+		Description string                `json:"description"`
+		Details     string                `json:"details"`
+		Tags        []string              `json:"tags"`
+		Options     models.ReleaseOptions `json:"options" validate:"required"`
+		IsPublished bool                  `json:"is_published"`
 	}
 
 	if err := c.BindBody(&req); err != nil {
@@ -131,8 +135,8 @@ func (ctrl *ReleaseController) update(c *ctx.Ctx) error {
 
 	tx := ctrl.db.Begin()
 
-	var release models.MatrixRelease
-	if err := tx.Where("slug = ? AND app_id = ?", c.P.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
+	var release models.Release
+	if err := tx.Where("slug = ? AND app_id = ?", c.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
 		tx.Rollback()
 		return c.DbError(err)
 	} else {
@@ -144,7 +148,7 @@ func (ctrl *ReleaseController) update(c *ctx.Ctx) error {
 	release.Description = req.Description
 	release.IsPublished = req.IsPublished
 	release.Options = datatypes.NewJSONType(req.Options)
-	release.Post = models.MatrixPost{
+	release.Post = models.Post{
 		Slug:        req.Slug,
 		Type:        req.Type,
 		Title:       req.Name,
@@ -162,20 +166,21 @@ func (ctrl *ReleaseController) update(c *ctx.Ctx) error {
 	if err := tx.Commit().Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(release)
+		return c.JSON(release)
 	}
 }
 
-func (ctrl *ReleaseController) delete(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *ReleaseController) delete(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
-	var release models.MatrixRelease
-	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.P.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
+	var release models.Release
+	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("release"), app.ID).Preload("Post").First(&release).Error; err != nil {
 		return c.DbError(err)
 	}
 
@@ -186,6 +191,6 @@ func (ctrl *ReleaseController) delete(c *ctx.Ctx) error {
 	if err := ctrl.db.Delete(&release).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.SendStatus(fiber.StatusNoContent)
+		return c.SendStatus(fiber.StatusNoContent)
 	}
 }

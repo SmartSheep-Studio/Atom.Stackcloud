@@ -13,10 +13,10 @@ func NewExploreService(db *gorm.DB) *ExploreService {
 	return &ExploreService{db}
 }
 
-func (v *ExploreService) ExploreApps() ([]models.MatrixApp, error) {
+func (v *ExploreService) ExploreApps() ([]models.App, error) {
 	tx := v.db.Where("is_published = true")
 
-	var apps []models.MatrixApp
+	var apps []models.App
 	if err := tx.Limit(100).Order("created_at desc").Find(&apps).Error; err != nil {
 		return nil, err
 	} else {
@@ -24,10 +24,10 @@ func (v *ExploreService) ExploreApps() ([]models.MatrixApp, error) {
 	}
 }
 
-func (v *ExploreService) ExploreApp(app uint) (models.MatrixApp, error) {
+func (v *ExploreService) ExploreApp(app uint) (models.App, error) {
 	tx := v.db.Where("is_published = true AND id = ?", app)
 
-	var details models.MatrixApp
+	var details models.App
 	if err := tx.Preload("Posts").Preload("Releases").First(&details).Error; err != nil {
 		return details, err
 	} else {
@@ -35,10 +35,10 @@ func (v *ExploreService) ExploreApp(app uint) (models.MatrixApp, error) {
 	}
 }
 
-func (v *ExploreService) ExplorePosts(app uint) ([]models.MatrixPost, error) {
+func (v *ExploreService) ExplorePosts(app uint) ([]models.Post, error) {
 	tx := v.db.Where("is_published = true AND app_id = ?", app)
 
-	var posts []models.MatrixPost
+	var posts []models.Post
 	if err := tx.Limit(100).Order("created_at desc").Find(&posts).Error; err != nil {
 		return nil, err
 	} else {
@@ -46,10 +46,10 @@ func (v *ExploreService) ExplorePosts(app uint) ([]models.MatrixPost, error) {
 	}
 }
 
-func (v *ExploreService) ExploreReleases(app uint) ([]models.MatrixRelease, error) {
+func (v *ExploreService) ExploreReleases(app uint) ([]models.Release, error) {
 	tx := v.db.Where("is_published = true AND app_id = ?", app)
 
-	var releases []models.MatrixRelease
+	var releases []models.Release
 	if err := tx.Limit(100).Order("created_at desc").Find(&releases).Error; err != nil {
 		return nil, err
 	} else {

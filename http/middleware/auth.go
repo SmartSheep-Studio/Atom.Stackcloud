@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	ctx "code.smartsheep.studio/atom/neutron/http/context"
+	"code.smartsheep.studio/atom/neutron/http/context"
 	"errors"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
@@ -16,10 +16,10 @@ import (
 
 var conn *toolbox.ExternalServiceConnection
 
-type AuthHandler func(force bool, perms ...string) ctx.Handler
+type AuthHandler func(force bool, perms ...string) fiber.Handler
 
 type AuthConfig struct {
-	Next        func(c *ctx.Ctx) bool
+	Next        func(ctx *fiber.Ctx) bool
 	LookupToken string
 }
 
@@ -31,10 +31,11 @@ func NewAuth(cycle fx.Lifecycle, db *gorm.DB, c *toolbox.ExternalServiceConnecti
 		LookupToken: "header: Authorization, query: token, cookie: authorization",
 	}
 
-	return func(force bool, perms ...string) ctx.Handler {
-		return func(c *ctx.Ctx) error {
-			if cfg.Next != nil && cfg.Next(c) {
-				return c.P.Next()
+	return func(force bool, perms ...string) fiber.Handler {
+		return func(ctx *fiber.Ctx) error {
+			c := &context.Ctx{Ctx: ctx}
+			if cfg.Next != nil && cfg.Next(ctx) {
+				return c.Next()
 			}
 
 			u, err := LookupAuthToken(c, strings.Split(cfg.LookupToken, ","))
@@ -46,10 +47,10 @@ func NewAuth(cycle fx.Lifecycle, db *gorm.DB, c *toolbox.ExternalServiceConnecti
 						return fiber.NewError(fiber.StatusForbidden, err.Error())
 					}
 
-					var account *models.MatrixAccount
+					var account *models.Account
 					if err := db.Where("user_id = ?", u.ID).First(&account).Error; err != nil {
 						if errors.Is(gorm.ErrRecordNotFound, err) {
-							account = &models.MatrixAccount{
+							account = &models.Account{
 								Nickname: u.Nickname,
 								UserID:   u.ID,
 							}
@@ -62,20 +63,20 @@ func NewAuth(cycle fx.Lifecycle, db *gorm.DB, c *toolbox.ExternalServiceConnecti
 						}
 					}
 
-					c.P.Locals("matrix-id", account)
+					c.Locals("matrix-id", account)
 				}
 
-				c.P.Locals("principal-ok", err == nil)
+				c.Locals("principal-ok", err == nil)
 
-				c.P.Locals("principal", u)
+				c.Locals("principal", u)
 			}
 
-			return c.P.Next()
+			return c.Next()
 		}
 	}
 }
 
-func LookupAuthToken(c *ctx.Ctx, args []string) (tmodels.User, error) {
+func LookupAuthToken(c *context.Ctx, args []string) (tmodels.User, error) {
 	var str string
 	for _, arg := range args {
 		parts := strings.Split(strings.TrimSpace(arg), ":")
@@ -84,16 +85,16 @@ func LookupAuthToken(c *ctx.Ctx, args []string) (tmodels.User, error) {
 
 		switch k {
 		case "header":
-			if len(c.P.GetReqHeaders()[v]) > 0 {
-				str = strings.TrimSpace(strings.ReplaceAll(c.P.GetReqHeaders()[v], "Bearer", ""))
+			if len(c.GetReqHeaders()[v]) > 0 {
+				str = strings.TrimSpace(strings.ReplaceAll(c.GetReqHeaders()[v], "Bearer", ""))
 			}
 		case "query":
-			if len(c.P.Query(v)) > 0 {
-				str = c.P.Query(v)
+			if len(c.Query(v)) > 0 {
+				str = c.Query(v)
 			}
 		case "cookie":
-			if len(c.P.Cookies(v)) > 0 {
-				str = c.P.Cookies(v)
+			if len(c.Cookies(v)) > 0 {
+				str = c.Cookies(v)
 			}
 		}
 	}

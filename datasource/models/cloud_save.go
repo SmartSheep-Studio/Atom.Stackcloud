@@ -2,7 +2,7 @@ package models
 
 import "gorm.io/datatypes"
 
-type MatrixCloudSave struct {
+type CloudSave struct {
 	Model
 
 	Name      string         `json:"name"`

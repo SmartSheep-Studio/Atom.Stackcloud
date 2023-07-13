@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	ctx "code.smartsheep.studio/atom/neutron/http/context"
+	"code.smartsheep.studio/atom/neutron/http/context"
 	"errors"
 	"github.com/gofiber/fiber/v2"
 
@@ -22,47 +22,50 @@ func NewLibraryController(db *gorm.DB, conn *toolbox.ExternalServiceConnection, 
 	return &LibraryController{db, conn, auth}
 }
 
-func (ctrl *LibraryController) Map(router *ctx.App) {
+func (ctrl *LibraryController) Map(router *context.App) {
 	router.Get("/api/library", ctrl.auth(true), ctrl.list)
 	router.Get("/api/library/own", ctrl.auth(true), ctrl.doesOwn)
 	router.Post("/api/library/add", ctrl.auth(true), ctrl.add)
 }
 
-func (ctrl *LibraryController) list(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *LibraryController) list(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
-	var items []models.MatrixLibraryItem
+	var items []models.LibraryItem
 	if err := ctrl.db.Where("account_id = ?", u.ID).Find(&items).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(items)
+		return c.JSON(items)
 	}
 }
 
-func (ctrl *LibraryController) doesOwn(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
-	target := c.P.Query("app")
+func (ctrl *LibraryController) doesOwn(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
+	target := c.Query("app")
 
-	var app models.MatrixApp
+	var app models.App
 	if err := ctrl.db.Where("slug = ?", target).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
 	var libraryCount int64
-	if err := ctrl.db.Model(&models.MatrixLibraryItem{}).Where("account_id = ? AND app_id = ?", u.ID, app.ID).Count(&libraryCount).Error; err != nil {
+	if err := ctrl.db.Model(&models.LibraryItem{}).Where("account_id = ? AND app_id = ?", u.ID, app.ID).Count(&libraryCount).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return c.P.SendStatus(fiber.StatusNoContent)
+			return c.SendStatus(fiber.StatusNoContent)
 		}
 		return c.DbError(err)
 	} else if libraryCount <= 0 {
-		return c.P.SendStatus(fiber.StatusOK)
+		return c.SendStatus(fiber.StatusOK)
 	} else {
-		return c.P.SendStatus(fiber.StatusNoContent)
+		return c.SendStatus(fiber.StatusNoContent)
 	}
 }
 
-func (ctrl *LibraryController) add(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *LibraryController) add(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
 	var req struct {
 		App string `json:"app" validate:"required"`
@@ -72,13 +75,13 @@ func (ctrl *LibraryController) add(c *ctx.Ctx) error {
 		return err
 	}
 
-	var app models.MatrixApp
+	var app models.App
 	if err := ctrl.db.Where("slug = ?", req.App).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
 	var libraryCount int64
-	if err := ctrl.db.Model(&models.MatrixLibraryItem{}).Where("account_id = ? AND app_id = ?", u.ID, app.ID).Count(&libraryCount).Error; err != nil {
+	if err := ctrl.db.Model(&models.LibraryItem{}).Where("account_id = ? AND app_id = ?", u.ID, app.ID).Count(&libraryCount).Error; err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return c.DbError(err)
 		}
@@ -86,10 +89,10 @@ func (ctrl *LibraryController) add(c *ctx.Ctx) error {
 		return fiber.NewError(fiber.StatusForbidden, "already in the library")
 	}
 
-	item := models.MatrixLibraryItem{
+	item := models.LibraryItem{
 		AccountID: u.ID,
 		AppID:     app.ID,
-		CloudSave: models.MatrixCloudSave{
+		CloudSave: models.CloudSave{
 			Name:    u.Nickname,
 			Payload: datatypes.JSON([]byte("{}")),
 		},
@@ -98,6 +101,6 @@ func (ctrl *LibraryController) add(c *ctx.Ctx) error {
 	if err := ctrl.db.Save(&item).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(item)
+		return c.JSON(item)
 	}
 }

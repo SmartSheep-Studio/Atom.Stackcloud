@@ -1,6 +1,6 @@
 import { defineStore } from "pinia"
 import { http } from "@/utils/http"
-import { reactive, ref } from "vue"
+import { ref } from "vue"
 
 export const useEndpoint = defineStore("endpoint", () => {
   const isPrepared = ref(true)
@@ -23,6 +23,7 @@ export const useEndpoint = defineStore("endpoint", () => {
       throw e
     }
 
+    console.log(configuration.value)
     document.title = configuration.value.general.name ?? "Project Atom"
   }
 

@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	ctx "code.smartsheep.studio/atom/neutron/http/context"
+	"code.smartsheep.studio/atom/neutron/http/context"
 	"encoding/json"
 	"fmt"
 	"github.com/gofiber/fiber/v2"
@@ -20,7 +20,7 @@ func NewAuthController(conn *toolbox.ExternalServiceConnection) *AuthController 
 	return &AuthController{conn}
 }
 
-func (ctrl *AuthController) Map(router *ctx.App) {
+func (ctrl *AuthController) Map(router *context.App) {
 	router.Get("/api/auth/request", ctrl.request)
 	router.Get("/api/auth/callback", ctrl.callback)
 }
@@ -34,19 +34,21 @@ func (ctrl *AuthController) getOauth() models.OauthClient {
 	return client
 }
 
-func (ctrl *AuthController) request(c *ctx.Ctx) error {
+func (ctrl *AuthController) request(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
 	oauth := ctrl.getOauth()
 
-	return c.P.Redirect(ctrl.conn.GetConnectURL(
+	return c.Redirect(ctrl.conn.GetConnectURL(
 		strconv.Itoa(int(oauth.ID)),
 		fmt.Sprintf("%s/api/auth/callback", viper.GetString("base_url")),
 	), fiber.StatusFound)
 }
 
-func (ctrl *AuthController) callback(c *ctx.Ctx) error {
+func (ctrl *AuthController) callback(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
 	oauth := ctrl.getOauth()
 
-	code := c.P.Query("code")
+	code := c.Query("code")
 
 	token, _, err := ctrl.conn.ExchangeAccessToken(
 		code,
@@ -58,7 +60,7 @@ func (ctrl *AuthController) callback(c *ctx.Ctx) error {
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	} else {
-		c.P.Cookie(&fiber.Cookie{
+		c.Cookie(&fiber.Cookie{
 			Path:     "/",
 			Name:     "authorization",
 			Value:    token,
@@ -67,6 +69,6 @@ func (ctrl *AuthController) callback(c *ctx.Ctx) error {
 			Secure:   true,
 		})
 
-		return c.P.Redirect(viper.GetString("base_url"), fiber.StatusFound)
+		return c.Redirect(viper.GetString("base_url"), fiber.StatusFound)
 	}
 }

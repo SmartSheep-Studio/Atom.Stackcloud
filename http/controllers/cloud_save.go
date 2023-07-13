@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	ctx "code.smartsheep.studio/atom/neutron/http/context"
+	"code.smartsheep.studio/atom/neutron/http/context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -22,21 +22,22 @@ func NewCloudSaveController(db *gorm.DB, auth middleware.AuthHandler) *CloudSave
 	return &CloudSaveController{db, auth}
 }
 
-func (ctrl *CloudSaveController) Map(router *ctx.App) {
+func (ctrl *CloudSaveController) Map(router *context.App) {
 	router.Get("/api/apps/:app/cloud-save", ctrl.auth(true), ctrl.get)
 	router.Put("/api/apps/:app/cloud-save", ctrl.auth(true), ctrl.update)
 	router.Put("/api/apps/:app/cloud-save/name", ctrl.auth(true), ctrl.updateInfo)
 }
 
-func (ctrl *CloudSaveController) get(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *CloudSaveController) get(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ?", c.P.Params("app")).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ?", c.Params("app")).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
-	var library models.MatrixLibraryItem
+	var library models.LibraryItem
 	if err := ctrl.db.Where("app_id = ? AND user_id = ?", app.ID, u.ID).Preload("CloudSave").First(&library).Error; err != nil {
 		if errors.Is(gorm.ErrRecordNotFound, err) {
 			return fiber.NewError(fiber.StatusForbidden, "you haven't that app")
@@ -45,11 +46,12 @@ func (ctrl *CloudSaveController) get(c *ctx.Ctx) error {
 		}
 	}
 
-	return c.P.JSON(library.CloudSave)
+	return c.JSON(library.CloudSave)
 }
 
-func (ctrl *CloudSaveController) update(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *CloudSaveController) update(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
 	var req map[string]any
 	if err := c.BindBody(&req); err != nil {
@@ -61,12 +63,12 @@ func (ctrl *CloudSaveController) update(c *ctx.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("you need provide a valid json format payload: %q", err))
 	}
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ?", c.P.Params("app")).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ?", c.Params("app")).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
-	var library models.MatrixLibraryItem
+	var library models.LibraryItem
 	if err := ctrl.db.Where("app_id = ? AND user_id = ?", app.ID, u.ID).Preload("CloudSave").First(&library).Error; err != nil {
 		if errors.Is(gorm.ErrRecordNotFound, err) {
 			return fiber.NewError(fiber.StatusForbidden, "you haven't that app")
@@ -80,12 +82,13 @@ func (ctrl *CloudSaveController) update(c *ctx.Ctx) error {
 	if err := ctrl.db.Save(&library.CloudSave).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(library.CloudSave)
+		return c.JSON(library.CloudSave)
 	}
 }
 
-func (ctrl *CloudSaveController) updateInfo(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *CloudSaveController) updateInfo(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
 	var req struct {
 		Name string `json:"name" validate:"required"`
@@ -95,12 +98,12 @@ func (ctrl *CloudSaveController) updateInfo(c *ctx.Ctx) error {
 		return err
 	}
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ?", c.P.Params("app")).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ?", c.Params("app")).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
-	var library models.MatrixLibraryItem
+	var library models.LibraryItem
 	if err := ctrl.db.Where("app_id = ? AND user_id = ?", app.ID, u.ID).Preload("CloudSave").First(&library).Error; err != nil {
 		if errors.Is(gorm.ErrRecordNotFound, err) {
 			return fiber.NewError(fiber.StatusForbidden, "you haven't that app")
@@ -114,6 +117,6 @@ func (ctrl *CloudSaveController) updateInfo(c *ctx.Ctx) error {
 	if err := ctrl.db.Save(&library.CloudSave).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(library.CloudSave)
+		return c.JSON(library.CloudSave)
 	}
 }

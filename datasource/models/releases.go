@@ -2,20 +2,20 @@ package models
 
 import "gorm.io/datatypes"
 
-type MatrixRelease struct {
+type Release struct {
 	Model
 
-	Name         string                                   `json:"name"`
-	Slug         string                                   `json:"slug"`
-	Description  string                                   `json:"description"`
-	IsPrerelease bool                                     `json:"is_prerelease"`
-	IsPublished  bool                                     `json:"is_published"`
-	Post         MatrixPost                               `json:"post" gorm:"foreignKey:ReleaseID"`
-	Options      datatypes.JSONType[MatrixReleaseOptions] `json:"options"`
-	AppID        uint                                     `json:"app_id"`
+	Name         string                             `json:"name"`
+	Slug         string                             `json:"slug"`
+	Description  string                             `json:"description"`
+	IsPrerelease bool                               `json:"is_prerelease"`
+	IsPublished  bool                               `json:"is_published"`
+	Post         Post                               `json:"post" gorm:"foreignKey:ReleaseID"`
+	Options      datatypes.JSONType[ReleaseOptions] `json:"options"`
+	AppID        uint                               `json:"app_id"`
 }
 
-type MatrixReleaseOptions struct {
+type ReleaseOptions struct {
 	Assets []struct {
 		Name         string `json:"name" validate:"required"`
 		URL          string `json:"url" validate:"required"`

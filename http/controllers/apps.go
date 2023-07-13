@@ -3,7 +3,7 @@ package controllers
 import (
 	"code.smartsheep.studio/atom/matrix/datasource/models"
 	"code.smartsheep.studio/atom/matrix/http/middleware"
-	ctx "code.smartsheep.studio/atom/neutron/http/context"
+	"code.smartsheep.studio/atom/neutron/http/context"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
@@ -18,7 +18,7 @@ func NewAppController(db *gorm.DB, auth middleware.AuthHandler) *AppController {
 	return &AppController{db, auth}
 }
 
-func (ctrl *AppController) Map(router *ctx.App) {
+func (ctrl *AppController) Map(router *context.App) {
 	router.Get("/api/apps", ctrl.auth(true), ctrl.list)
 	router.Get("/api/apps/:app", ctrl.auth(true), ctrl.get)
 	router.Post("/api/apps", ctrl.auth(true), ctrl.create)
@@ -26,30 +26,33 @@ func (ctrl *AppController) Map(router *ctx.App) {
 	router.Delete("/api/apps/:app", ctrl.auth(true), ctrl.delete)
 }
 
-func (ctrl *AppController) list(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *AppController) list(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
-	var apps []models.MatrixApp
+	var apps []models.App
 	if err := ctrl.db.Where("account_id = ?", u.ID).Find(&apps).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(apps)
+		return c.JSON(apps)
 	}
 }
 
-func (ctrl *AppController) get(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *AppController) get(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(app)
+		return c.JSON(app)
 	}
 }
 
-func (ctrl *AppController) create(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *AppController) create(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
 	var req struct {
 		Slug        string   `json:"slug" validate:"required"`
@@ -65,7 +68,7 @@ func (ctrl *AppController) create(c *ctx.Ctx) error {
 		return err
 	}
 
-	app := models.MatrixApp{
+	app := models.App{
 		Slug:        req.Slug,
 		Url:         req.Url,
 		Tags:        datatypes.NewJSONSlice(req.Tags),
@@ -79,12 +82,13 @@ func (ctrl *AppController) create(c *ctx.Ctx) error {
 	if err := ctrl.db.Save(&app).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(app)
+		return c.JSON(app)
 	}
 }
 
-func (ctrl *AppController) update(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *AppController) update(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
 	var req struct {
 		Slug        string   `json:"slug" validate:"required"`
@@ -100,8 +104,8 @@ func (ctrl *AppController) update(c *ctx.Ctx) error {
 		return err
 	}
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
@@ -116,21 +120,22 @@ func (ctrl *AppController) update(c *ctx.Ctx) error {
 	if err := ctrl.db.Save(&app).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(app)
+		return c.JSON(app)
 	}
 }
 
-func (ctrl *AppController) delete(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *AppController) delete(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
 	if err := ctrl.db.Delete(&app).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.SendStatus(fiber.StatusNoContent)
+		return c.SendStatus(fiber.StatusNoContent)
 	}
 }

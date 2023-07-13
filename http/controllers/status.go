@@ -1,8 +1,9 @@
 package controllers
 
 import (
-	ctx "code.smartsheep.studio/atom/neutron/http/context"
+	"code.smartsheep.studio/atom/neutron/http/context"
 	"code.smartsheep.studio/atom/neutron/toolbox"
+	"github.com/gofiber/fiber/v2"
 )
 
 type StatusController struct {
@@ -13,10 +14,11 @@ func NewStatusController(conn *toolbox.ExternalServiceConnection) *StatusControl
 	return &StatusController{conn}
 }
 
-func (ctrl *StatusController) Map(router *ctx.App) {
+func (ctrl *StatusController) Map(router *context.App) {
 	router.Get("/api/info", ctrl.configure)
 }
 
-func (ctrl *StatusController) configure(c *ctx.Ctx) error {
-	return c.P.JSON(ctrl.conn)
+func (ctrl *StatusController) configure(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	return c.JSON(ctrl.conn)
 }

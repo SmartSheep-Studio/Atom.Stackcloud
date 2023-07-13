@@ -10,7 +10,7 @@ const (
 	PostBlogType         = "blog"
 )
 
-type MatrixPost struct {
+type Post struct {
 	Model
 
 	Slug        string                      `json:"slug" gorm:"uniqueIndex"`

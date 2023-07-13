@@ -3,7 +3,7 @@ package controllers
 import (
 	"code.smartsheep.studio/atom/matrix/datasource/models"
 	"code.smartsheep.studio/atom/matrix/http/middleware"
-	ctx "code.smartsheep.studio/atom/neutron/http/context"
+	"code.smartsheep.studio/atom/neutron/http/context"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
@@ -18,7 +18,7 @@ func NewPostController(db *gorm.DB, auth middleware.AuthHandler) *PostController
 	return &PostController{db, auth}
 }
 
-func (ctrl *PostController) Map(router *ctx.App) {
+func (ctrl *PostController) Map(router *context.App) {
 	router.Get("/api/apps/:app/posts", ctrl.auth(true), ctrl.list)
 	router.Get("/api/apps/:app/posts/:post", ctrl.auth(true), ctrl.get)
 	router.Post("/api/apps/:app/posts", ctrl.auth(true), ctrl.create)
@@ -26,43 +26,46 @@ func (ctrl *PostController) Map(router *ctx.App) {
 	router.Delete("/api/apps/:app/posts/:post", ctrl.auth(true), ctrl.delete)
 }
 
-func (ctrl *PostController) list(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *PostController) list(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
-	var posts []models.MatrixPost
+	var posts []models.Post
 	if err := ctrl.db.Where("app_id = ?", app.ID).Order("created_at desc").Find(&posts).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(posts)
+		return c.JSON(posts)
 	}
 }
 
-func (ctrl *PostController) get(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *PostController) get(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
-	var post models.MatrixPost
-	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.P.Params("post"), app.ID).First(&post).Error; err != nil {
+	var post models.Post
+	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("post"), app.ID).First(&post).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(post)
+		return c.JSON(post)
 	}
 }
 
-func (ctrl *PostController) create(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *PostController) create(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
@@ -79,7 +82,7 @@ func (ctrl *PostController) create(c *ctx.Ctx) error {
 		return err
 	}
 
-	post := models.MatrixPost{
+	post := models.Post{
 		Slug:        req.Slug,
 		Type:        req.Type,
 		Title:       req.Title,
@@ -92,15 +95,16 @@ func (ctrl *PostController) create(c *ctx.Ctx) error {
 	if err := ctrl.db.Save(&post).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(post)
+		return c.JSON(post)
 	}
 }
 
-func (ctrl *PostController) update(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *PostController) update(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
@@ -116,8 +120,8 @@ func (ctrl *PostController) update(c *ctx.Ctx) error {
 		return err
 	}
 
-	var post models.MatrixPost
-	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.P.Params("post"), app.ID).First(&post).Error; err != nil {
+	var post models.Post
+	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("post"), app.ID).First(&post).Error; err != nil {
 		return c.DbError(err)
 	}
 
@@ -130,26 +134,27 @@ func (ctrl *PostController) update(c *ctx.Ctx) error {
 	if err := ctrl.db.Save(&post).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(post)
+		return c.JSON(post)
 	}
 }
 
-func (ctrl *PostController) delete(c *ctx.Ctx) error {
-	u := c.P.Locals("matrix-id").(*models.MatrixAccount)
+func (ctrl *PostController) delete(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	u := c.Locals("matrix-id").(*models.Account)
 
-	var app models.MatrixApp
-	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.P.Params("app"), u.ID).First(&app).Error; err != nil {
+	var app models.App
+	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
-	var post models.MatrixPost
-	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.P.Params("post"), app.ID).First(&post).Error; err != nil {
+	var post models.Post
+	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("post"), app.ID).First(&post).Error; err != nil {
 		return c.DbError(err)
 	}
 
 	if err := ctrl.db.Delete(&post).Error; err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.SendStatus(fiber.StatusNoContent)
+		return c.SendStatus(fiber.StatusNoContent)
 	}
 }

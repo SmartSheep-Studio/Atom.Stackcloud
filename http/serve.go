@@ -1,6 +1,7 @@
 package http
 
 import (
+	"code.smartsheep.studio/atom/matrix/http/controllers"
 	ctx "code.smartsheep.studio/atom/neutron/http/context"
 	"context"
 	"fmt"
@@ -24,28 +25,29 @@ func NewHttpServer(cycle fx.Lifecycle, cors middleware.CorsHandler, conf *viper.
 	conn = c
 
 	// Create app
-	server = &ctx.App{P: fiber.New(fiber.Config{
-		Prefork:               viper.GetBool("http.advanced.prefork"),
-		CaseSensitive:         false,
-		StrictRouting:         false,
-		DisableStartupMessage: true,
-		ServerHeader:          "Matrix",
-		AppName:               "Matrix v2.0",
-		BodyLimit:             viper.GetInt("http.max_body_size"),
-	}),
+	server = &ctx.App{
+		fiber.New(fiber.Config{
+			Prefork:               viper.GetBool("http.advanced.prefork"),
+			CaseSensitive:         false,
+			StrictRouting:         false,
+			DisableStartupMessage: true,
+			ServerHeader:          "Matrix",
+			AppName:               "Matrix v2.0",
+			BodyLimit:             viper.GetInt("http.max_body_size"),
+		}),
 	}
 
 	// Apply global middleware
-	server.P.Use(flog.New(flog.Config{
+	server.Use(flog.New(flog.Config{
 		Format: "${status} | ${latency} | ${method} ${path} ${body}\n",
 		Output: log.Logger,
 	}))
-	server.P.Use(cors())
+	server.Use(cors())
 
 	cycle.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			go func() {
-				err := server.P.Listen(conf.GetString("http.listen_addr"))
+				err := server.Listen(conf.GetString("http.listen_addr"))
 				if err != nil {
 					log.Fatal().Err(err).Msg("Failed to start http http")
 				}
@@ -58,19 +60,21 @@ func NewHttpServer(cycle fx.Lifecycle, cors middleware.CorsHandler, conf *viper.
 	return server
 }
 
-func MapControllers(controllers []HttpController, server *ctx.App) {
+func MapControllers(controllers []controllers.HttpController, server *ctx.App) {
+	fmt.Println(controllers)
 	for _, controller := range controllers {
 		controller.Map(server)
 	}
 
 	// Fallback not found api to nucleus
-	server.All("/api/*", func(c *ctx.Ctx) error {
-		uri := fmt.Sprintf("%s?%s", c.P.Request().URI().Path(), c.P.Request().URI().QueryArgs().String())
-		return c.P.Redirect(conn.GetEndpointPath(uri), fiber.StatusFound)
+	server.All("/api/*", func(cx *fiber.Ctx) error {
+		c := &ctx.Ctx{Ctx: cx}
+		uri := fmt.Sprintf("%s?%s", c.Request().URI().Path(), c.Request().URI().QueryArgs().String())
+		return c.Redirect(conn.GetEndpointPath(uri), fiber.StatusFound)
 	})
 
 	// Serve static files
-	server.P.Use("/", filesystem.New(filesystem.Config{
+	server.Use("/", filesystem.New(filesystem.Config{
 		Root:         renderer.GetHttpFS(),
 		Index:        "index.html",
 		NotFoundFile: "index.html",

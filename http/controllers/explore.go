@@ -3,8 +3,9 @@ package controllers
 import (
 	"code.smartsheep.studio/atom/matrix/datasource/models"
 	"code.smartsheep.studio/atom/matrix/services"
-	ctx "code.smartsheep.studio/atom/neutron/http/context"
+	"code.smartsheep.studio/atom/neutron/http/context"
 	"code.smartsheep.studio/atom/neutron/toolbox"
+	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
@@ -18,26 +19,28 @@ func NewExploreController(db *gorm.DB, conn *toolbox.ExternalServiceConnection, 
 	return &ExploreController{db, conn, service}
 }
 
-func (ctrl *ExploreController) Map(router *ctx.App) {
+func (ctrl *ExploreController) Map(router *context.App) {
 	router.Get("/api/explore/apps", ctrl.apps)
 	router.Get("/api/explore/apps/:app", ctrl.app)
 	router.Get("/api/explore/apps/:app/posts", ctrl.posts)
 	router.Get("/api/explore/apps/:app/releases", ctrl.releases)
 }
 
-func (ctrl *ExploreController) apps(c *ctx.Ctx) error {
+func (ctrl *ExploreController) apps(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
 	items, err := ctrl.service.ExploreApps()
 	if err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(items)
+		return c.JSON(items)
 	}
 }
 
-func (ctrl *ExploreController) app(c *ctx.Ctx) error {
-	var app models.MatrixApp
-	id, _ := c.P.ParamsInt("app", 0)
-	if err := ctrl.db.Where("slug = ? OR id = ?", c.P.Params("app"), id).First(&app).Error; err != nil {
+func (ctrl *ExploreController) app(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	var app models.App
+	id, _ := c.ParamsInt("app", 0)
+	if err := ctrl.db.Where("slug = ? OR id = ?", c.Params("app"), id).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
@@ -45,14 +48,15 @@ func (ctrl *ExploreController) app(c *ctx.Ctx) error {
 	if err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(items)
+		return c.JSON(items)
 	}
 }
 
-func (ctrl *ExploreController) posts(c *ctx.Ctx) error {
-	var app models.MatrixApp
-	id, _ := c.P.ParamsInt("app", 0)
-	if err := ctrl.db.Where("slug = ? OR id = ?", c.P.Params("app"), id).First(&app).Error; err != nil {
+func (ctrl *ExploreController) posts(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	var app models.App
+	id, _ := c.ParamsInt("app", 0)
+	if err := ctrl.db.Where("slug = ? OR id = ?", c.Params("app"), id).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
@@ -60,14 +64,15 @@ func (ctrl *ExploreController) posts(c *ctx.Ctx) error {
 	if err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(items)
+		return c.JSON(items)
 	}
 }
 
-func (ctrl *ExploreController) releases(c *ctx.Ctx) error {
-	var app models.MatrixApp
-	id, _ := c.P.ParamsInt("app", 0)
-	if err := ctrl.db.Where("slug = ? OR id = ?", c.P.Params("app"), id).First(&app).Error; err != nil {
+func (ctrl *ExploreController) releases(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+	var app models.App
+	id, _ := c.ParamsInt("app", 0)
+	if err := ctrl.db.Where("slug = ? OR id = ?", c.Params("app"), id).First(&app).Error; err != nil {
 		return c.DbError(err)
 	}
 
@@ -75,6 +80,6 @@ func (ctrl *ExploreController) releases(c *ctx.Ctx) error {
 	if err != nil {
 		return c.DbError(err)
 	} else {
-		return c.P.JSON(items)
+		return c.JSON(items)
 	}
 }
