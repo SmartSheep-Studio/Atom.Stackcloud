@@ -29,85 +29,69 @@
 </template>
 
 <script lang="ts" setup>
-import DataProvider from "@/data-provider.vue"
-import Gatekeeper from "@/components/global/gatekeeper.vue"
-import { useEndpoint } from "@/stores/endpoint"
-import { usePrincipal } from "@/stores/principal"
-import { h, type Component, computed, type Ref, ref, watch } from "vue"
-import { RouterLink, useRoute, useRouter } from "vue-router"
-import { NIcon, type MenuOption } from "naive-ui"
-import { TerminalRound, ExploreRound, LibraryBooksRound } from "@vicons/material"
-import { hasUserPermissions } from "@/utils/gatekeeper"
-import { useI18n } from "vue-i18n"
+import DataProvider from "@/data-provider.vue";
+import Gatekeeper from "@/components/global/gatekeeper.vue";
+import { useEndpoint } from "@/stores/endpoint";
+import { usePrincipal } from "@/stores/principal";
+import { type Component, computed, h, type Ref, ref, watch } from "vue";
+import { RouterLink, useRoute, useRouter } from "vue-router";
+import { type MenuOption, NIcon } from "naive-ui";
+import { ExploreRound, LibraryBooksRound, TerminalRound } from "@vicons/material";
+import { hasUserPermissions } from "@/utils/gatekeeper";
+import { useI18n } from "vue-i18n";
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const $route = useRoute()
-const $router = useRouter()
-const $endpoint = useEndpoint()
-const $principal = usePrincipal()
+const $route = useRoute();
+const $router = useRouter();
+const $endpoint = useEndpoint();
+const $principal = usePrincipal();
 
 function renderIcon(icon: Component) {
-  return () => h(NIcon, null, { default: () => h(icon) })
+  return () => h(NIcon, null, { default: () => h(icon) });
 }
 
 const themeOverrides = {
   common: {
-    primaryColor: "#3F51B5",
-    infoColor: "#03A9F4",
-    infoColorHover: "#0BABF4",
-    primaryColorHover: "#4657B4",
-    primaryColorPressed: "#3748A2",
-    primaryColorSuppl: "#4657B8",
-    infoColorPressed: "#049BE0",
-    infoColorSuppl: "#109BDA",
-    successColor: "#4CAF50",
-    successColorHover: "#4DAE51",
-    successColorPressed: "#439946",
-    successColorSuppl: "#399D3D",
-    warningColor: "#FF9800",
-    warningColorHover: "#F59609",
-    warningColorPressed: "#DD8400",
-    warningColorSuppl: "#E58F10",
-    errorColor: "#F25146",
-    errorColorHover: "#FB564A",
-    errorColorPressed: "#D94A40",
-    errorColorSuppl: "#DA5047",
-  },
-}
+    primaryColor: "#ca4d4dFF",
+    primaryColorHover: "#DF5656FF",
+    primaryColorPressed: "#C04747FF",
+    primaryColorSuppl: "#A84141FF"
+  }
+};
 
-const menuKey = ref($route.name)
+const menuKey = ref($route.name);
 const menuOptions: Ref<MenuOption[]> = computed(() =>
   $principal.isLoggedIn
     ? [
-        {
-          label: () => h(RouterLink, { to: { name: "landing" } }, { default: () => t('nav.explore') }),
-          icon: renderIcon(ExploreRound),
-          key: "landing",
-        },
-        {
-          label: () => h(RouterLink, { to: { name: "console" } }, { default: () => t('nav.console') }),
-          icon: renderIcon(TerminalRound),
-          show: hasUserPermissions("matrix.console.view"),
-          key: "console",
-        },
-        {
-          label: () => h(RouterLink, { to: { name: "library" } }, { default: () => t('nav.library') }),
-          icon: renderIcon(LibraryBooksRound),
-          key: "library",
-        },
-      ]
+      {
+        label: () => h(RouterLink, { to: { name: "landing" } }, { default: () => t("nav.explore") }),
+        icon: renderIcon(ExploreRound),
+        key: "landing"
+      },
+      {
+        label: () => h(RouterLink, { to: { name: "console" } }, { default: () => t("nav.console") }),
+        icon: renderIcon(TerminalRound),
+        show: hasUserPermissions("matrix.console.view"),
+        key: "console"
+      },
+      {
+        label: () => h(RouterLink, { to: { name: "library" } }, { default: () => t("nav.library") }),
+        icon: renderIcon(LibraryBooksRound),
+        key: "library"
+      }
+    ]
     : []
-)
+);
 
 watch($route, (v) => {
-  menuKey.value = v.name
-})
+  menuKey.value = v.name;
+});
 
 // Use for dynamic calculate height
 const isUnderShadow = computed(() => {
-  return (window as any).__POWERED_BY_WUJIE__ != null
-})
+  return (window as any).__POWERED_BY_WUJIE__ != null;
+});
 </script>
 
 <style>
