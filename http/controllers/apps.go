@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"code.smartsheep.studio/atom/matrix/datasource/models"
-	"code.smartsheep.studio/atom/matrix/http/middleware"
 	"code.smartsheep.studio/atom/neutron/http/context"
+	"code.smartsheep.studio/atom/stackcloud/datasource/models"
+	"code.smartsheep.studio/atom/stackcloud/http/middleware"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
@@ -28,7 +28,7 @@ func (ctrl *AppController) Map(router *context.App) {
 
 func (ctrl *AppController) list(ctx *fiber.Ctx) error {
 	c := &context.Ctx{Ctx: ctx}
-	u := c.Locals("matrix-id").(*models.Account)
+	u := c.Locals("stackcloud-id").(*models.Account)
 
 	var apps []models.App
 	if err := ctrl.db.Where("account_id = ?", u.ID).Find(&apps).Error; err != nil {
@@ -40,7 +40,7 @@ func (ctrl *AppController) list(ctx *fiber.Ctx) error {
 
 func (ctrl *AppController) get(ctx *fiber.Ctx) error {
 	c := &context.Ctx{Ctx: ctx}
-	u := c.Locals("matrix-id").(*models.Account)
+	u := c.Locals("stackcloud-id").(*models.Account)
 
 	var app models.App
 	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
@@ -52,16 +52,13 @@ func (ctrl *AppController) get(ctx *fiber.Ctx) error {
 
 func (ctrl *AppController) create(ctx *fiber.Ctx) error {
 	c := &context.Ctx{Ctx: ctx}
-	u := c.Locals("matrix-id").(*models.Account)
+	u := c.Locals("stackcloud-id").(*models.Account)
 
 	var req struct {
 		Slug        string   `json:"slug" validate:"required"`
 		Name        string   `json:"name" validate:"required"`
 		Description string   `json:"description"`
-		Details     string   `json:"details"`
-		Url         string   `json:"url"`
 		Tags        []string `json:"tags"`
-		IsPublished bool     `json:"is_published"`
 	}
 
 	if err := c.BindBody(&req); err != nil {
@@ -70,12 +67,9 @@ func (ctrl *AppController) create(ctx *fiber.Ctx) error {
 
 	app := models.App{
 		Slug:        req.Slug,
-		Url:         req.Url,
 		Tags:        datatypes.NewJSONSlice(req.Tags),
 		Name:        req.Name,
 		Description: req.Description,
-		Details:     req.Details,
-		IsPublished: req.IsPublished,
 		AccountID:   u.ID,
 	}
 
@@ -88,14 +82,12 @@ func (ctrl *AppController) create(ctx *fiber.Ctx) error {
 
 func (ctrl *AppController) update(ctx *fiber.Ctx) error {
 	c := &context.Ctx{Ctx: ctx}
-	u := c.Locals("matrix-id").(*models.Account)
+	u := c.Locals("stackcloud-id").(*models.Account)
 
 	var req struct {
 		Slug        string   `json:"slug" validate:"required"`
 		Name        string   `json:"name" validate:"required"`
 		Description string   `json:"description"`
-		Details     string   `json:"details"`
-		Url         string   `json:"url"`
 		Tags        []string `json:"tags"`
 		IsPublished bool     `json:"is_published"`
 	}
@@ -109,13 +101,10 @@ func (ctrl *AppController) update(ctx *fiber.Ctx) error {
 		return c.DbError(err)
 	}
 
-	app.Url = req.Url
 	app.Tags = datatypes.NewJSONSlice(req.Tags)
 	app.Slug = req.Slug
 	app.Name = req.Name
 	app.Description = req.Description
-	app.Details = req.Details
-	app.IsPublished = req.IsPublished
 
 	if err := ctrl.db.Save(&app).Error; err != nil {
 		return c.DbError(err)
@@ -126,7 +115,7 @@ func (ctrl *AppController) update(ctx *fiber.Ctx) error {
 
 func (ctrl *AppController) delete(ctx *fiber.Ctx) error {
 	c := &context.Ctx{Ctx: ctx}
-	u := c.Locals("matrix-id").(*models.Account)
+	u := c.Locals("stackcloud-id").(*models.Account)
 
 	var app models.App
 	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {

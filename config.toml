@@ -1,6 +1,6 @@
 debug = false
 instance_id = "86ad4f61-8bff-4bf8-9a93-8da7813a722c"
-base_url = "http://localhost:9446"
+base_url = "http://localhost:9444"
 endpoints = "http://localhost:9443"
 mount_key = "WGqNUFNhED"
 
@@ -11,12 +11,12 @@ user_contents = "dist/uploads"
 sessions_alive_duration = "720h"
 
 [http]
-listen_addr = "0.0.0.0:9446"
+listen_addr = "0.0.0.0:9444"
 max_body_size = 4194304
 [http.advanced]
 prefork = false
 
 [datasource]
 [datasource.master]
-table_prefix = "matrix_"
-dsn = "host=localhost user=postgres password=password dbname=matrix port=5432 sslmode=disable timezone=Asia/Shanghai"
+table_prefix = "cumulus_"
+dsn = "host=localhost user=postgres password=password dbname=cumulus port=5432 sslmode=disable timezone=Asia/Shanghai"

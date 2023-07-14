@@ -8,7 +8,7 @@ steps:
       DOCKER_BUILDKIT: 1
     settings:
       registry: https://code.smartsheep.studio
-      repo: code.smartsheep.studio/atom/matrix
+      repo: code.smartsheep.studio/atom/stackcloud
       username: Drone
       password: Drone@2007
       auto_tag: true

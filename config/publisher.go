@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 
 	tmodels "code.smartsheep.studio/atom/neutron/datasource/models"
@@ -20,7 +21,7 @@ func NewEndpointConnection(cycle fx.Lifecycle) *toolbox.ExternalServiceConnectio
 			conn, err := toolbox.PublishService(viper.GetString("endpoints"), viper.GetString("mount_key"), toolbox.ExternalServiceRequest{
 				Name:        "Matrix",
 				InstanceID:  viper.GetString("instance_id"),
-				PackageID:   "code.smartsheep.studio/atom/matrix",
+				PackageID:   "code.smartsheep.studio/atom/stackcloud",
 				Description: "A developer-friendly, geek-friendly store for apps and games.",
 				Address:     viper.GetString("base_url"),
 				Options: tmodels.ExternalServiceOptions{

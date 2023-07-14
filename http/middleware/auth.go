@@ -1,15 +1,16 @@
 package middleware
 
 import (
-	"code.smartsheep.studio/atom/neutron/http/context"
 	"errors"
 	"fmt"
-	"github.com/gofiber/fiber/v2"
 	"strings"
 
-	"code.smartsheep.studio/atom/matrix/datasource/models"
+	"code.smartsheep.studio/atom/neutron/http/context"
+	"github.com/gofiber/fiber/v2"
+
 	tmodels "code.smartsheep.studio/atom/neutron/datasource/models"
 	"code.smartsheep.studio/atom/neutron/toolbox"
+	"code.smartsheep.studio/atom/stackcloud/datasource/models"
 	"go.uber.org/fx"
 	"gorm.io/gorm"
 )
@@ -51,8 +52,7 @@ func NewAuth(cycle fx.Lifecycle, db *gorm.DB, c *toolbox.ExternalServiceConnecti
 					if err := db.Where("user_id = ?", u.ID).First(&account).Error; err != nil {
 						if errors.Is(gorm.ErrRecordNotFound, err) {
 							account = &models.Account{
-								Nickname: u.Nickname,
-								UserID:   u.ID,
+								UserID: u.ID,
 							}
 
 							if err := db.Save(&account).Error; err != nil {
@@ -63,7 +63,7 @@ func NewAuth(cycle fx.Lifecycle, db *gorm.DB, c *toolbox.ExternalServiceConnecti
 						}
 					}
 
-					c.Locals("matrix-id", account)
+					c.Locals("stackcloud-id", account)
 				}
 
 				c.Locals("principal-ok", err == nil)

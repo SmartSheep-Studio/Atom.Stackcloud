@@ -22,7 +22,7 @@ export default defineConfig({
     Components({
       resolvers: [NaiveUiResolver()],
     }),
-    VueI18nPlugin({}),
+    VueI18nPlugin({ runtimeOnly: false }),
   ],
   resolve: {
     alias: {
@@ -32,7 +32,7 @@ export default defineConfig({
   server: {
     port: 5176,
     proxy: {
-      "/api": "http://127.0.0.1:9446",
+      "/api": "http://127.0.0.1:9444",
     },
   },
 })

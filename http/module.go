@@ -1,8 +1,8 @@
 package http
 
 import (
-	"code.smartsheep.studio/atom/matrix/http/controllers"
-	"code.smartsheep.studio/atom/matrix/http/middleware"
+	"code.smartsheep.studio/atom/stackcloud/http/controllers"
+	"code.smartsheep.studio/atom/stackcloud/http/middleware"
 	"go.uber.org/fx"
 )
 

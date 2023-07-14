@@ -3,17 +3,7 @@
     <n-dialog-provider>
       <n-message-provider>
         <div class="w-full relative" :class="isUnderShadow ? 'h-max' : 'h-screen'">
-          <n-layout has-sider position="absolute">
-            <n-layout-sider bordered collapse-mode="width" collapsed :collapsed-width="64" class="pt-2">
-              <n-menu
-                collapsed
-                v-model:value="menuKey"
-                :collapsed-width="64"
-                :collapsed-icon-size="22"
-                :options="menuOptions"
-              />
-            </n-layout-sider>
-
+          <n-layout position="absolute">
             <n-layout class="w-full h-full">
               <data-provider>
                 <gatekeeper>
@@ -33,11 +23,9 @@ import DataProvider from "@/data-provider.vue";
 import Gatekeeper from "@/components/global/gatekeeper.vue";
 import { useEndpoint } from "@/stores/endpoint";
 import { usePrincipal } from "@/stores/principal";
-import { type Component, computed, h, type Ref, ref, watch } from "vue";
-import { RouterLink, useRoute, useRouter } from "vue-router";
-import { type MenuOption, NIcon } from "naive-ui";
-import { ExploreRound, LibraryBooksRound, TerminalRound } from "@vicons/material";
-import { hasUserPermissions } from "@/utils/gatekeeper";
+import { type Component, computed, h } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { NIcon } from "naive-ui";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
@@ -59,34 +47,6 @@ const themeOverrides = {
     primaryColorSuppl: "#A84141FF"
   }
 };
-
-const menuKey = ref($route.name);
-const menuOptions: Ref<MenuOption[]> = computed(() =>
-  $principal.isLoggedIn
-    ? [
-      {
-        label: () => h(RouterLink, { to: { name: "landing" } }, { default: () => t("nav.explore") }),
-        icon: renderIcon(ExploreRound),
-        key: "landing"
-      },
-      {
-        label: () => h(RouterLink, { to: { name: "console" } }, { default: () => t("nav.console") }),
-        icon: renderIcon(TerminalRound),
-        show: hasUserPermissions("matrix.console.view"),
-        key: "console"
-      },
-      {
-        label: () => h(RouterLink, { to: { name: "library" } }, { default: () => t("nav.library") }),
-        icon: renderIcon(LibraryBooksRound),
-        key: "library"
-      }
-    ]
-    : []
-);
-
-watch($route, (v) => {
-  menuKey.value = v.name;
-});
 
 // Use for dynamic calculate height
 const isUnderShadow = computed(() => {

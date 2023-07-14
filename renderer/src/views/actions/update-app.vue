@@ -6,12 +6,6 @@
         v-model:value="payload.slug"
       />
     </n-form-item>
-    <n-form-item label="URL" path="url">
-      <n-input
-        placeholder="The homepage of this application. Can be your studio homepage or source repository. Or you can keep this field blank"
-        v-model:value="payload.url"
-      />
-    </n-form-item>
     <n-form-item label="Name" path="name">
       <n-input placeholder="Use for pointing out topics. Accepts anything you want." v-model:value="payload.name" />
     </n-form-item>
@@ -24,9 +18,6 @@
         placeholder="Use for describe main content. Accepts anything you want."
         v-model:value="payload.description"
       />
-    </n-form-item>
-    <n-form-item label="Details" path="details">
-      <v-md-editor v-model="payload.details" height="400px" />
     </n-form-item>
 
     <n-space size="small">
@@ -72,20 +63,12 @@ const rules: FormRules = {
     message: "Need least six characters",
     trigger: ["blur", "input"],
   },
-  details: {
-    required: true,
-    validator: (_, v) => v.length >= 6,
-    message: "Need least six characters",
-    trigger: ["blur", "input"],
-  },
 }
 
 const payload = ref({
   slug: "",
   name: "",
   description: "",
-  details: "",
-  url: "",
   tags: [],
   is_published: false,
 })

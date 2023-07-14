@@ -1,4 +1,4 @@
-module code.smartsheep.studio/atom/matrix
+module code.smartsheep.studio/atom/stackcloud
 
 go 1.20
 

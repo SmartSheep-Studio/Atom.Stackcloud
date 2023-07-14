@@ -1,35 +1,30 @@
 <template>
   <div class="container">
     <div class="pt-12 pb-4 px-10">
-      <div class="text-2xl font-bold">Update a exists post</div>
+      <div class="text-2xl font-bold">Create a new app</div>
       <div class="text-lg">Don't forgot follow the community guidelines!</div>
     </div>
 
     <div class="px-10 pt-4">
-      <n-form ref="form" :rules="rules" :model="payload" @submit.prevent="update" class="max-w-[800px]">
+      <n-form ref="form" :rules="rules" :model="payload" @submit.prevent="create" class="max-w-[800px]">
         <n-form-item label="Slug" path="slug">
           <n-input
-            placeholder="Use for the link to your post. Only accepts url safe characters."
+            placeholder="Use for the link to your application. Only accepts url safe characters."
             v-model:value="payload.slug"
           />
         </n-form-item>
-        <n-form-item label="Type" path="type">
-          <n-select :options="types" v-model:value="payload.type" />
-        </n-form-item>
-        <n-form-item label="Title" path="title">
-          <n-input
-            placeholder="Use for pointing out topics. Accepts anything you want."
-            v-model:value="payload.title"
-          />
+        <n-form-item label="Name" path="name">
+          <n-input placeholder="Use for pointing out topics. Accepts anything you want." v-model:value="payload.name" />
         </n-form-item>
         <n-form-item label="Tags" path="tags">
           <n-dynamic-tags v-model:value="payload.tags" />
         </n-form-item>
-        <n-form-item label="Content" path="content">
-          <v-md-editor v-model="payload.content" height="400px" />
-        </n-form-item>
-        <n-form-item label="Is Published" path="is_published">
-          <n-switch v-model:value="payload.is_published" />
+        <n-form-item label="Description" path="description">
+          <n-input
+            type="textarea"
+            placeholder="Use for describe main content. Accepts anything you want."
+            v-model:value="payload.description"
+          />
         </n-form-item>
 
         <n-space size="small">
@@ -44,12 +39,13 @@
 <script lang="ts" setup>
 import { parseRedirect } from "@/utils/callback"
 import { http } from "@/utils/http"
-import { useMessage, type FormRules, type FormInst } from "naive-ui"
-import { onMounted, ref } from "vue"
+import { useMessage, type FormRules, type FormInst, useDialog } from "naive-ui"
+import { reactive, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 
 const $route = useRoute()
 const $router = useRouter()
+const $dialog = useDialog()
 const $message = useMessage()
 
 const submitting = ref(false)
@@ -62,13 +58,13 @@ const rules: FormRules = {
     message: "Only accepts letters, underscore and numbers without space",
     trigger: ["blur", "input"],
   },
-  title: {
+  name: {
     required: true,
     validator: (_, v) => v.length >= 4,
     message: "Need least four characters",
     trigger: ["blur", "input"],
   },
-  content: {
+  description: {
     required: true,
     validator: (_, v) => v.length >= 6,
     message: "Need least six characters",
@@ -76,29 +72,15 @@ const rules: FormRules = {
   },
 }
 
-const types = [
-  { label: "Announcement", value: "announcement" },
-  { label: "Blog", value: "blog" },
-]
-
-const payload = ref({
+const payload = reactive({
   slug: "",
-  type: "announcement",
-  title: "",
-  content: "",
+  name: "",
+  description: "",
   tags: [],
   is_published: false,
 })
 
-async function fetch() {
-  try {
-    payload.value = (await http.get(`/api/apps/${$route.params.app}/posts/${$route.params.post}`)).data
-  } catch (e: any) {
-    $message.error(`Something went wrong... ${e}`)
-  }
-}
-
-function update() {
+function create() {
   form.value?.validate(async (errors) => {
     if (errors) {
       return
@@ -107,12 +89,16 @@ function update() {
     try {
       submitting.value = true
 
-      await http.put(`/api/apps/${$route.params.app}/posts/${$route.params.post}`, payload.value)
+      await http.post("/api/apps", payload)
 
-      $message.success("Successfully updated a post")
-      await $router.push(
-        await parseRedirect($route.query, { name: "console.apps", params: { app: $route.params.app } })
-      )
+      $dialog.success({
+        title: "Successfully created an app",
+        content: "Now back to console and start use our services!",
+        positiveText: "OK",
+        onPositiveClick: async () => {
+          await $router.push(await parseRedirect($route.query))
+        },
+      })
     } catch (e: any) {
       $message.error(`Something went wrong... ${e}`)
     } finally {
@@ -120,8 +106,4 @@ function update() {
     }
   })
 }
-
-onMounted(() => {
-  fetch()
-})
 </script>

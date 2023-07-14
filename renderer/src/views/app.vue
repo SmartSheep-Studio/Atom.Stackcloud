@@ -14,19 +14,12 @@
 
       <n-grid v-if="!reverting" item-responsive responsive="screen" x-gap="8" y-gap="8" class="lg:px-10 pt-4">
         <n-gi span="24 m:14">
-          <n-card title="Posts">
-            <posts :data="app" />
-          </n-card>
-          <n-card class="mt-2" title="Releases">
-            <releases :data="app" />
-          </n-card>
           <n-card class="mt-2" title="Update App">
             <update-app :data="app" @refresh="fetch()" />
           </n-card>
         </n-gi>
         <n-gi span="24 m:6 l:8">
           <n-card title="Dangerous Zone">
-            <publish-app :data="app" @refresh="fetch()" />
             <destroy-app class="mt-2" :data="app" @done="$router.push({ name: 'console' })" />
           </n-card>
         </n-gi>
@@ -36,11 +29,8 @@
 </template>
 
 <script lang="ts" setup>
-import Posts from "@/views/console/parts/posts.vue"
-import Releases from "@/views/console/parts/releases.vue"
-import UpdateApp from "@/views/console/actions/update-app.vue"
-import DestroyApp from "@/views/console/actions/destroy-app.vue"
-import PublishApp from "@/views/console/actions/publish-app.vue"
+import UpdateApp from "@/views/actions/update-app.vue"
+import DestroyApp from "@/views/actions/destroy-app.vue"
 import { useMessage } from "naive-ui"
 import { useRoute } from "vue-router"
 import { onMounted, ref } from "vue"

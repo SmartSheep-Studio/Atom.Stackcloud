@@ -17,13 +17,7 @@ func Module() fx.Option {
 	return fx.Module("http.controllers",
 		fx.Provide(
 			AsController(NewStatusController),
-			AsController(NewAuthController),
-			AsController(NewExploreController),
-			AsController(NewLibraryController),
 			AsController(NewAppController),
-			AsController(NewReleaseController),
-			AsController(NewPostController),
-			AsController(NewCloudSaveController),
 		),
 	)
 }

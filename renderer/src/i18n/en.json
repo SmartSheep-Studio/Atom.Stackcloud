@@ -1,7 +1,4 @@
 {
-  "nav.explore": "Explore",
-  "nav.console": "Console",
-  "nav.library": "Library",
   "common.feedback.network-error": "An error occurred during the connection.",
   "actions.retry": "Retry",
   "common.feedback.connecting": "Connecting...",
