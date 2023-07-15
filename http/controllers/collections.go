@@ -19,11 +19,11 @@ func NewCollectionController(db *gorm.DB, auth middleware.AuthHandler) *Collecti
 }
 
 func (ctrl *CollectionController) Map(router *context.App) {
-	router.Get("/api/apps/:app/records", ctrl.auth(true), ctrl.list)
-	router.Get("/api/apps/:app/records/:collection", ctrl.auth(true), ctrl.get)
-	router.Post("/api/apps/:app/records", ctrl.auth(true), ctrl.create)
-	router.Put("/api/apps/:app/records/:collection", ctrl.auth(true), ctrl.update)
-	router.Delete("/api/apps/:app/records/:collection", ctrl.auth(true), ctrl.delete)
+	router.Get("/api/apps/:app/records", ctrl.auth(true, "records.collection.read", "stackcloud.records.collection.read"), ctrl.list)
+	router.Get("/api/apps/:app/records/:collection", ctrl.auth(true, "records.collection.read", "stackcloud.records.collection.read"), ctrl.get)
+	router.Post("/api/apps/:app/records", ctrl.auth(true, "records.collection.create", "stackcloud.records.collection.create"), ctrl.create)
+	router.Put("/api/apps/:app/records/:collection", ctrl.auth(true, "records.collection.update", "stackcloud.records.collection.update"), ctrl.update)
+	router.Delete("/api/apps/:app/records/:collection", ctrl.auth(true, "records.collection.delete", "stackcloud.records.collection.delete"), ctrl.delete)
 }
 
 func (ctrl *CollectionController) list(ctx *fiber.Ctx) error {
