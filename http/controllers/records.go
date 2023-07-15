@@ -42,7 +42,7 @@ func (ctrl *RecordController) list(ctx *fiber.Ctx) error {
 		return c.DbError(err)
 	}
 
-	var records []models.RecordCollection
+	var records []models.Record
 	if err := ctrl.db.Where("collection_id = ?", collection.ID).Order("created_at desc").Find(&records).Error; err != nil {
 		return c.DbError(err)
 	} else {
@@ -98,7 +98,8 @@ func (ctrl *RecordController) create(ctx *fiber.Ctx) error {
 	}
 
 	record := models.Record{
-		Payload: datatypes.JSON(payload),
+		Payload:      datatypes.JSON(payload),
+		CollectionID: collection.ID,
 	}
 
 	if err := ctrl.db.Save(&record).Error; err != nil {
@@ -166,7 +167,7 @@ func (ctrl *RecordController) delete(ctx *fiber.Ctx) error {
 		return c.DbError(err)
 	}
 
-	if err := ctrl.db.Delete(&collection).Error; err != nil {
+	if err := ctrl.db.Delete(&record).Error; err != nil {
 		return c.DbError(err)
 	} else {
 		return c.SendStatus(fiber.StatusNoContent)

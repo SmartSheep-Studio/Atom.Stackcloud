@@ -19,6 +19,11 @@ const router = createRouter({
       component: () => import("@/views/actions/create-collection.vue"),
     },
     {
+      path: "/apps/:app/collections/:collection",
+      name: "console.apps.collections",
+      component: () => import("@/views/collection.vue"),
+    },
+    {
       path: "/apps/:app/collections/:collection/update",
       name: "console.apps.collections.update",
       component: () => import("@/views/actions/update-collection.vue"),

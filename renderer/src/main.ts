@@ -21,9 +21,12 @@ VueMarkdownEditor.use(githubTheme, {
   Prism,
 })
 
+import { install as VueMonacoEditorPlugin } from '@guolao/vue-monaco-editor'
+
 const app = createApp(wrapper)
 
 app.use(VueMarkdownEditor)
+app.use(VueMonacoEditorPlugin)
 app.use(createPinia())
 app.use(i18n)
 app.use(router)

@@ -18,5 +18,5 @@ prefork = false
 
 [datasource]
 [datasource.master]
-table_prefix = "cumulus_"
-dsn = "host=localhost user=postgres password=password dbname=cumulus port=5432 sslmode=disable timezone=Asia/Shanghai"
+table_prefix = "stackcloud_"
+dsn = "host=localhost user=postgres password=password dbname=stackcloud port=5432 sslmode=disable timezone=Asia/Shanghai"

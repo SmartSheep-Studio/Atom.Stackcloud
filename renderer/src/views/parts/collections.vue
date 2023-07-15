@@ -5,11 +5,7 @@
         <n-empty v-if="data.length <= 0" class="py-8" description="There's no data. Why not you create one?" />
 
         <n-list-item v-for="(item, i) in data" :key="i">
-          <n-thing
-            class="cursor-pointer"
-            :title="item.name"
-            @click="$router.push({ name: 'console.collections', params: { app: item.slug } })"
-          >
+          <n-thing :title="item.name">
             <template #description>
               <n-space size="small">
                 <n-tag :bordered="false" type="success" size="small">#{{ item.slug }}</n-tag>
@@ -21,10 +17,28 @@
             <div>{{ item.description }}</div>
             <n-space class="mt-2" size="small">
               <n-button
+                type="info"
+                size="small"
+                @click="
+                  $router.push({
+                    name: 'console.apps.collections',
+                    params: { app: props.data.slug, collection: item.slug },
+                  })
+                "
+              >
+                <template #icon>
+                  <n-icon :component="TextSnippetRound" />
+                </template>
+                Inspect
+              </n-button>
+              <n-button
                 type="warning"
                 size="small"
                 @click="
-                  $router.push({ name: 'console.apps.collections.update', params: { app: props.data.slug, collection: item.slug } })
+                  $router.push({
+                    name: 'console.apps.collections.update',
+                    params: { app: props.data.slug, collection: item.slug },
+                  })
                 "
               >
                 <template #icon>
@@ -63,7 +77,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, reactive, ref } from "vue"
-import { PlusRound, EditRound, DeleteRound } from "@vicons/material"
+import { PlusRound, TextSnippetRound, EditRound, DeleteRound } from "@vicons/material"
 import { useMessage, useDialog } from "naive-ui"
 import { http } from "@/utils/http"
 
