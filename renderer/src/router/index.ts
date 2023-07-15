@@ -9,22 +9,22 @@ const router = createRouter({
       component: () => import("@/views/landing.vue"),
     },
     {
-      path: "/apps/:app",
+      path: "/apps/-/:app",
       name: "console.apps",
       component: () => import("@/views/app.vue"),
     },
     {
-      path: "/apps/:app/collections/create",
+      path: "/apps/-/:app/collections/create",
       name: "console.apps.collections.create",
       component: () => import("@/views/actions/create-collection.vue"),
     },
     {
-      path: "/apps/:app/collections/:collection",
+      path: "/apps/-/:app/collections/:collection",
       name: "console.apps.collections",
       component: () => import("@/views/collection.vue"),
     },
     {
-      path: "/apps/:app/collections/:collection/update",
+      path: "/apps/-/:app/collections/:collection/update",
       name: "console.apps.collections.update",
       component: () => import("@/views/actions/update-collection.vue"),
     },
