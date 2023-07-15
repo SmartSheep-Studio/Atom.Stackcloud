@@ -10,12 +10,6 @@
             :title="item.name"
             @click="$router.push({ name: 'console.apps', params: { app: item.slug } })"
           >
-            <template #header-extra>
-              <div class="flex items-center">
-                <div class="me-2">{{ item.is_published ? "Published" : "Draft" }}</div>
-                <n-badge dot processing :type="item.is_published ? 'success' : 'warning'" />
-              </div>
-            </template>
             <template #description>
               <n-space size="small">
                 <n-tag :bordered="false" type="success" size="small">#{{ item.slug }}</n-tag>

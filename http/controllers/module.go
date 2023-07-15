@@ -18,6 +18,8 @@ func Module() fx.Option {
 		fx.Provide(
 			AsController(NewStatusController),
 			AsController(NewAppController),
+			AsController(NewCollectionController),
+			AsController(NewRecordController),
 		),
 	)
 }

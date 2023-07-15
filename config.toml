@@ -1,5 +1,5 @@
 debug = false
-instance_id = "86ad4f61-8bff-4bf8-9a93-8da7813a722c"
+instance_id = "b20b7a22-9bce-47b7-8560-52443d221711"
 base_url = "http://localhost:9444"
 endpoints = "http://localhost:9443"
 mount_key = "WGqNUFNhED"

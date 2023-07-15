@@ -27,15 +27,10 @@
 </template>
 
 <script lang="ts" setup>
-import { parseRedirect } from "@/utils/callback"
 import { http } from "@/utils/http"
-import { useMessage, type FormRules, type FormInst, useDialog } from "naive-ui"
-import { onMounted, reactive, ref } from "vue"
-import { useRoute, useRouter } from "vue-router"
+import { useMessage, type FormRules, type FormInst } from "naive-ui"
+import { onMounted, ref } from "vue"
 
-const $route = useRoute()
-const $router = useRouter()
-const $dialog = useDialog()
 const $message = useMessage()
 
 const submitting = ref(false)
@@ -82,7 +77,7 @@ function update() {
     try {
       submitting.value = true
 
-      await http.put(`/api/apps/${payload.value.slug}`, payload.value)
+      await http.put(`/api/apps/${props.data.slug}`, payload.value)
 
       emits("refresh")
       $message.success("Successfully updated the app")

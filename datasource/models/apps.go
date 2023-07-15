@@ -8,6 +8,7 @@ type App struct {
 	Slug        string                      `json:"slug"`
 	Name        string                      `json:"name"`
 	Description string                      `json:"description"`
+	Collections []RecordCollection          `json:"record_collections"`
 	Tags        datatypes.JSONSlice[string] `json:"tags"`
 	AccountID   uint                        `json:"account_id"`
 }

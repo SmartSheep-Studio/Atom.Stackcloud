@@ -19,10 +19,10 @@ func NewEndpointConnection(cycle fx.Lifecycle) *toolbox.ExternalServiceConnectio
 	cycle.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			conn, err := toolbox.PublishService(viper.GetString("endpoints"), viper.GetString("mount_key"), toolbox.ExternalServiceRequest{
-				Name:        "Matrix",
+				Name:        "Stackcloud",
 				InstanceID:  viper.GetString("instance_id"),
 				PackageID:   "code.smartsheep.studio/atom/stackcloud",
-				Description: "A developer-friendly, geek-friendly store for apps and games.",
+				Description: "A developer-friendly cloud computing and serverless services platform.",
 				Address:     viper.GetString("base_url"),
 				Options: tmodels.ExternalServiceOptions{
 					Pages: []tmodels.ExternalPage{

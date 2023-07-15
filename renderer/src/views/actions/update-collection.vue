@@ -1,20 +1,20 @@
 <template>
   <div class="container">
     <div class="pt-12 pb-4 px-10">
-      <div class="text-2xl font-bold">Create a new app</div>
-      <div class="text-lg">The basic unit used to organize all resources.</div>
+      <div class="text-2xl font-bold">Update a exists collection</div>
+      <div class="text-lg">A place to store a lot of serializable data.</div>
     </div>
 
     <div class="px-10 pt-4">
-      <n-form ref="form" :rules="rules" :model="payload" @submit.prevent="create" class="max-w-[800px]">
+      <n-form ref="form" :rules="rules" :model="payload" @submit.prevent="update" class="max-w-[800px]">
         <n-form-item label="Slug" path="slug">
           <n-input
-            placeholder="Use for the link to your application. Only accepts url safe characters."
+            placeholder="Use for the link to your collection. Only accepts url safe characters."
             v-model:value="payload.slug"
           />
         </n-form-item>
         <n-form-item label="Name" path="name">
-          <n-input placeholder="Use for pointing out topics. Accepts anything you want." v-model:value="payload.name" />
+          <n-input placeholder="Used to hint the developer what the collection is for." v-model:value="payload.name" />
         </n-form-item>
         <n-form-item label="Tags" path="tags">
           <n-dynamic-tags v-model:value="payload.tags" />
@@ -37,15 +37,13 @@
 </template>
 
 <script lang="ts" setup>
-import { parseRedirect } from "@/utils/callback"
 import { http } from "@/utils/http"
-import { useMessage, type FormRules, type FormInst, useDialog } from "naive-ui"
-import { reactive, ref } from "vue"
+import { useMessage, type FormRules, type FormInst } from "naive-ui"
+import { onMounted, reactive, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 
 const $route = useRoute()
 const $router = useRouter()
-const $dialog = useDialog()
 const $message = useMessage()
 
 const submitting = ref(false)
@@ -72,7 +70,7 @@ const rules: FormRules = {
   },
 }
 
-const payload = reactive({
+const payload = ref({
   slug: "",
   name: "",
   description: "",
@@ -80,7 +78,15 @@ const payload = reactive({
   is_published: false,
 })
 
-function create() {
+async function fetch() {
+  try {
+    payload.value = (await http.get(`/api/apps/${$route.params.app}/records/${$route.params.collection}`)).data
+  } catch (e: any) {
+    $message.error(`Something went wrong... ${e}`)
+  }
+}
+
+function update() {
   form.value?.validate(async (errors) => {
     if (errors) {
       return
@@ -89,16 +95,9 @@ function create() {
     try {
       submitting.value = true
 
-      await http.post("/api/apps", payload)
+      await http.put(`/api/apps/${$route.params.app}/records/${$route.params.collection}`, payload.value)
 
-      $dialog.success({
-        title: "Successfully created an app",
-        content: "Now back to console and start use our services!",
-        positiveText: "OK",
-        onPositiveClick: async () => {
-          await $router.push(await parseRedirect($route.query))
-        },
-      })
+      $message.success("Successfully updated a collection.")
     } catch (e: any) {
       $message.error(`Something went wrong... ${e}`)
     } finally {
@@ -106,4 +105,8 @@ function create() {
     }
   })
 }
+
+onMounted(() => {
+  fetch()
+})
 </script>

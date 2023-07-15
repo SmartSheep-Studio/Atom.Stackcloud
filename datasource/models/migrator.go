@@ -9,6 +9,8 @@ func RunMigration(db *gorm.DB) {
 	if err := db.AutoMigrate(
 		&Account{},
 		&App{},
+		&RecordCollection{},
+		&Record{},
 	); err != nil {
 		log.Fatal().Err(err).Msg("Error when migrating database")
 	}

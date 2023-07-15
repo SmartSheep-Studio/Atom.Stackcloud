@@ -1,20 +1,20 @@
 <template>
   <div class="container">
     <div class="pt-12 pb-4 px-10">
-      <div class="text-2xl font-bold">Create a new app</div>
-      <div class="text-lg">The basic unit used to organize all resources.</div>
+      <div class="text-2xl font-bold">Create a new collection</div>
+      <div class="text-lg">A place to store a lot of serializable data.</div>
     </div>
 
     <div class="px-10 pt-4">
       <n-form ref="form" :rules="rules" :model="payload" @submit.prevent="create" class="max-w-[800px]">
         <n-form-item label="Slug" path="slug">
           <n-input
-            placeholder="Use for the link to your application. Only accepts url safe characters."
+            placeholder="Use for the link to your collection. Only accepts url safe characters."
             v-model:value="payload.slug"
           />
         </n-form-item>
         <n-form-item label="Name" path="name">
-          <n-input placeholder="Use for pointing out topics. Accepts anything you want." v-model:value="payload.name" />
+          <n-input placeholder="Used to hint the developer what the collection is for." v-model:value="payload.name" />
         </n-form-item>
         <n-form-item label="Tags" path="tags">
           <n-dynamic-tags v-model:value="payload.tags" />
@@ -89,14 +89,16 @@ function create() {
     try {
       submitting.value = true
 
-      await http.post("/api/apps", payload)
+      await http.post(`/api/apps/${$route.params.app}/records`, payload)
 
       $dialog.success({
-        title: "Successfully created an app",
-        content: "Now back to console and start use our services!",
+        title: "Successfully created a collection",
+        content: "Now back to console and learn how to add a new record in it!",
         positiveText: "OK",
         onPositiveClick: async () => {
-          await $router.push(await parseRedirect($route.query))
+          await $router.push(
+            await parseRedirect($route.query, { name: "console.apps", params: { app: $route.params.app } })
+          )
         },
       })
     } catch (e: any) {
