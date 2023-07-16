@@ -75,7 +75,6 @@ const payload = ref({
   name: "",
   description: "",
   tags: [],
-  is_published: false,
 })
 
 async function fetch() {

@@ -17,11 +17,15 @@
           <n-tab-pane name="resources" tab="Resources" display-directive="show:lazy">
             <n-grid v-if="!reverting" item-responsive responsive="screen" :x-gap="8" :y-gap="8" class="mt-2">
               <n-gi span="24 m:12">
+                <n-card title="Cloud Functions">
+                  <functions :data="app" />
+                </n-card>
+              </n-gi>
+              <n-gi span="24 m:12">
                 <n-card title="Cloud Collections">
                   <collections :data="app" />
                 </n-card>
               </n-gi>
-              <n-gi span="24 m:12"> </n-gi>
             </n-grid>
           </n-tab-pane>
           <n-tab-pane name="settings" tab="Settings" display-directive="show:lazy">
@@ -48,6 +52,7 @@
 import UpdateApp from "@/views/actions/update-app.vue"
 import DestroyApp from "@/views/actions/destroy-app.vue"
 import Collections from "@/views/parts/collections.vue"
+import Functions from "@/views/parts/functions.vue"
 import { useMessage } from "naive-ui"
 import { useRoute } from "vue-router"
 import { onMounted, ref } from "vue"

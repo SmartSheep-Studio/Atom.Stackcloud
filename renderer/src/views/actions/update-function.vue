@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <div class="pt-12 pb-4 px-10">
-      <div class="text-2xl font-bold">Create a new collection</div>
-      <div class="text-lg">A place to store a lot of serializable data.</div>
+      <div class="text-2xl font-bold">Update a exists function</div>
+      <div class="text-lg">A thing that can operate all services.</div>
     </div>
 
     <div class="px-10 pt-4">
-      <n-form ref="form" :rules="rules" :model="payload" @submit.prevent="create" class="max-w-[800px]">
+      <n-form ref="form" :rules="rules" :model="payload" @submit.prevent="update" class="max-w-[800px]">
         <n-form-item label="Slug" path="slug">
           <n-input
             placeholder="Use for the link to your collection. Only accepts url safe characters."
@@ -26,6 +26,9 @@
             v-model:value="payload.description"
           />
         </n-form-item>
+        <n-form-item label="Script" path="script">
+          <vue-monaco-editor v-model:value="payload.script" height="400px" language="javascript" theme="vs-dark" />
+        </n-form-item>
 
         <n-space size="small">
           <n-button type="primary" attr-type="submit" :loading="submitting">Submit</n-button>
@@ -39,13 +42,12 @@
 <script lang="ts" setup>
 import { parseRedirect } from "@/utils/callback"
 import { http } from "@/utils/http"
-import { useMessage, type FormRules, type FormInst, useDialog } from "naive-ui"
-import { reactive, ref } from "vue"
+import { useMessage, type FormRules, type FormInst } from "naive-ui"
+import { onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 
 const $route = useRoute()
 const $router = useRouter()
-const $dialog = useDialog()
 const $message = useMessage()
 
 const submitting = ref(false)
@@ -70,16 +72,30 @@ const rules: FormRules = {
     message: "Need least six characters",
     trigger: ["blur", "input"],
   },
+  script: {
+    required: true,
+    message: "Need least one character",
+    trigger: ["blur", "input"],
+  },
 }
 
-const payload = reactive({
+const payload = ref({
   slug: "",
   name: "",
   description: "",
   tags: [],
+  script: "// Your code goes there.\n// Support ES5 and most ES6 syntax\n// Learn more from our official documentation!",
 })
 
-function create() {
+async function fetch() {
+  try {
+    payload.value = (await http.get(`/api/apps/${$route.params.app}/functions/${$route.params.function}`)).data
+  } catch (e: any) {
+    $message.error(`Something went wrong... ${e}`)
+  }
+}
+
+function update() {
   form.value?.validate(async (errors) => {
     if (errors) {
       return
@@ -88,18 +104,12 @@ function create() {
     try {
       submitting.value = true
 
-      await http.post(`/api/apps/${$route.params.app}/records`, payload)
+      await http.post(`/api/apps/${$route.params.app}/functions/${$route.params.function}`, payload)
 
-      $dialog.success({
-        title: "Successfully created a collection",
-        content: "Now back to console and learn how to add a new record in it!",
-        positiveText: "OK",
-        onPositiveClick: async () => {
-          await $router.push(
-            await parseRedirect($route.query, { name: "console.apps", params: { app: $route.params.app } })
-          )
-        },
-      })
+      $message.success("Successfully updated a function.")
+      await $router.push(
+        await parseRedirect($route.query, { name: "console.apps", params: { app: $route.params.app } })
+      )
     } catch (e: any) {
       $message.error(`Something went wrong... ${e}`)
     } finally {
@@ -107,4 +117,8 @@ function create() {
     }
   })
 }
+
+onMounted(() => {
+  fetch()
+})
 </script>

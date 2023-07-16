@@ -14,6 +14,16 @@ const router = createRouter({
       component: () => import("@/views/app.vue"),
     },
     {
+      path: "/apps/-/:app/functions/create",
+      name: "console.apps.functions.create",
+      component: () => import("@/views/actions/create-function.vue"),
+    },
+    {
+      path: "/apps/-/:app/functions/:function/update",
+      name: "console.apps.functions.update",
+      component: () => import("@/views/actions/update-function.vue"),
+    },
+    {
       path: "/apps/-/:app/collections/create",
       name: "console.apps.collections.create",
       component: () => import("@/views/actions/create-collection.vue"),

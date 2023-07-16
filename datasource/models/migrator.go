@@ -11,6 +11,7 @@ func RunMigration(db *gorm.DB) {
 		&App{},
 		&RecordCollection{},
 		&Record{},
+		&CloudFunction{},
 	); err != nil {
 		log.Fatal().Err(err).Msg("Error when migrating database")
 	}

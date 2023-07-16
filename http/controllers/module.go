@@ -20,6 +20,7 @@ func Module() fx.Option {
 			AsController(NewAppController),
 			AsController(NewCollectionController),
 			AsController(NewRecordController),
+			AsController(NewFunctionController),
 		),
 	)
 }

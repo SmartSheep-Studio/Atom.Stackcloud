@@ -1,20 +1,20 @@
 <template>
   <div class="container">
     <div class="pt-12 pb-4 px-10">
-      <div class="text-2xl font-bold">Create a new collection</div>
-      <div class="text-lg">A place to store a lot of serializable data.</div>
+      <div class="text-2xl font-bold">Create a new function</div>
+      <div class="text-lg">A thing that can operate all services.</div>
     </div>
 
     <div class="px-10 pt-4">
       <n-form ref="form" :rules="rules" :model="payload" @submit.prevent="create" class="max-w-[800px]">
         <n-form-item label="Slug" path="slug">
           <n-input
-            placeholder="Use for the link to your collection. Only accepts url safe characters."
+            placeholder="Use for the link to your function. Only accepts url safe characters."
             v-model:value="payload.slug"
           />
         </n-form-item>
         <n-form-item label="Name" path="name">
-          <n-input placeholder="Used to hint the developer what the collection is for." v-model:value="payload.name" />
+          <n-input placeholder="Used to hint the developer what the function is for." v-model:value="payload.name" />
         </n-form-item>
         <n-form-item label="Tags" path="tags">
           <n-dynamic-tags v-model:value="payload.tags" />
@@ -24,6 +24,14 @@
             type="textarea"
             placeholder="Use for describe main content. Accepts anything you want."
             v-model:value="payload.description"
+          />
+        </n-form-item>
+        <n-form-item label="Script" path="script">
+          <vue-monaco-editor
+            v-model:value="payload.script"
+            height="400px"
+            language="javascript"
+            theme="vs-dark"
           />
         </n-form-item>
 
@@ -70,6 +78,11 @@ const rules: FormRules = {
     message: "Need least six characters",
     trigger: ["blur", "input"],
   },
+  script: {
+    required: true,
+    message: "Need least one character",
+    trigger: ["blur", "input"],
+  },
 }
 
 const payload = reactive({
@@ -77,6 +90,7 @@ const payload = reactive({
   name: "",
   description: "",
   tags: [],
+  script: "// Your code goes there.\n// Support ES5 and most ES6 syntax\n// Learn more from our official documentation!",
 })
 
 function create() {
@@ -88,11 +102,11 @@ function create() {
     try {
       submitting.value = true
 
-      await http.post(`/api/apps/${$route.params.app}/records`, payload)
+      await http.post(`/api/apps/${$route.params.app}/functions`, payload)
 
       $dialog.success({
-        title: "Successfully created a collection",
-        content: "Now back to console and learn how to add a new record in it!",
+        title: "Successfully created a function",
+        content: "Now back to console and learn how to call it!",
         positiveText: "OK",
         onPositiveClick: async () => {
           await $router.push(
