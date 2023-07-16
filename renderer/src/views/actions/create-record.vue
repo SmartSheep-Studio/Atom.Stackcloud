@@ -1,12 +1,7 @@
 <template>
   <n-form ref="form" :rules="rules" :model="payload" @submit.prevent="create">
     <n-form-item label="Payload" path="payload">
-      <vue-monaco-editor
-        v-model:value="payload.payload"
-        language="json"
-        height="400px"
-        :options="{ lineNumbers: false }"
-      />
+      <vue-monaco-editor v-model:value="payload.payload" language="json" height="400px" theme="vs-dark" />
     </n-form-item>
 
     <n-space size="small">

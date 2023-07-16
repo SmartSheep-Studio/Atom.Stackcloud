@@ -15,5 +15,6 @@ module.exports = {
   rules: {
     "vue/multi-word-component-names": "off",
     "vue/no-side-effects-in-computed-properties": "off",
+    "vue/require-v-for-key": "off",
   }
 }

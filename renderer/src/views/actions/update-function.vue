@@ -104,7 +104,7 @@ function update() {
     try {
       submitting.value = true
 
-      await http.post(`/api/apps/${$route.params.app}/functions/${$route.params.function}`, payload)
+      await http.put(`/api/apps/${$route.params.app}/functions/${$route.params.function}`, payload.value)
 
       $message.success("Successfully updated a function.")
       await $router.push(

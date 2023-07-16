@@ -16,7 +16,16 @@
             </template>
             <div>{{ item.description }}</div>
             <n-space class="mt-2" size="small">
-              <n-button type="info" size="small">
+              <n-button
+                type="info"
+                size="small"
+                @click="
+                  () => {
+                    focus = item
+                    calling = true
+                  }
+                "
+              >
                 <template #icon>
                   <n-icon :component="PlayArrowRound" />
                 </template>
@@ -63,10 +72,17 @@
         :page-slot="pagination.slot"
       />
     </div>
+
+    <n-modal v-model:show="calling">
+      <n-card size="huge" title="Call a function" class="w-[800px]">
+        <call-function :data="focus" />
+      </n-card>
+    </n-modal>
   </div>
 </template>
 
 <script lang="ts" setup>
+import CallFunction from "@/views/actions/call-function.vue"
 import { computed, onMounted, reactive, ref } from "vue"
 import { PlusRound, PlayArrowRound, EditRound, DeleteRound } from "@vicons/material"
 import { useMessage, useDialog } from "naive-ui"
@@ -83,6 +99,8 @@ const data = computed(() => {
   return rawData.value.slice(start, start + pagination.pageSize) ?? []
 })
 
+const focus = ref<null | any>(null)
+const calling = ref(false)
 const requesting = ref(true)
 
 const pagination = reactive({

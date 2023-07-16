@@ -4,18 +4,20 @@ import (
 	"code.smartsheep.studio/atom/neutron/http/context"
 	"code.smartsheep.studio/atom/stackcloud/datasource/models"
 	"code.smartsheep.studio/atom/stackcloud/http/middleware"
+	"code.smartsheep.studio/atom/stackcloud/services"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
 
 type FunctionController struct {
-	db   *gorm.DB
-	auth middleware.AuthHandler
+	db       *gorm.DB
+	executor *services.FunctionService
+	auth     middleware.AuthHandler
 }
 
-func NewFunctionController(db *gorm.DB, auth middleware.AuthHandler) *FunctionController {
-	return &FunctionController{db, auth}
+func NewFunctionController(db *gorm.DB, executor *services.FunctionService, auth middleware.AuthHandler) *FunctionController {
+	return &FunctionController{db, executor, auth}
 }
 
 func (ctrl *FunctionController) Map(router *context.App) {
@@ -24,6 +26,7 @@ func (ctrl *FunctionController) Map(router *context.App) {
 	router.Post("/api/apps/:app/functions", ctrl.auth(true, "records.function.create", "stackcloud.function.create"), ctrl.create)
 	router.Put("/api/apps/:app/functions/:function", ctrl.auth(true, "records.function.update", "stackcloud.function.update"), ctrl.update)
 	router.Delete("/api/apps/:app/functions/:function", ctrl.auth(true, "records.function.delete", "stackcloud.function.delete"), ctrl.delete)
+	router.Post("/api/apps/:app/functions/:function/call", ctrl.auth(true, "records.function.call", "stackcloud.function.call"), ctrl.call)
 }
 
 func (ctrl *FunctionController) list(ctx *fiber.Ctx) error {
@@ -155,4 +158,20 @@ func (ctrl *FunctionController) delete(ctx *fiber.Ctx) error {
 	} else {
 		return c.SendStatus(fiber.StatusNoContent)
 	}
+}
+
+func (ctrl *FunctionController) call(ctx *fiber.Ctx) error {
+	c := &context.Ctx{Ctx: ctx}
+
+	var app models.App
+	if err := ctrl.db.Where("slug = ?", c.Params("app")).First(&app).Error; err != nil {
+		return c.DbError(err)
+	}
+
+	var function models.CloudFunction
+	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("function"), app.ID).First(&function).Error; err != nil {
+		return c.DbError(err)
+	}
+
+	return ctrl.executor.HandleRequest(function, c)
 }

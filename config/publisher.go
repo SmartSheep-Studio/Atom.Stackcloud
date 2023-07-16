@@ -28,9 +28,9 @@ func NewEndpointConnection(cycle fx.Lifecycle) *toolbox.ExternalServiceConnectio
 					Pages: []tmodels.ExternalPage{
 						{
 							To:      viper.GetString("base_url"),
-							Title:   "Matrix",
-							Name:    "matrix",
-							Icon:    "mdi-store",
+							Title:   "Stackcloud",
+							Name:    "stackcloud",
+							Icon:    "mdi-cloud",
 							Builtin: false,
 							Visible: true,
 							Meta: map[string]any{
