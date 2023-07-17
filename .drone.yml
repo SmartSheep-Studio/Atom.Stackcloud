@@ -2,7 +2,7 @@ kind: pipeline
 type: docker
 name: default
 steps:
-  - name: Build Image
+  - name: build image
     image: plugins/docker
     environment:
       DOCKER_BUILDKIT: 1
