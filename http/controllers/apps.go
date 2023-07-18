@@ -19,11 +19,11 @@ func NewAppController(db *gorm.DB, auth middleware.AuthHandler) *AppController {
 }
 
 func (ctrl *AppController) Map(router *context.App) {
-	router.Get("/api/apps", ctrl.auth(true), ctrl.list)
-	router.Get("/api/apps/:app", ctrl.auth(true), ctrl.get)
-	router.Post("/api/apps", ctrl.auth(true), ctrl.create)
-	router.Put("/api/apps/:app", ctrl.auth(true), ctrl.update)
-	router.Delete("/api/apps/:app", ctrl.auth(true), ctrl.delete)
+	router.Get("/api/apps", ctrl.auth(true, "stackcloud.apps.read", "stackcloud.apps.read"), ctrl.list)
+	router.Get("/api/apps/:app", ctrl.auth(true, "stackcloud.apps.read", "stackcloud.apps.read"), ctrl.get)
+	router.Post("/api/apps", ctrl.auth(true, "stackcloud.apps.create", "stackcloud.apps.create"), ctrl.create)
+	router.Put("/api/apps/:app", ctrl.auth(true, "stackcloud.apps.update", "stackcloud.apps.update"), ctrl.update)
+	router.Delete("/api/apps/:app", ctrl.auth(true, "stackcloud.apps.delete", "stackcloud.apps.delete"), ctrl.delete)
 }
 
 func (ctrl *AppController) list(ctx *fiber.Ctx) error {

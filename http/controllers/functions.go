@@ -21,12 +21,12 @@ func NewFunctionController(db *gorm.DB, executor *services.FunctionService, auth
 }
 
 func (ctrl *FunctionController) Map(router *context.App) {
-	router.Get("/api/apps/:app/functions", ctrl.auth(true, "records.function.read", "stackcloud.function.read"), ctrl.list)
-	router.Get("/api/apps/:app/functions/:function", ctrl.auth(true, "records.function.read", "stackcloud.function.read"), ctrl.get)
-	router.Post("/api/apps/:app/functions", ctrl.auth(true, "records.function.create", "stackcloud.function.create"), ctrl.create)
-	router.Put("/api/apps/:app/functions/:function", ctrl.auth(true, "records.function.update", "stackcloud.function.update"), ctrl.update)
-	router.Delete("/api/apps/:app/functions/:function", ctrl.auth(true, "records.function.delete", "stackcloud.function.delete"), ctrl.delete)
-	router.Post("/api/apps/:app/functions/:function/call", ctrl.auth(false, "records.function.call", "stackcloud.function.call"), ctrl.call)
+	router.Get("/api/apps/:app/functions", ctrl.auth(true, "stackcloud.records.function.read", "stackcloud.function.read"), ctrl.list)
+	router.Get("/api/apps/:app/functions/:function", ctrl.auth(true, "stackcloud.records.function.read", "stackcloud.function.read"), ctrl.get)
+	router.Post("/api/apps/:app/functions", ctrl.auth(true, "stackcloud.records.function.create", "stackcloud.function.create"), ctrl.create)
+	router.Put("/api/apps/:app/functions/:function", ctrl.auth(true, "stackcloud.records.function.update", "stackcloud.function.update"), ctrl.update)
+	router.Delete("/api/apps/:app/functions/:function", ctrl.auth(true, "stackcloud.records.function.delete", "stackcloud.function.delete"), ctrl.delete)
+	router.Post("/api/apps/:app/functions/:function/call", ctrl.auth(false, "stackcloud.records.function.call", "stackcloud.function.call"), ctrl.call)
 }
 
 func (ctrl *FunctionController) list(ctx *fiber.Ctx) error {

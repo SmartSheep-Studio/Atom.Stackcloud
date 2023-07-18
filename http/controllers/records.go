@@ -21,11 +21,11 @@ func NewRecordController(db *gorm.DB, auth middleware.AuthHandler) *RecordContro
 }
 
 func (ctrl *RecordController) Map(router *context.App) {
-	router.Get("/api/apps/:app/records/:collection/data", ctrl.auth(true, "records.data.read", "stackcloud.records.data.read"), ctrl.list)
-	router.Get("/api/apps/:app/records/:collection/data/:record", ctrl.auth(true, "records.data.read", "stackcloud.records.data.read"), ctrl.get)
-	router.Post("/api/apps/:app/records/:collection/data", ctrl.auth(true, "records.data.create", "stackcloud.records.data.create"), ctrl.create)
-	router.Put("/api/apps/:app/records/:collection/data/:record", ctrl.auth(true, "records.data.update", "stackcloud.records.data.update"), ctrl.update)
-	router.Delete("/api/apps/:app/records/:collection/data/:record", ctrl.auth(true, "records.data.delete", "stackcloud.records.data.delete"), ctrl.delete)
+	router.Get("/api/apps/:app/records/:collection/data", ctrl.auth(true, "stackcloud.records.data.read", "stackcloud.records.data.read"), ctrl.list)
+	router.Get("/api/apps/:app/records/:collection/data/:record", ctrl.auth(true, "stackcloud.records.data.read", "stackcloud.records.data.read"), ctrl.get)
+	router.Post("/api/apps/:app/records/:collection/data", ctrl.auth(true, "stackcloud.records.data.create", "stackcloud.records.data.create"), ctrl.create)
+	router.Put("/api/apps/:app/records/:collection/data/:record", ctrl.auth(true, "stackcloud.records.data.update", "stackcloud.records.data.update"), ctrl.update)
+	router.Delete("/api/apps/:app/records/:collection/data/:record", ctrl.auth(true, "stackcloud.records.data.delete", "stackcloud.records.data.delete"), ctrl.delete)
 }
 
 func (ctrl *RecordController) list(ctx *fiber.Ctx) error {
