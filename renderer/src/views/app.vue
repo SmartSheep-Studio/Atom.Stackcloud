@@ -18,7 +18,7 @@
       </div>
     </n-card>
     <n-spin :show="reverting">
-      <splitpanes style="height: calc(100vh - 48px)">
+      <splitpanes :class="isUnderShadow ? 'h-max' : 'h-screen'">
         <pane :min-size="15" :max-size="30">
           <div class="h-full p-4">
             <n-tree block-line expand-on-click :data="navNodes" :node-props="navProps" />
@@ -146,9 +146,22 @@ async function fetch() {
 onMounted(() => {
   fetch()
 })
+
+// Use for dynamic calculate height
+const isUnderShadow = computed(() => {
+  return (window as any).__POWERED_BY_WUJIE__ != null;
+});
 </script>
 
 <style>
+.h-max {
+  height: calc(100vh - 48px - 72px);
+}
+
+.h-screen {
+  height: calc(100vh - 48px);
+}
+
 .splitpanes__pane {
   background-color: #ffffff;
 }

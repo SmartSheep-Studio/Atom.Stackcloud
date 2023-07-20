@@ -32,18 +32,18 @@
       </n-card>
       <div>
         <vue-monaco-editor
+          :height="isUnderShadow ? 'calc(100vh - 54px - 46px - 48px)' : 'calc(100vh - 54px - 46px)'"
           v-model:value="code"
           @update:value="isSaved = false"
           @keyup.ctrl.s.prevent="save"
           language="javascript"
           theme="vs"
-          height="calc(100vh - 54px - 46px)"
         />
       </div>
 
       <n-modal v-model:show="updating">
         <n-card size="huge" class="w-[800px]">
-          <div class="text-lg mb-5">Update an exists collection</div>
+          <div class="text-lg mb-5">Update a exists collection</div>
           <n-card>
             <update-function />
           </n-card>
@@ -68,13 +68,14 @@
 import CallFunction from "@/views/actions/call-function.vue"
 import UpdateFunction from "@/views/actions/update-function.vue"
 import DestroyFunction from "@/views/actions/destroy-function.vue"
-import { onMounted, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 import { useMessage } from "naive-ui"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import { http } from "@/utils/http"
 import { PlayArrowRound, SettingsRound } from "@vicons/material"
 
 const $route = useRoute()
+const $router = useRouter()
 const $message = useMessage()
 
 const reverting = ref(true)
@@ -114,6 +115,7 @@ async function save() {
 }
 
 function reload() {
+  $router.push({ name: "console.apps.functions", params: { app: $route.params.app, function: func.value.slug } })
   window.location.reload()
 }
 
@@ -129,5 +131,10 @@ onMounted(() => {
     },
     { passive: false }
   )
+})
+
+// Use for dynamic calculate height
+const isUnderShadow = computed(() => {
+  return (window as any).__POWERED_BY_WUJIE__ != null
 })
 </script>

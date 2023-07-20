@@ -40,11 +40,12 @@ import Records from "@/views/parts/records.vue"
 import UpdateCollection from "@/views/actions/update-collection.vue"
 import DestroyCollection from "@/views/actions/destroy-collection.vue"
 import { useMessage } from "naive-ui"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import { onMounted, ref } from "vue"
 import { http } from "@/utils/http"
 
 const $route = useRoute()
+const $router = useRouter()
 const $message = useMessage()
 
 const app = ref<any>({})
@@ -65,6 +66,7 @@ async function fetch() {
 }
 
 function reload() {
+  $router.push({ name: "console.apps.collections", params: { app: $route.params.app, collection: collection.value.slug } })
   window.location.reload()
 }
 
