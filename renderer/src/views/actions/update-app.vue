@@ -36,7 +36,6 @@ const $message = useMessage()
 const submitting = ref(false)
 
 const props = defineProps<{data: any}>()
-const emits = defineEmits(["refresh"])
 
 const form = ref<FormInst | null>(null)
 const rules: FormRules = {
@@ -79,8 +78,8 @@ function update() {
 
       await http.put(`/api/apps/${props.data.slug}`, payload.value)
 
-      emits("refresh")
       $message.success("Successfully updated the app")
+      window.location.reload()
     } catch (e: any) {
       $message.error(`Something went wrong... ${e}`)
     } finally {

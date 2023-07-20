@@ -1,11 +1,11 @@
 <template>
-  <div class="container">
-    <div class="pt-12 pb-4 px-10">
+  <div class="py-12 px-16">
+    <div class="pb-4">
       <div class="text-2xl font-bold">Create a new function</div>
       <div class="text-lg">A thing that can operate all services.</div>
     </div>
 
-    <div class="px-10 pt-4">
+    <div class="pt-4">
       <n-form ref="form" :rules="rules" :model="payload" @submit.prevent="create" class="max-w-[800px]">
         <n-form-item label="Slug" path="slug">
           <n-input
@@ -24,14 +24,6 @@
             type="textarea"
             placeholder="Use for describe main content. Accepts anything you want."
             v-model:value="payload.description"
-          />
-        </n-form-item>
-        <n-form-item label="Script" path="script">
-          <vue-monaco-editor
-            v-model:value="payload.script"
-            height="400px"
-            language="javascript"
-            theme="vs-dark"
           />
         </n-form-item>
 
@@ -76,11 +68,6 @@ const rules: FormRules = {
     required: true,
     validator: (_, v) => v.length >= 6,
     message: "Need least six characters",
-    trigger: ["blur", "input"],
-  },
-  script: {
-    required: true,
-    message: "Need least one character",
     trigger: ["blur", "input"],
   },
 }

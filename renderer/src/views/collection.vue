@@ -1,35 +1,44 @@
 <template>
-  <n-spin :show="reverting">
-    <div class="container h-full">
-      <div class="pt-8 px-2 pb-6 md:px-4 lg:px-10">
-        <n-page-header
-          :title="app.name"
-          :subtitle="app.description"
-          @back="$router.push({ name: 'console.apps', params: { app: $route.params.app } })"
-        >
-          <template #header>
-            <n-breadcrumb>
-              <n-breadcrumb-item @click="$router.push({ name: 'console' })">Console</n-breadcrumb-item>
-              <n-breadcrumb-item @click="$router.push({ name: 'console.apps', params: { app: $route.params.app } })">
-                {{ app.name }}
-              </n-breadcrumb-item>
-              <n-breadcrumb-item>{{ collection.name }}</n-breadcrumb-item>
-            </n-breadcrumb>
-          </template>
-        </n-page-header>
-      </div>
-
-      <div class="px-2 md:px-4 lg:px-10" v-if="!reverting">
-        <n-card>
-          <records :data="collection" />
-        </n-card>
-      </div>
-    </div>
-  </n-spin>
+  <div>
+    <n-spin :show="reverting">
+      <n-tabs type="line" justify-content="space-around" animated>
+        <n-tab-pane name="data" tab="Data">
+          <div class="px-8 py-4" v-if="!reverting">
+            <n-card>
+              <records :data="collection" />
+            </n-card>
+          </div>
+        </n-tab-pane>
+        <n-tab-pane name="settings" tab="Settings">
+          <div class="px-8 py-4 flex justify-center" v-if="!reverting">
+            <n-grid item-responsive responsive="screen" x-gap="8" y-gap="8">
+              <n-gi span="24 m:14 l:16">
+                <n-card title="Update Collection">
+                  <update-collection />
+                </n-card>
+              </n-gi>
+              <n-gi span="24 m:10 l:8">
+                <n-card title="Dangerous Zone">
+                  <destroy-collection
+                    :data="collection"
+                    @done="
+                      $router.push({ name: 'console.apps', params: { app: $route.params.app } }).then(() => reload())
+                    "
+                  />
+                </n-card>
+              </n-gi>
+            </n-grid>
+          </div>
+        </n-tab-pane>
+      </n-tabs>
+    </n-spin>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import Records from "@/views/parts/records.vue"
+import UpdateCollection from "@/views/actions/update-collection.vue"
+import DestroyCollection from "@/views/actions/destroy-collection.vue"
 import { useMessage } from "naive-ui"
 import { useRoute } from "vue-router"
 import { onMounted, ref } from "vue"
@@ -53,6 +62,10 @@ async function fetch() {
   } finally {
     reverting.value = false
   }
+}
+
+function reload() {
+  window.location.reload()
 }
 
 onMounted(() => {

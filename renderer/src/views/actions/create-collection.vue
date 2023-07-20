@@ -1,11 +1,11 @@
 <template>
-  <div class="container">
-    <div class="pt-12 pb-4 px-10">
+  <div class="py-12 px-16">
+    <div class="pb-4">
       <div class="text-2xl font-bold">Create a new collection</div>
       <div class="text-lg">A place to store a lot of serializable data.</div>
     </div>
 
-    <div class="px-10 pt-4">
+    <div class="pt-4">
       <n-form ref="form" :rules="rules" :model="payload" @submit.prevent="create" class="max-w-[800px]">
         <n-form-item label="Slug" path="slug">
           <n-input

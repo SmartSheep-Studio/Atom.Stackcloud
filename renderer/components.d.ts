@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Gatekeeper: typeof import('./src/components/global/gatekeeper.vue')['default']
+    NBadge: typeof import('naive-ui')['NBadge']
     NBreadcrumb: typeof import('naive-ui')['NBreadcrumb']
     NBreadcrumbItem: typeof import('naive-ui')['NBreadcrumbItem']
     NButton: typeof import('naive-ui')['NButton']
@@ -16,6 +17,7 @@ declare module 'vue' {
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
     NDataTable: typeof import('naive-ui')['NDataTable']
     NDialogProvider: typeof import('naive-ui')['NDialogProvider']
+    NDivider: typeof import('naive-ui')['NDivider']
     NDynamicInput: typeof import('naive-ui')['NDynamicInput']
     NDynamicTags: typeof import('naive-ui')['NDynamicTags']
     NEmpty: typeof import('naive-ui')['NEmpty']
@@ -24,6 +26,7 @@ declare module 'vue' {
     NGi: typeof import('naive-ui')['NGi']
     NGrid: typeof import('naive-ui')['NGrid']
     NIcon: typeof import('naive-ui')['NIcon']
+    NIcons: typeof import('naive-ui')['NIcons']
     NInput: typeof import('naive-ui')['NInput']
     NLayout: typeof import('naive-ui')['NLayout']
     NLayoutContent: typeof import('naive-ui')['NLayoutContent']
@@ -40,6 +43,7 @@ declare module 'vue' {
     NTabs: typeof import('naive-ui')['NTabs']
     NTag: typeof import('naive-ui')['NTag']
     NThing: typeof import('naive-ui')['NThing']
+    NTree: typeof import('naive-ui')['NTree']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

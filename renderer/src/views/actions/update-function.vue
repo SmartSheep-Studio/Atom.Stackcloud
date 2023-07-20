@@ -1,41 +1,31 @@
 <template>
-  <div class="container">
-    <div class="pt-12 pb-4 px-10">
-      <div class="text-2xl font-bold">Update a exists function</div>
-      <div class="text-lg">A thing that can operate all services.</div>
-    </div>
+  <div>
+    <n-form ref="form" :rules="rules" :model="payload" @submit.prevent="update" class="max-w-[800px]">
+      <n-form-item label="Slug" path="slug">
+        <n-input
+          placeholder="Use for the link to your collection. Only accepts url safe characters."
+          v-model:value="payload.slug"
+        />
+      </n-form-item>
+      <n-form-item label="Name" path="name">
+        <n-input placeholder="Used to hint the developer what the collection is for." v-model:value="payload.name" />
+      </n-form-item>
+      <n-form-item label="Tags" path="tags">
+        <n-dynamic-tags v-model:value="payload.tags" />
+      </n-form-item>
+      <n-form-item label="Description" path="description">
+        <n-input
+          type="textarea"
+          placeholder="Use for describe main content. Accepts anything you want."
+          v-model:value="payload.description"
+        />
+      </n-form-item>
 
-    <div class="px-10 pt-4">
-      <n-form ref="form" :rules="rules" :model="payload" @submit.prevent="update" class="max-w-[800px]">
-        <n-form-item label="Slug" path="slug">
-          <n-input
-            placeholder="Use for the link to your collection. Only accepts url safe characters."
-            v-model:value="payload.slug"
-          />
-        </n-form-item>
-        <n-form-item label="Name" path="name">
-          <n-input placeholder="Used to hint the developer what the collection is for." v-model:value="payload.name" />
-        </n-form-item>
-        <n-form-item label="Tags" path="tags">
-          <n-dynamic-tags v-model:value="payload.tags" />
-        </n-form-item>
-        <n-form-item label="Description" path="description">
-          <n-input
-            type="textarea"
-            placeholder="Use for describe main content. Accepts anything you want."
-            v-model:value="payload.description"
-          />
-        </n-form-item>
-        <n-form-item label="Script" path="script">
-          <vue-monaco-editor v-model:value="payload.script" height="400px" language="javascript" theme="vs-dark" />
-        </n-form-item>
-
-        <n-space size="small">
-          <n-button type="primary" attr-type="submit" :loading="submitting">Submit</n-button>
-          <n-button @click="$router.back()">Cancel</n-button>
-        </n-space>
-      </n-form>
-    </div>
+      <n-space size="small">
+        <n-button type="primary" attr-type="submit" :loading="submitting">Submit</n-button>
+        <n-button @click="$router.back()">Cancel</n-button>
+      </n-space>
+    </n-form>
   </div>
 </template>
 
@@ -84,7 +74,8 @@ const payload = ref({
   name: "",
   description: "",
   tags: [],
-  script: "// Your code goes there.\n// Support ES5 and most ES6 syntax\n// Learn more from our official documentation!",
+  script:
+    "// Your code goes there.\n// Support ES5 and most ES6 syntax\n// Learn more from our official documentation!",
 })
 
 async function fetch() {
@@ -107,9 +98,7 @@ function update() {
       await http.put(`/api/apps/${$route.params.app}/functions/${$route.params.function}`, payload.value)
 
       $message.success("Successfully updated a function.")
-      await $router.push(
-        await parseRedirect($route.query, { name: "console.apps", params: { app: $route.params.app } })
-      )
+      window.location.reload()
     } catch (e: any) {
       $message.error(`Something went wrong... ${e}`)
     } finally {

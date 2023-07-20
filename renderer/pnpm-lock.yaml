@@ -38,6 +38,9 @@ dependencies:
   prismjs:
     specifier: ^1.29.0
     version: 1.29.0
+  splitpanes:
+    specifier: ^3.1.5
+    version: 3.1.5
   universal-cookie:
     specifier: ^4.0.4
     version: 4.0.4
@@ -4434,6 +4437,10 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       extend-shallow: 3.0.2
+    dev: false
+
+  /splitpanes@3.1.5:
+    resolution: {integrity: sha512-r3Mq2ITFQ5a2VXLOy4/Sb2Ptp7OfEO8YIbhVJqJXoFc9hc5nTXXkCvtVDjIGbvC0vdE7tse+xTM9BMjsszP6bw==}
     dev: false
 
   /sprintf-js@1.0.3:
