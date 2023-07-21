@@ -21,23 +21,7 @@
 <script lang="ts" setup>
 import DataProvider from "@/data-provider.vue";
 import Gatekeeper from "@/components/global/gatekeeper.vue";
-import { useEndpoint } from "@/stores/endpoint";
-import { usePrincipal } from "@/stores/principal";
-import { type Component, computed, h } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { NIcon } from "naive-ui";
-import { useI18n } from "vue-i18n";
-
-const { t } = useI18n();
-
-const $route = useRoute();
-const $router = useRouter();
-const $endpoint = useEndpoint();
-const $principal = usePrincipal();
-
-function renderIcon(icon: Component) {
-  return () => h(NIcon, null, { default: () => h(icon) });
-}
+import { computed } from "vue";
 
 const themeOverrides = {
   common: {
@@ -65,6 +49,14 @@ const isUnderShadow = computed(() => {
 
 .h-max {
   height: calc(100vh - 72px);
+}
+
+.h-max-inner {
+  height: calc(100vh - 72px - 48px);
+}
+
+.h-screen-inner {
+  height: calc(100vh - 48px);
 }
 
 .w-dialog {

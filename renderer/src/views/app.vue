@@ -18,7 +18,7 @@
       </div>
     </n-card>
     <n-spin :show="reverting">
-      <splitpanes :class="isUnderShadow ? 'h-max' : 'h-screen'">
+      <splitpanes :class="isUnderShadow ? 'h-max-inner' : 'h-screen-inner'">
         <pane :min-size="15" :max-size="30">
           <div class="h-full p-4">
             <n-tree block-line expand-on-click :data="navNodes" :node-props="navProps" />
