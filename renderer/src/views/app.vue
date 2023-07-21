@@ -154,11 +154,11 @@ const isUnderShadow = computed(() => {
 </script>
 
 <style>
-.h-max {
+.h-max-inner {
   height: calc(100vh - 48px - 72px);
 }
 
-.h-screen {
+.h-screen-inner {
   height: calc(100vh - 48px);
 }
 

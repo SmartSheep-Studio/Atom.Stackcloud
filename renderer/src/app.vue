@@ -39,24 +39,20 @@ const isUnderShadow = computed(() => {
 </script>
 
 <style>
-.n-layout-header {
-  height: 72px;
-}
-
-.n-layout-footer {
-  padding: 24px;
+.h-screen {
+  height: 100vh;
 }
 
 .h-max {
   height: calc(100vh - 72px);
 }
 
-.h-max-inner {
-  height: calc(100vh - 72px - 48px);
+.n-layout-header {
+  height: 72px;
 }
 
-.h-screen-inner {
-  height: calc(100vh - 48px);
+.n-layout-footer {
+  padding: 24px;
 }
 
 .w-dialog {
