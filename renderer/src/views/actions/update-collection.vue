@@ -26,6 +26,7 @@
 
 <script lang="ts" setup>
 import { http } from "@/utils/http"
+import { useConsole } from "@/stores/console";
 import { useMessage, type FormRules, type FormInst } from "naive-ui"
 import { onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
@@ -33,6 +34,7 @@ import { useRoute, useRouter } from "vue-router"
 const $route = useRoute()
 const $router = useRouter()
 const $message = useMessage()
+const $console = useConsole()
 
 const submitting = ref(false)
 
@@ -85,7 +87,9 @@ function update() {
       await http.put(`/api/apps/${$route.params.app}/records/${$route.params.collection}`, payload.value)
 
       $message.success("Successfully updated a collection.")
-      window.location.reload()
+      $console.fetch()
+
+      $router.push({ name: "console.apps.collections", params: { app: $route.params.app, collection: payload.value.slug } })
     } catch (e: any) {
       $message.error(`Something went wrong... ${e}`)
     } finally {

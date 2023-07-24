@@ -37,8 +37,9 @@
 </template>
 
 <script lang="ts" setup>
-import { parseRedirect } from "@/utils/callback"
 import { http } from "@/utils/http"
+import { parseRedirect } from "@/utils/callback"
+import { useConsole } from "@/stores/console"
 import { useMessage, type FormRules, type FormInst, useDialog } from "naive-ui"
 import { reactive, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
@@ -47,6 +48,7 @@ const $route = useRoute()
 const $router = useRouter()
 const $dialog = useDialog()
 const $message = useMessage()
+const $console = useConsole()
 
 const submitting = ref(false)
 
@@ -89,6 +91,7 @@ function create() {
       submitting.value = true
 
       await http.post(`/api/apps/${$route.params.app}/records`, payload)
+      await $console.fetch()
 
       $dialog.success({
         title: "Successfully created a collection",
@@ -96,7 +99,7 @@ function create() {
         positiveText: "OK",
         onPositiveClick: async () => {
           await $router.push(
-            await parseRedirect($route.query, { name: "console.apps", params: { app: $route.params.app } })
+            await parseRedirect($route.query, { name: "console.apps.collections", params: { app: $route.params.app, collection: payload.slug } })
           )
         },
       })

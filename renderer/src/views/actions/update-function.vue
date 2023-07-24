@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts" setup>
-import { parseRedirect } from "@/utils/callback"
+import { useConsole } from "@/stores/console"
 import { http } from "@/utils/http"
 import { useMessage, type FormRules, type FormInst } from "naive-ui"
 import { onMounted, ref } from "vue"
@@ -39,6 +39,7 @@ import { useRoute, useRouter } from "vue-router"
 const $route = useRoute()
 const $router = useRouter()
 const $message = useMessage()
+const $console = useConsole()
 
 const submitting = ref(false)
 
@@ -98,7 +99,9 @@ function update() {
       await http.put(`/api/apps/${$route.params.app}/functions/${$route.params.function}`, payload.value)
 
       $message.success("Successfully updated a function.")
-      window.location.reload()
+      $console.fetch()
+
+      $router.push({ name: "console.apps.functions", params: { app: $route.params.app, function: payload.value.slug } })
     } catch (e: any) {
       $message.error(`Something went wrong... ${e}`)
     } finally {

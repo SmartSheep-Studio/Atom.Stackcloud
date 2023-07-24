@@ -1,7 +1,7 @@
 <template>
   <n-spin :show="reverting">
     <div>
-      <n-card size="small" class="px-2 rounded-0">
+      <n-card size="small" class="px-2 rounded-none">
         <div class="flex justify-between items-center">
           <div class="flex items-center">
             <div>
@@ -50,7 +50,9 @@
           <div class="text-lg mt-7 mb-5">Dangerous Zone</div>
           <destroy-function
             :data="func"
-            @done="$router.push({ name: 'console.apps', params: { app: $route.params.app } }).then(() => reload())"
+            @done="
+              $router.push({ name: 'console.apps', params: { app: $route.params.app } }).then(() => $console.fetch())
+            "
           />
         </n-card>
       </n-modal>
@@ -73,10 +75,12 @@ import { useMessage } from "naive-ui"
 import { useRoute, useRouter } from "vue-router"
 import { http } from "@/utils/http"
 import { PlayArrowRound, SettingsRound } from "@vicons/material"
+import { useConsole } from "@/stores/console"
 
 const $route = useRoute()
 const $router = useRouter()
 const $message = useMessage()
+const $console = useConsole()
 
 const reverting = ref(true)
 const updating = ref(false)
@@ -112,11 +116,6 @@ async function save() {
   } finally {
     reverting.value = false
   }
-}
-
-function reload() {
-  $router.push({ name: "console.apps.functions", params: { app: $route.params.app, function: func.value.slug } })
-  window.location.reload()
 }
 
 onMounted(() => {

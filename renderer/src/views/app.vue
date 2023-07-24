@@ -1,6 +1,6 @@
 <template>
   <div>
-    <n-card size="small" class="px-2 h-[48px] flex content-center">
+    <n-card size="small" class="px-2 h-[48px] flex content-center rounded-none">
       <div class="flex items-center justify-between gap-2">
         <n-button text @click="$router.push({ name: 'console' })">
           <template #icon>
@@ -8,7 +8,7 @@
           </template>
         </n-button>
         <div class="text-gray-400 hover:text-gray-900 transition-colors cursor-default">
-          {{ app.name }} - Stackcloud Console
+          {{ $console.focusApp.name }} - Stackcloud Console
         </div>
         <n-button text>
           <template #icon>
@@ -17,7 +17,7 @@
         </n-button>
       </div>
     </n-card>
-    <n-spin :show="reverting">
+    <n-spin :show="!$console.isPrepared">
       <splitpanes :class="isUnderShadow ? 'h-max-inner' : 'h-screen-inner'">
         <pane :min-size="15" :max-size="30">
           <div class="h-full p-4">
@@ -37,23 +37,22 @@
 <script lang="ts" setup>
 import "splitpanes/dist/splitpanes.css"
 import { Splitpanes, Pane } from "splitpanes"
-import { useMessage, type TreeOption, NIcon, NSpace, NTag } from "naive-ui"
-import { onMounted, ref, computed, h } from "vue"
+import { type TreeOption, NIcon, NSpace, NTag } from "naive-ui"
+import { onMounted, computed, h } from "vue"
 import { AppsFilled, FunctionsRound, LayersRound, ArrowBackRound, SettingsRound, AddBoxRound } from "@vicons/material"
 import { useRoute, useRouter } from "vue-router"
-import { http } from "@/utils/http"
+import { useConsole } from "@/stores/console"
 
 const $route = useRoute()
 const $router = useRouter()
-const $message = useMessage()
+const $console = useConsole()
 
-const app = ref<any>({})
 const navNodes = computed(() => {
   return [
     {
       label: "Application",
       key: "application",
-      component: { name: "console.apps.settings", params: { app: app.value.slug } },
+      component: { name: "console.apps.settings", params: { app: $console.focusApp.slug } },
       prefix: () => h(NIcon, null, { default: () => h(AppsFilled) }),
     },
     {
@@ -67,17 +66,17 @@ const navNodes = computed(() => {
             onClick: (e: Event) => {
               e.preventDefault()
               e.stopPropagation()
-              $router.push({ name: "console.apps.functions.create", params: { app: app.value.slug }, exact: true })
+              $router.push({ name: "console.apps.functions.create", params: { app: $console.focusApp.slug } })
             },
           },
           {
             default: () => h(AddBoxRound),
           }
         ),
-      children: app.value.cloud_functions?.map((v: any) => ({
+      children: $console.focusApp.cloud_functions?.map((v: any) => ({
         label: v.name,
         key: `cloud-functions-${v.slug}`,
-        component: { name: "console.apps.functions", params: { app: app.value.slug, function: v.slug }, exact: true },
+        component: { name: "console.apps.functions", params: { app: $console.focusApp.slug, function: v.slug } },
         suffix: () =>
           h(
             NSpace,
@@ -97,17 +96,17 @@ const navNodes = computed(() => {
             onClick: (e: Event) => {
               e.preventDefault()
               e.stopPropagation()
-              $router.push({ name: "console.apps.collections.create", params: { app: app.value.slug } })
+              $router.push({ name: "console.apps.collections.create", params: { app: $console.focusApp.slug } })
             },
           },
           {
             default: () => h(AddBoxRound),
           }
         ),
-      children: app.value.cloud_collections?.map((v: any) => ({
+      children: $console.focusApp.cloud_collections?.map((v: any) => ({
         label: v.name,
         key: `cloud-collections-${v.slug}`,
-        component: { name: "console.apps.collections", params: { app: app.value.slug, collection: v.slug } },
+        component: { name: "console.apps.collections", params: { app: $console.focusApp.slug, collection: v.slug } },
         suffix: () =>
           h(
             NSpace,
@@ -128,23 +127,8 @@ const navProps = ({ option }: { option: TreeOption }) => {
   }
 }
 
-const reverting = ref(true)
-
-async function fetch() {
-  try {
-    reverting.value = true
-    app.value = (await http.get(`/api/apps/${$route.params.app}`)).data
-    app.value.cloud_functions = (await http.get(`/api/apps/${$route.params.app}/functions`)).data
-    app.value.cloud_collections = (await http.get(`/api/apps/${$route.params.app}/records`)).data
-  } catch (e: any) {
-    $message.error(`Something went wrong... ${e}`)
-  } finally {
-    reverting.value = false
-  }
-}
-
 onMounted(() => {
-  fetch()
+  $console.fetch()
 })
 
 // Use for dynamic calculate height

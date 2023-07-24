@@ -22,7 +22,7 @@
                   <destroy-collection
                     :data="collection"
                     @done="
-                      $router.push({ name: 'console.apps', params: { app: $route.params.app } }).then(() => reload())
+                      $router.push({ name: 'console.apps', params: { app: $route.params.app } }).then(() => $console.fetch())
                     "
                   />
                 </n-card>
@@ -42,11 +42,13 @@ import DestroyCollection from "@/views/actions/destroy-collection.vue"
 import { useMessage } from "naive-ui"
 import { useRoute, useRouter } from "vue-router"
 import { onMounted, ref } from "vue"
+import { useConsole } from "@/stores/console"
 import { http } from "@/utils/http"
 
 const $route = useRoute()
 const $router = useRouter()
 const $message = useMessage()
+const $console = useConsole()
 
 const app = ref<any>({})
 const collection = ref<any>({})
@@ -63,11 +65,6 @@ async function fetch() {
   } finally {
     reverting.value = false
   }
-}
-
-function reload() {
-  $router.push({ name: "console.apps.collections", params: { app: $route.params.app, collection: collection.value.slug } })
-  window.location.reload()
 }
 
 onMounted(() => {

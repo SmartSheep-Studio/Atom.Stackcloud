@@ -37,6 +37,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useConsole } from "@/stores/console"
 import { parseRedirect } from "@/utils/callback"
 import { http } from "@/utils/http"
 import { useMessage, type FormRules, type FormInst, useDialog } from "naive-ui"
@@ -47,6 +48,7 @@ const $route = useRoute()
 const $router = useRouter()
 const $dialog = useDialog()
 const $message = useMessage()
+const $console = useConsole()
 
 const submitting = ref(false)
 
@@ -90,6 +92,7 @@ function create() {
       submitting.value = true
 
       await http.post(`/api/apps/${$route.params.app}/functions`, payload)
+      await $console.fetch()
 
       $dialog.success({
         title: "Successfully created a function",
@@ -97,7 +100,7 @@ function create() {
         positiveText: "OK",
         onPositiveClick: async () => {
           await $router.push(
-            await parseRedirect($route.query, { name: "console.apps", params: { app: $route.params.app } })
+            await parseRedirect($route.query, { name: "console.apps.functions", params: { app: $route.params.app, function: payload.slug } })
           )
         },
       })
