@@ -8,7 +8,6 @@ import (
 
 	tmodels "code.smartsheep.studio/atom/neutron/datasource/models"
 	"code.smartsheep.studio/atom/neutron/http/context"
-	"code.smartsheep.studio/atom/neutron/utils"
 	"code.smartsheep.studio/atom/stackcloud/datasource/models"
 	"github.com/dop251/goja"
 	"github.com/gofiber/fiber/v2"
@@ -61,6 +60,39 @@ func (v *FunctionService) prepareRequestContext(vm *goja.Runtime, ctx *context.C
 	return nil
 }
 
+func (v *FunctionService) queryParser(collection models.RecordCollection, vm *goja.Runtime, call goja.FunctionCall) *gorm.DB {
+	options, ok := call.Argument(1).Export().(map[string]any)
+	if !ok {
+		return nil
+	}
+
+	tx := v.db.Where("collection_id = ?", collection.ID)
+	if idCondition, ok := options["id"].(int); ok {
+		tx.Where("id = ?", idCondition)
+	}
+	if likeCondition, ok := options["like"].(map[string]any); ok {
+		rawConditions, _ := json.Marshal(likeCondition)
+		tx.Where("payload @> ?", collection.ID, rawConditions)
+	}
+	if sqlConditions, ok := options["sql"].(string); ok {
+		if strings.Contains(sqlConditions, "--") || strings.Contains(sqlConditions, ";") {
+			return nil
+		}
+		tx.Where(sqlConditions)
+	}
+	if limitCondition, ok := options["limit"].(int); ok {
+		tx.Limit(limitCondition)
+	}
+	if offsetCondition, ok := options["offset"].(int); ok {
+		tx.Offset(offsetCondition)
+	}
+	if orderCondition, ok := options["order"].(string); ok {
+		tx.Order(orderCondition)
+	}
+
+	return tx
+}
+
 func (v *FunctionService) prepareCollectionContext(vm *goja.Runtime, function models.CloudFunction, ctx *context.Ctx) error {
 	var app models.App
 	if err := v.db.Where("id = ?", function.AppID).First(&app).Error; err != nil {
@@ -74,15 +106,9 @@ func (v *FunctionService) prepareCollectionContext(vm *goja.Runtime, function mo
 			return vm.NewGoError(err)
 		}
 
-		tx := v.db
-
-		if call.Argument(1).ExportType() != goja.Null().ExportType() {
-			if conditions, ok := call.Argument(1).Export().(map[string]any); ok {
-				rawConditions, _ := json.Marshal(conditions)
-				tx.Where("collection_id = ? AND payload @> ?", collection.ID, rawConditions)
-			} else {
-				return vm.NewGoError(fmt.Errorf("argument 2 must be a object contains conditions"))
-			}
+		tx := v.queryParser(collection, vm, call)
+		if tx == nil {
+			return vm.NewGoError(fmt.Errorf("argument 2 must be a object valid query options"))
 		}
 
 		var records int64
@@ -98,19 +124,10 @@ func (v *FunctionService) prepareCollectionContext(vm *goja.Runtime, function mo
 			return vm.NewGoError(err)
 		}
 
-		tx := v.db.Where("collection_id = ?", collection.ID)
-
-		if call.Argument(1).ExportType() != goja.Null().ExportType() {
-			if conditions, ok := call.Argument(1).Export().(map[string]any); ok {
-				rawConditions, _ := json.Marshal(conditions)
-				tx.Where("payload @> ?", rawConditions)
-			} else {
-				return vm.NewGoError(fmt.Errorf("argument 2 must be a object contains conditions"))
-			}
+		tx := v.queryParser(collection, vm, call)
+		if tx == nil {
+			return vm.NewGoError(fmt.Errorf("argument 2 must be a object valid query options"))
 		}
-
-		order := utils.ValueIf(len(call.Arguments) >= 3, call.Argument(2).String(), "created_at asc")
-		tx.Order(order)
 
 		var records []models.Record
 		if err := tx.Find(&records).Error; err != nil {
@@ -125,24 +142,9 @@ func (v *FunctionService) prepareCollectionContext(vm *goja.Runtime, function mo
 			return vm.NewGoError(err)
 		}
 
-		tx := v.db.Where("collection_id = ?", collection.ID)
-
-		for _, argument := range call.Arguments {
-			if conditions, ok := argument.Export().(string); ok {
-				rawConditions := strings.SplitN(conditions, " ", 3)
-				if len(rawConditions) != 3 {
-					return vm.NewGoError(fmt.Errorf("argument must be a string contains valid conditions or order"))
-				} else {
-					tx.Where(fmt.Sprintf("payload->>%s %s ?", rawConditions[0], rawConditions[1]), rawConditions[2])
-				}
-			} else {
-				return vm.NewGoError(fmt.Errorf("argument must be a string contains valid conditions or order"))
-			}
-		}
-
-		rawOrder := strings.Trim(strings.ToLower(call.Arguments[len(call.Arguments)-1].String()), " ")
-		if strings.HasSuffix(rawOrder, "asc") || strings.HasSuffix(rawOrder, "desc") {
-			tx.Order(call.Arguments[len(call.Arguments)-1].String())
+		tx := v.queryParser(collection, vm, call)
+		if tx == nil {
+			return vm.NewGoError(fmt.Errorf("argument 2 must be a object valid query options"))
 		}
 
 		var records []models.Record
@@ -158,8 +160,13 @@ func (v *FunctionService) prepareCollectionContext(vm *goja.Runtime, function mo
 			return vm.NewGoError(err)
 		}
 
+		tx := v.queryParser(collection, vm, call)
+		if tx == nil {
+			return vm.NewGoError(fmt.Errorf("argument 2 must be a object valid query options"))
+		}
+
 		var record models.Record
-		if err := v.db.Where("id = ?", call.Argument(1).ToInteger()).First(&record).Error; err != nil {
+		if err := tx.First(&record).Error; err != nil {
 			return vm.NewGoError(err)
 		}
 
@@ -188,17 +195,26 @@ func (v *FunctionService) prepareCollectionContext(vm *goja.Runtime, function mo
 			return vm.NewGoError(err)
 		}
 
-		var record models.Record
-		if err := v.db.Where("id = ?", call.Argument(1).ToInteger()).First(&record).Error; err != nil {
-			return vm.NewGoError(err)
-		}
-		data, _ := json.Marshal(call.Argument(2).Export())
-		record.Payload = datatypes.JSON(data)
-		if err := v.db.Save(&record).Error; err != nil {
-			return vm.NewGoError(err)
+		tx := v.queryParser(collection, vm, call)
+		if tx == nil {
+			return vm.NewGoError(fmt.Errorf("argument 2 must be a object valid query options"))
 		}
 
-		return vm.ToValue(record)
+		var records []models.Record
+		if err := tx.First(&records).Error; err != nil {
+			return vm.NewGoError(err)
+		}
+		for idx, record := range records {
+			data, _ := json.Marshal(call.Argument(2).Export())
+			record.Payload = datatypes.JSON(data)
+			if err := v.db.Save(&record).Error; err != nil {
+				return vm.NewGoError(err)
+			} else {
+				records[idx] = record
+			}
+		}
+
+		return vm.ToValue(records)
 	})
 	records.Set("delete", func(call goja.FunctionCall) goja.Value {
 		var collection models.RecordCollection
@@ -206,15 +222,16 @@ func (v *FunctionService) prepareCollectionContext(vm *goja.Runtime, function mo
 			return vm.NewGoError(err)
 		}
 
-		var record models.Record
-		if err := v.db.Where("id = ?", call.Argument(1).ToInteger()).First(&record).Error; err != nil {
-			return vm.NewGoError(err)
+		tx := v.queryParser(collection, vm, call)
+		if tx == nil {
+			return vm.NewGoError(fmt.Errorf("argument 2 must be a object valid query options"))
 		}
-		if err := v.db.Delete(&record).Error; err != nil {
+
+		if err := tx.Delete(&models.Record{}).Error; err != nil {
 			return vm.NewGoError(err)
 		}
 
-		return vm.ToValue(record)
+		return goja.Undefined()
 	})
 
 	vm.Set("records", records)
