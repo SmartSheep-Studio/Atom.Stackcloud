@@ -1,14 +1,14 @@
 package services
 
 import (
+	"code.smartsheep.studio/atom/stackcloud/pkg/server/hypertext/hyperutils"
 	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
 
-	tmodels "code.smartsheep.studio/atom/neutron/datasource/models"
-	"code.smartsheep.studio/atom/neutron/http/context"
-	"code.smartsheep.studio/atom/stackcloud/datasource/models"
+	tmodels "code.smartsheep.studio/atom/bedrock/pkg/server/datasource/models"
+	"code.smartsheep.studio/atom/stackcloud/pkg/server/datasource/models"
 	"github.com/dop251/goja"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/datatypes"
@@ -23,7 +23,7 @@ func NewFunctionService(db *gorm.DB) *FunctionService {
 	return &FunctionService{db}
 }
 
-func (v *FunctionService) prepareRequestContext(vm *goja.Runtime, ctx *context.Ctx) error {
+func (v *FunctionService) prepareRequestContext(vm *goja.Runtime, ctx *fiber.Ctx) error {
 	var body map[string]any
 	if err := ctx.BodyParser(&body); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("request only accepts valid JSON format payload: %q", err))
@@ -93,10 +93,10 @@ func (v *FunctionService) queryParser(collection models.RecordCollection, vm *go
 	return tx
 }
 
-func (v *FunctionService) prepareCollectionContext(vm *goja.Runtime, function models.CloudFunction, ctx *context.Ctx) error {
+func (v *FunctionService) prepareCollectionContext(vm *goja.Runtime, function models.CloudFunction, ctx *fiber.Ctx) error {
 	var app models.App
 	if err := v.db.Where("id = ?", function.AppID).First(&app).Error; err != nil {
-		return ctx.DbError(err)
+		return hyperutils.ErrorParser(err)
 	}
 
 	records := vm.NewObject()
@@ -239,7 +239,7 @@ func (v *FunctionService) prepareCollectionContext(vm *goja.Runtime, function mo
 	return nil
 }
 
-func (v *FunctionService) HandleRequest(handler models.CloudFunction, ctx *context.Ctx) error {
+func (v *FunctionService) HandleRequest(handler models.CloudFunction, ctx *fiber.Ctx) error {
 	vm := goja.New()
 	vm.SetFieldNameMapper(goja.TagFieldNameMapper("json", true))
 

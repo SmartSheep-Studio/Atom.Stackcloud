@@ -1,89 +1,110 @@
 package controllers
 
 import (
+	"code.smartsheep.studio/atom/stackcloud/pkg/server/datasource/models"
+	"code.smartsheep.studio/atom/stackcloud/pkg/server/hypertext/hyperutils"
+	"code.smartsheep.studio/atom/stackcloud/pkg/server/hypertext/middleware"
 	"encoding/json"
 
 	"code.smartsheep.studio/atom/neutron/http/context"
-	"code.smartsheep.studio/atom/stackcloud/datasource/models"
-	"code.smartsheep.studio/atom/stackcloud/http/middleware"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
 
 type RecordController struct {
-	db   *gorm.DB
-	auth middleware.AuthHandler
+	db         *gorm.DB
+	gatekeeper *middleware.AuthMiddleware
 }
 
-func NewRecordController(db *gorm.DB, auth middleware.AuthHandler) *RecordController {
-	return &RecordController{db, auth}
+func NewRecordController(db *gorm.DB, gatekeeper *middleware.AuthMiddleware) *RecordController {
+	return &RecordController{db, gatekeeper}
 }
 
 func (ctrl *RecordController) Map(router *context.App) {
-	router.Get("/api/apps/:app/records/:collection/data", ctrl.auth(true, "stackcloud.records.data.read", "stackcloud.records.data.read"), ctrl.list)
-	router.Get("/api/apps/:app/records/:collection/data/:record", ctrl.auth(true, "stackcloud.records.data.read", "stackcloud.records.data.read"), ctrl.get)
-	router.Post("/api/apps/:app/records/:collection/data", ctrl.auth(true, "stackcloud.records.data.create", "stackcloud.records.data.create"), ctrl.create)
-	router.Put("/api/apps/:app/records/:collection/data/:record", ctrl.auth(true, "stackcloud.records.data.update", "stackcloud.records.data.update"), ctrl.update)
-	router.Delete("/api/apps/:app/records/:collection/data/:record", ctrl.auth(true, "stackcloud.records.data.delete", "stackcloud.records.data.delete"), ctrl.delete)
+	router.Get(
+		"/api/apps/:app/records/:collection/data",
+		ctrl.gatekeeper.Fn(true, hyperutils.GenScope("read:records.data"), hyperutils.GenPerms("records.data.read")),
+		ctrl.list,
+	)
+	router.Get(
+		"/api/apps/:app/records/:collection/data/:record",
+		ctrl.gatekeeper.Fn(true, hyperutils.GenScope("read:records.data"), hyperutils.GenPerms("records.data.read")),
+		ctrl.get,
+	)
+	router.Post(
+		"/api/apps/:app/records/:collection/data",
+		ctrl.gatekeeper.Fn(true, hyperutils.GenScope("create:records.data"), hyperutils.GenPerms("records.data.create")),
+		ctrl.create,
+	)
+	router.Put(
+		"/api/apps/:app/records/:collection/data/:record",
+		ctrl.gatekeeper.Fn(true, hyperutils.GenScope("update:records.data"), hyperutils.GenPerms("records.data.update")),
+		ctrl.update,
+	)
+	router.Delete(
+		"/api/apps/:app/records/:collection/data/:record",
+		ctrl.gatekeeper.Fn(true, hyperutils.GenScope("delete:records.data"), hyperutils.GenPerms("records.data.delete")),
+		ctrl.delete,
+	)
 }
 
-func (ctrl *RecordController) list(ctx *fiber.Ctx) error {
-	c := &context.Ctx{Ctx: ctx}
+func (ctrl *RecordController) list(c *fiber.Ctx) error {
+
 	u := c.Locals("stackcloud-id").(*models.Account)
 
 	var app models.App
 	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	}
 
 	var collection models.RecordCollection
 	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("collection"), app.ID).First(&collection).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	}
 
 	var records []models.Record
 	if err := ctrl.db.Where("collection_id = ?", collection.ID).Order("created_at desc").Find(&records).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	} else {
 		return c.JSON(records)
 	}
 }
 
-func (ctrl *RecordController) get(ctx *fiber.Ctx) error {
-	c := &context.Ctx{Ctx: ctx}
+func (ctrl *RecordController) get(c *fiber.Ctx) error {
+
 	u := c.Locals("stackcloud-id").(*models.Account)
 
 	var app models.App
 	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	}
 
 	var collection models.RecordCollection
 	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("collection"), app.ID).First(&collection).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	}
 
 	var record models.Record
 	if err := ctrl.db.Where("collection_id = ? AND id = ?", collection.ID, c.Params("record")).First(&record).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	} else {
 		return c.JSON(record)
 	}
 }
 
-func (ctrl *RecordController) create(ctx *fiber.Ctx) error {
-	c := &context.Ctx{Ctx: ctx}
+func (ctrl *RecordController) create(c *fiber.Ctx) error {
+
 	u := c.Locals("stackcloud-id").(*models.Account)
 
 	var app models.App
 	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	}
 
 	var collection models.RecordCollection
 	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("collection"), app.ID).First(&collection).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	}
 
 	var req struct {
@@ -91,7 +112,7 @@ func (ctrl *RecordController) create(ctx *fiber.Ctx) error {
 	}
 
 	var payload []byte
-	if err := c.BindBody(&req); err != nil {
+	if err := hyperutils.BodyParser(c, &req); err != nil {
 		return err
 	} else {
 		payload, _ = json.Marshal(req.Payload)
@@ -103,24 +124,24 @@ func (ctrl *RecordController) create(ctx *fiber.Ctx) error {
 	}
 
 	if err := ctrl.db.Save(&record).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	} else {
 		return c.JSON(record)
 	}
 }
 
-func (ctrl *RecordController) update(ctx *fiber.Ctx) error {
-	c := &context.Ctx{Ctx: ctx}
+func (ctrl *RecordController) update(c *fiber.Ctx) error {
+
 	u := c.Locals("stackcloud-id").(*models.Account)
 
 	var app models.App
 	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	}
 
 	var collection models.RecordCollection
 	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("collection"), app.ID).First(&collection).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	}
 
 	var req struct {
@@ -128,7 +149,7 @@ func (ctrl *RecordController) update(ctx *fiber.Ctx) error {
 	}
 
 	var payload []byte
-	if err := c.BindBody(&req); err != nil {
+	if err := hyperutils.BodyParser(c, &req); err != nil {
 		return err
 	} else {
 		payload, _ = json.Marshal(req.Payload)
@@ -136,39 +157,39 @@ func (ctrl *RecordController) update(ctx *fiber.Ctx) error {
 
 	var record models.Record
 	if err := ctrl.db.Where("collection_id = ? AND id = ?", collection.ID, c.Params("record")).First(&record).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	}
 
 	record.Payload = datatypes.JSON(payload)
 
 	if err := ctrl.db.Save(&record).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	} else {
 		return c.JSON(record)
 	}
 }
 
-func (ctrl *RecordController) delete(ctx *fiber.Ctx) error {
-	c := &context.Ctx{Ctx: ctx}
+func (ctrl *RecordController) delete(c *fiber.Ctx) error {
+
 	u := c.Locals("stackcloud-id").(*models.Account)
 
 	var app models.App
 	if err := ctrl.db.Where("slug = ? AND account_id = ?", c.Params("app"), u.ID).First(&app).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	}
 
 	var collection models.RecordCollection
 	if err := ctrl.db.Where("slug = ? AND app_id = ?", c.Params("collection"), app.ID).First(&collection).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	}
 
 	var record models.Record
 	if err := ctrl.db.Where("collection_id = ? AND id = ?", collection.ID, c.Params("record")).First(&record).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	}
 
 	if err := ctrl.db.Delete(&record).Error; err != nil {
-		return c.DbError(err)
+		return hyperutils.ErrorParser(err)
 	} else {
 		return c.SendStatus(fiber.StatusNoContent)
 	}

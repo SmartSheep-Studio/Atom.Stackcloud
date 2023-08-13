@@ -1,16 +1,16 @@
 package controllers
 
 import (
+	"code.smartsheep.studio/atom/bedrock/pkg/kit/subapps"
 	"code.smartsheep.studio/atom/neutron/http/context"
-	"code.smartsheep.studio/atom/neutron/toolbox"
 	"github.com/gofiber/fiber/v2"
 )
 
 type StatusController struct {
-	conn *toolbox.ExternalServiceConnection
+	conn *subapps.HeLiCoPtErConnection
 }
 
-func NewStatusController(conn *toolbox.ExternalServiceConnection) *StatusController {
+func NewStatusController(conn *subapps.HeLiCoPtErConnection) *StatusController {
 	return &StatusController{conn}
 }
 
@@ -18,7 +18,6 @@ func (ctrl *StatusController) Map(router *context.App) {
 	router.Get("/api/info", ctrl.configure)
 }
 
-func (ctrl *StatusController) configure(ctx *fiber.Ctx) error {
-	c := &context.Ctx{Ctx: ctx}
+func (ctrl *StatusController) configure(c *fiber.Ctx) error {
 	return c.JSON(ctrl.conn)
 }

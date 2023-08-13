@@ -3,19 +3,23 @@ module code.smartsheep.studio/atom/stackcloud
 go 1.20
 
 require (
+	code.smartsheep.studio/atom/bedrock v0.0.0-20230813155949-361e489326e4
 	code.smartsheep.studio/atom/neutron v0.0.0-20230713075104-9c4c72ab83cb
+	github.com/dop251/goja v0.0.0-20230707174833-636fdf960de1
+	github.com/go-playground/validator/v10 v10.14.1
 	github.com/rs/zerolog v1.29.1
+	github.com/samber/lo v1.38.1
+	github.com/urfave/cli v1.22.14
 	gorm.io/datatypes v1.2.0
 )
 
 require (
 	github.com/IGLOU-EU/go-wildcard v1.0.3 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/dlclark/regexp2 v1.10.0 // indirect
-	github.com/dop251/goja v0.0.0-20230707174833-636fdf960de1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.14.1 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
 	github.com/golang-jwt/jwt/v5 v5.0.0 // indirect
 	github.com/google/pprof v0.0.0-20230705174524-200ffdc848b8 // indirect
@@ -23,8 +27,7 @@ require (
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/pgx/v5 v5.4.2 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
-	github.com/robfig/cron/v3 v3.0.1 // indirect
-	github.com/stretchr/testify v1.8.4 // indirect
+	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	golang.org/x/crypto v0.11.0 // indirect
 	golang.org/x/exp v0.0.0-20230711153332-06a737ee72cb // indirect
 )

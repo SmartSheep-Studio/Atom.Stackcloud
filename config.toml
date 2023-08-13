@@ -10,7 +10,7 @@ user_contents = "dist/uploads"
 [security]
 sessions_alive_duration = "720h"
 
-[http]
+[hypertext]
 listen_addr = "0.0.0.0:9444"
 max_body_size = 4194304
 [http.advanced]

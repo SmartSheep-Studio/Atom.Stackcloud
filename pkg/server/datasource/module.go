@@ -1,7 +1,7 @@
 package datasource
 
 import (
-	"code.smartsheep.studio/atom/stackcloud/datasource/models"
+	"code.smartsheep.studio/atom/stackcloud/pkg/server/datasource/models"
 	"go.uber.org/fx"
 )
 
