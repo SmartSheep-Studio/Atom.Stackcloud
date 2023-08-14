@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"code.smartsheep.studio/atom/neutron/http/context"
 	"code.smartsheep.studio/atom/stackcloud/pkg/server/datasource/models"
 	"code.smartsheep.studio/atom/stackcloud/pkg/server/hypertext/hyperutils"
 	"code.smartsheep.studio/atom/stackcloud/pkg/server/hypertext/middleware"
@@ -21,7 +20,7 @@ func NewFunctionController(db *gorm.DB, executor *services.FunctionService, gate
 	return &FunctionController{db, executor, gatekeeper}
 }
 
-func (ctrl *FunctionController) Map(router *context.App) {
+func (ctrl *FunctionController) Map(router *fiber.App) {
 	router.Get(
 		"/api/apps/:app/functions",
 		ctrl.gatekeeper.Fn(true, hyperutils.GenScope("read:functions"), hyperutils.GenPerms("functions.read")),

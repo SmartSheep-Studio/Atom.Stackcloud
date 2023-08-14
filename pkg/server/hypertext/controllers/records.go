@@ -6,7 +6,6 @@ import (
 	"code.smartsheep.studio/atom/stackcloud/pkg/server/hypertext/middleware"
 	"encoding/json"
 
-	"code.smartsheep.studio/atom/neutron/http/context"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
@@ -21,7 +20,7 @@ func NewRecordController(db *gorm.DB, gatekeeper *middleware.AuthMiddleware) *Re
 	return &RecordController{db, gatekeeper}
 }
 
-func (ctrl *RecordController) Map(router *context.App) {
+func (ctrl *RecordController) Map(router *fiber.App) {
 	router.Get(
 		"/api/apps/:app/records/:collection/data",
 		ctrl.gatekeeper.Fn(true, hyperutils.GenScope("read:records.data"), hyperutils.GenPerms("records.data.read")),

@@ -12,7 +12,7 @@ func NewEndpointConnection() *subapps.HeLiCoPtErConnection {
 
 	conn, err := subapps.PublishApp(
 		viper.GetString("base_url"),
-		"matrix",
+		"stackcloud",
 		models.SubAppExposedPage{
 			Icon:  "mdi-cloud",
 			Name:  "stackcloud",

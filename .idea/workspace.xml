@@ -4,107 +4,14 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="171c3bbe-7984-49bc-902e-7e9a4b1e3d89" name="Changes" comment="Changes">
-      <change afterPath="$PROJECT_DIR$/pkg/cmd/server/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/server/config/publisher.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/server/hypertext/hyperutils/auth.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/server/hypertext/hyperutils/parser.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/server/hypertext/hyperutils/response.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/server/hypertext/middleware/auth.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/server/hypertext/serve.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Matrix.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Stackcloud.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="171c3bbe-7984-49bc-902e-7e9a4b1e3d89" name="Changes" comment=":recycle: Refactor with HeLiCoPtEr arch">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.toml" beforeDir="false" afterPath="$PROJECT_DIR$/config.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/loader.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/config/loader.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/module.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/config/module.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/publisher.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasource/gorm.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/datasource/gorm.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasource/models/account.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/datasource/models/account.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasource/models/apps.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/datasource/models/apps.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasource/models/functions.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/datasource/models/functions.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasource/models/migrator.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/datasource/models/migrator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasource/models/model.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/datasource/models/model.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasource/models/records.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/datasource/models/records.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasource/module.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/datasource/module.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/controllers/apps.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/apps.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/controllers/collections.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/collections.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/controllers/functions.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/functions.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/controllers/module.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/module.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/controllers/records.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/records.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/controllers/status.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/status.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/middleware/auth.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/middleware/cors.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/middleware/module.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/middleware/module.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/module.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/module.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/serve.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logger/log.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/logger/log.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logger/module.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/logger/module.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/.eslintrc.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/.eslintrc.cjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/.prettierrc.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/.prettierrc.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/.vscode/extensions.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/.vscode/extensions.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/auto-imports.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/auto-imports.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/components.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/components.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/embed.go" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/embed.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/env.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/env.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/pnpm-lock.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/postcss.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/postcss.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/public/favicon.png" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/public/favicon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/app.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/app.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/assets/icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/assets/icon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/assets/placeholders/default-avatar.png" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/assets/placeholders/default-avatar.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/assets/placeholders/default-banner.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/assets/placeholders/default-banner.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/assets/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/assets/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/components/global/gatekeeper.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/components/global/gatekeeper.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/data-provider.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/data-provider.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/i18n/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/i18n/en.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/i18n/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/i18n/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/i18n/zh-cn.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/i18n/zh-cn.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/main.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/router/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/router/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/stores/console.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/stores/console.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/stores/endpoint.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/stores/endpoint.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/stores/principal.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/stores/principal.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/utils/callback.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/utils/callback.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/utils/endpoint.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/utils/endpoint.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/utils/gatekeeper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/utils/gatekeeper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/utils/http.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/utils/http.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/utils/placeholders.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/utils/placeholders.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/actions/call-function.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/actions/call-function.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/actions/create-app.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/actions/create-app.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/actions/create-collection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/actions/create-collection.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/actions/create-function.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/actions/create-function.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/actions/create-record.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/actions/create-record.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/actions/destroy-app.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/actions/destroy-app.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/actions/destroy-collection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/actions/destroy-collection.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/actions/destroy-function.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/actions/destroy-function.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/actions/update-app.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/actions/update-app.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/actions/update-collection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/actions/update-collection.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/actions/update-function.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/actions/update-function.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/actions/update-record.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/actions/update-record.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/app.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/app.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/collection.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/collection.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/function.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/function.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/landing.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/landing.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/parts/apps.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/parts/apps.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/parts/intro.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/parts/intro.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/parts/records.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/parts/records.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/src/views/parts/settings.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/parts/settings.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/tailwind.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/tsconfig.app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/tsconfig.node.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/tsconfig.node.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/renderer/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/vite.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/functions.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/services/functions.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/module.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/services/module.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/server/config/publisher.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/config/publisher.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/server/hypertext/controllers/apps.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/apps.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/server/hypertext/controllers/collections.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/collections.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/server/hypertext/controllers/functions.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/functions.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/server/hypertext/controllers/records.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/records.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/server/hypertext/controllers/status.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/status.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,27 +33,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
-    "go.import.settings.migrated": "true",
-    "go.sdk.automatically.set": "true",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/LittleSheep/Projects/Code/Atom/Stackcloud/pkg/server/config",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "pnpm",
-    "ts.external.directory.path": "C:\\Tools\\Scoop\\apps\\jetbrains-toolbox\\current\\GoLand\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/LittleSheep/Projects/Code/Atom/Stackcloud/pkg/server/config&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\LittleSheep\\Projects\\Code\\Atom\\Stackcloud\\packages\\stackcloud-web\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\LittleSheep\Projects\Code\Atom\Stackcloud\pkg\server\config" />
@@ -194,6 +101,10 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value=":recycle: Refactor with HeLiCoPtEr arch" />
+    <option name="LAST_COMMIT_MESSAGE" value=":recycle: Refactor with HeLiCoPtEr arch" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

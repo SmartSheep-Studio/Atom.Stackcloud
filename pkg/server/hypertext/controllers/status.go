@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"code.smartsheep.studio/atom/bedrock/pkg/kit/subapps"
-	"code.smartsheep.studio/atom/neutron/http/context"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -14,7 +13,7 @@ func NewStatusController(conn *subapps.HeLiCoPtErConnection) *StatusController {
 	return &StatusController{conn}
 }
 
-func (ctrl *StatusController) Map(router *context.App) {
+func (ctrl *StatusController) Map(router *fiber.App) {
 	router.Get("/api/info", ctrl.configure)
 }
 

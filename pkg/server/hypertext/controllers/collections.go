@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"code.smartsheep.studio/atom/neutron/http/context"
 	"code.smartsheep.studio/atom/stackcloud/pkg/server/datasource/models"
 	"code.smartsheep.studio/atom/stackcloud/pkg/server/hypertext/hyperutils"
 	"code.smartsheep.studio/atom/stackcloud/pkg/server/hypertext/middleware"
@@ -19,7 +18,7 @@ func NewCollectionController(db *gorm.DB, gatekeeper *middleware.AuthMiddleware)
 	return &CollectionController{db, gatekeeper}
 }
 
-func (ctrl *CollectionController) Map(router *context.App) {
+func (ctrl *CollectionController) Map(router *fiber.App) {
 	router.Get(
 		"/api/apps/:app/records",
 		ctrl.gatekeeper.Fn(true, hyperutils.GenScope("read:records.collections"), hyperutils.GenPerms("records.collections.read")),
