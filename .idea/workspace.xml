@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="171c3bbe-7984-49bc-902e-7e9a4b1e3d89" name="Changes" comment=":recycle: Refactor with HeLiCoPtEr arch">
+    <list default="true" id="171c3bbe-7984-49bc-902e-7e9a4b1e3d89" name="Changes" comment=":bug: Fix wrong interface impl">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/server/config/publisher.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/config/publisher.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/server/hypertext/controllers/apps.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/apps.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/server/hypertext/controllers/collections.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/collections.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/server/hypertext/controllers/functions.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/functions.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/server/hypertext/controllers/records.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/records.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/server/hypertext/controllers/status.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/controllers/status.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.toml" beforeDir="false" afterPath="$PROJECT_DIR$/config.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,7 +99,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value=":recycle: Refactor with HeLiCoPtEr arch" />
-    <option name="LAST_COMMIT_MESSAGE" value=":recycle: Refactor with HeLiCoPtEr arch" />
+    <MESSAGE value=":bug: Fix wrong interface impl" />
+    <option name="LAST_COMMIT_MESSAGE" value=":bug: Fix wrong interface impl" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

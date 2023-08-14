@@ -11,7 +11,7 @@ user_contents = "dist/uploads"
 sessions_alive_duration = "720h"
 
 [hypertext]
-listen_addr = "0.0.0.0:9444"
+bind_addr = "0.0.0.0:9444"
 max_body_size = 4194304
 [http.advanced]
 prefork = false
