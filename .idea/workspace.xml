@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="171c3bbe-7984-49bc-902e-7e9a4b1e3d89" name="Changes" comment=":bug: Fix wrong interface impl">
+    <list default="true" id="171c3bbe-7984-49bc-902e-7e9a4b1e3d89" name="Changes" comment=":hammer: Update dockerfile">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.toml" beforeDir="false" afterPath="$PROJECT_DIR$/config.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/stackcloud-web/src/stores/principal.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/stores/principal.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/stackcloud-web/src/utils/gatekeeper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/utils/gatekeeper.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +101,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value=":recycle: Refactor with HeLiCoPtEr arch" />
     <MESSAGE value=":bug: Fix wrong interface impl" />
-    <option name="LAST_COMMIT_MESSAGE" value=":bug: Fix wrong interface impl" />
+    <MESSAGE value=":hammer: Update dockerfile" />
+    <option name="LAST_COMMIT_MESSAGE" value=":hammer: Update dockerfile" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
