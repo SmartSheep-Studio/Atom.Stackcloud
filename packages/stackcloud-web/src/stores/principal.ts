@@ -10,7 +10,7 @@ export const usePrincipal = defineStore("principal", () => {
   const token = computed(() => cookies.get("authorization"))
 
   const session = ref<any>({})
-  const account = useLocalStorage<any | null>("atom-profile", null, {
+  const account = useLocalStorage<any | null>("account-data", null, {
     deep: true,
     listenToStorageChanges: true,
     serializer: {
@@ -34,7 +34,7 @@ export const usePrincipal = defineStore("principal", () => {
   async function fetch() {
     if (cookies.get("authorization") != null) {
       try {
-        const res = await http.get("/api/auth")
+        const res = await http.get("/api/users/self")
         account.value = res.data.user
         session.value = res.data.session
 
