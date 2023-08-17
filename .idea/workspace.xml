@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="171c3bbe-7984-49bc-902e-7e9a4b1e3d89" name="Changes" comment=":hammer: Update dockerfile">
+    <list default="true" id="171c3bbe-7984-49bc-902e-7e9a4b1e3d89" name="Changes" comment=":bug: Fix frontend gatekeeper">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/stackcloud-web/src/stores/principal.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/stores/principal.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/stackcloud-web/src/utils/gatekeeper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/utils/gatekeeper.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/stackcloud-web/src/utils/http.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/utils/http.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/stackcloud-web/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/vite.config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +102,8 @@
     <MESSAGE value=":recycle: Refactor with HeLiCoPtEr arch" />
     <MESSAGE value=":bug: Fix wrong interface impl" />
     <MESSAGE value=":hammer: Update dockerfile" />
-    <option name="LAST_COMMIT_MESSAGE" value=":hammer: Update dockerfile" />
+    <MESSAGE value=":bug: Fix frontend gatekeeper" />
+    <option name="LAST_COMMIT_MESSAGE" value=":bug: Fix frontend gatekeeper" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
