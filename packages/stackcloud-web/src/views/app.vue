@@ -18,7 +18,7 @@
       </div>
     </n-card>
     <n-spin :show="!$console.isPrepared">
-      <splitpanes :class="isUnderShadow ? 'h-max-inner' : 'h-screen-inner'">
+      <splitpanes class="h-screen-inner">
         <pane :min-size="15" :max-size="30">
           <div class="h-full p-4">
             <n-tree block-line expand-on-click :data="navNodes" :node-props="navProps" />
@@ -138,10 +138,6 @@ const isUnderShadow = computed(() => {
 </script>
 
 <style>
-.h-max-inner {
-  height: calc(100vh - 48px - 72px);
-}
-
 .h-screen-inner {
   height: calc(100vh - 48px);
 }

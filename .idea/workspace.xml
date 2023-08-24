@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="171c3bbe-7984-49bc-902e-7e9a4b1e3d89" name="Changes" comment=":arrow_up: Support reserve proxy loader">
+    <list default="true" id="171c3bbe-7984-49bc-902e-7e9a4b1e3d89" name="Changes" comment=":bug: Fix bugs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.toml" beforeDir="false" afterPath="$PROJECT_DIR$/config.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/stackcloud-web/src/stores/principal.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/stores/principal.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/stackcloud-web/vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/vite.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/server/hypertext/serve.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/server/hypertext/serve.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/stackcloud-web/src/app.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/app.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/stackcloud-web/src/views/app.vue" beforeDir="false" afterPath="$PROJECT_DIR$/packages/stackcloud-web/src/views/app.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +64,7 @@
       <recent name="C:\Users\LittleSheep\Projects\Code\Atom\Stackcloud\packages" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.Stackcloud Web">
+  <component name="RunManager" selected="Go 构建.Stackcloud">
     <configuration name="Stackcloud" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="Stackcloud" />
       <working_directory value="$PROJECT_DIR$" />
@@ -117,13 +115,25 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value=":recycle: Refactor with HeLiCoPtEr arch" />
     <MESSAGE value=":bug: Fix wrong interface impl" />
     <MESSAGE value=":hammer: Update dockerfile" />
     <MESSAGE value=":bug: Fix frontend gatekeeper" />
     <MESSAGE value=":arrow_up: Support reserve proxy loader" />
-    <option name="LAST_COMMIT_MESSAGE" value=":arrow_up: Support reserve proxy loader" />
+    <MESSAGE value=":bug: Fix bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value=":bug: Fix bugs" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

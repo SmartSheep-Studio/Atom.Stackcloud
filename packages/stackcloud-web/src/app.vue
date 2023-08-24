@@ -2,7 +2,7 @@
   <n-config-provider :theme-overrides="themeOverrides">
     <n-dialog-provider>
       <n-message-provider>
-        <div class="w-full relative" :class="isUnderShadow ? 'h-max' : 'h-screen'">
+        <div class="w-full relative h-[100vh]">
           <n-layout position="absolute">
             <n-layout class="w-full h-full">
               <data-provider>
@@ -31,11 +31,6 @@ const themeOverrides = {
     primaryColorSuppl: "#A84141FF"
   }
 };
-
-// Use for dynamic calculate height
-const isUnderShadow = computed(() => {
-  return (window as any).__POWERED_BY_WUJIE__ != null;
-});
 </script>
 
 <style>
